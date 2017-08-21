@@ -23,7 +23,8 @@ import FdSettings from '@/views/fdSettings' // 返点设置
 import StatisCustotaltoc from '@/views/StatisCustotaltoc'  // 客户统计
 import StatisChannel from '@/views/StatisChannel'  // 渠道统计
 import UserList from '@/views/userList' // 员工管理
-import UserFq from '@/views/usersFq' // 分区设置
+// import UserFq from '@/views/usersFq' // 分区设置
+import PartitionManage from '@/views/partitionManage' // 大区管理
 
 Vue.use(Router)
 const router = new Router({
@@ -110,7 +111,8 @@ const router = new Router({
     }, {
       name: 'main.users_fq',
       path: 'users_fq',
-      component: UserFq
+      // component: UserFq
+      component: PartitionManage
     }, {
       name: 'main.custotaltoc',
       path: 'custotaltoc',
