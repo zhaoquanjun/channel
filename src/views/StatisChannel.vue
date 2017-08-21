@@ -1,0 +1,46 @@
+<template>
+<div>
+  <h3 class="vheader">财务数据分析</h3>
+  <el-tabs type="card" :value="curTab">
+    <el-tab-pane label="代理商充值统计" name="tab1" v-if="isAdmin">
+      <Tab1></Tab1>
+    </el-tab-pane>
+    <el-tab-pane label="总数据分析" name="tab2">
+      <Tab2></Tab2>
+    </el-tab-pane>
+    <el-tab-pane label="票据分析" name="tab3">
+      <Tab3></Tab3>
+    </el-tab-pane>
+    <el-tab-pane label="税期数据分析" name="tab4">
+      <Tab4></Tab4>
+    </el-tab-pane>
+  </el-tabs>
+</div>
+</template>
+<script>
+import StatisChannelTab1 from '@/views/components/StatisChannelTab1.vue'
+import StatisChannelTab2 from '@/views/components/StatisChannelTab2.vue'
+import StatisChannelTab3 from '@/views/components/StatisChannelTab3.vue'
+import StatisChannelTab4 from '@/views/components/StatisChannelTab4.vue'
+export default {
+  name: 'StatisChannel',
+  data: function () {
+    return {
+      isAdmin: this.$store.state.userInfo.RoleId === 1,
+      curTab: this.$store.state.userInfo.RoleId === 1 ? 'tab1' : 'tab2'
+    }
+  },
+  methods: {
+
+  },
+  components: {
+    Tab1: StatisChannelTab1,
+    Tab2: StatisChannelTab2,
+    Tab3: StatisChannelTab3,
+    Tab4: StatisChannelTab4
+  }
+}
+</script>
+<style>
+
+</style>

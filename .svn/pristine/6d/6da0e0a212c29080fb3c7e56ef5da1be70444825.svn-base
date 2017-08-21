@@ -1,0 +1,194 @@
+<template>
+<div>
+  <h3 class="vheader">代理审核</h3>
+  <div class="vsearch">
+    <el-form ref="searchParam" :inline="true" :model="searchParam" label-width="80px">
+      <el-form-item label="代理商">
+        <el-input placeholder="代理商名称" v-model="searchParam.channelname"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="fetchData">查询</el-button>
+      </el-form-item>
+    </el-form>
+  </div>
+  <el-table :data="tableData" border style="width: 100%">
+    <el-table-column prop="ProvinceName" label="省" width="80">
+    </el-table-column>
+    <el-table-column prop="CityName" label="市" width="110">
+    </el-table-column>
+    <el-table-column prop="ChannelName1" label="一级代理商" min-width="200">
+    </el-table-column>
+    <el-table-column prop="ChannelName2" label="二级代理商" min-width="200">
+    </el-table-column>
+    <el-table-column prop="Address" label="地址" min-width="200">
+    </el-table-column>
+    <el-table-column prop="Mobile" label="联系方式" min-width="130">
+    </el-table-column>
+    <el-table-column prop="Status" :formatter="StatusFormat" label="状态">
+    </el-table-column>
+    <el-table-column label="操作" width="180">
+      <template scope="scope">
+          <el-button @click="viewAgent(scope.row)" type="text" size="small">修改</el-button>
+          <el-button @click="deleteAgent(scope.row)" type="text" size="small">删除</el-button>
+          <el-button @click="passAgent(scope.row)" type="text" size="small">通过</el-button>
+          <el-button @click="refuseAgent(scope.row)" type="text" size="small">驳回</el-button>
+        </template>
+    </el-table-column>
+  </el-table>
+  <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 30]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
+    style="text-align:center; margin:20px;">
+  </el-pagination>
+</div>
+</template>
+
+<script>
+import {
+  agentAuth,
+  setIsFetation,
+  remove,
+  urlsignkey
+} from '../api/api'
+import Dialog from '../service/dialog.js'
+import AgentDialog from '@/views/components/AgentViewDialog.vue'
+import AgentPass from '../components/agentPass.vue'
+import Refuse from '../components/refuse.vue'
+import bus from '../bus'
+export default {
+  name: 'agentAuth',
+  data: function() {
+    return {
+      pagination: {
+        total: 0,
+        pageSize: 10,
+        currentPage: 1
+      },
+      tableData: [],
+      searchParam: {
+        channelname: ''
+      },
+      isFetation: false,
+      channelId: '',
+      signkey: {}
+    }
+  },
+  created() {
+    this.fetchData()
+    this.getsignkey()
+  },
+  methods: {
+    getsignkey() {
+      urlsignkey().then((res) => {
+        delete res.data.Filename
+        delete res.data.key
+        delete res.data.callback
+        delete res.data.expire
+        delete res.data.Host
+        this.signkey = res.data
+        // this.signkey.key = ''
+      })
+    },
+    fetchData() {
+      let limit = this.pagination.pageSize
+      let offset = (this.pagination.currentPage - 1) * limit
+      agentAuth({
+        limit: limit,
+        offset: offset,
+        channelname: this.searchParam.channelname
+      }).then((res) => {
+        this.tableData = res.data
+        this.pagination.total = res.Count
+      })
+    },
+    StatusFormat: function(row) {
+      var status = row.Status
+      switch (status) {
+        case 1:
+          status = '通过'
+          break
+        case 2:
+          status = '审核中'
+          break
+        default:
+          status = '拒审'
+      }
+      return status
+    },
+    viewAgent(agent) {
+      Dialog(AgentDialog, {
+        channelId: agent.ChannelId,
+        signKey: this.signkey
+      })
+      bus.$on('done', () => {
+        this.fetchData()
+      })
+    },
+    deleteAgent(row) {
+      this.$confirm('您确定要删除代理商?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        remove(row.ChannelId).then(res => {
+          if (res.status) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.fetchData()
+          }
+        })
+      }).catch(() => {})
+    },
+    dialog2Cacel: function() {
+      this.$refs.dialog2.close()
+    },
+    dialog2Save: function() {
+      var that = this
+      setIsFetation(this.channelId, {
+        IsFetation: this.isFetation
+      }).then((res) => {
+        if (res.status) {
+          that.$message.info('保存成功!')
+          that.$refs.dialog2.close()
+          that.fetchData()
+        } else {
+          that.$message.error(res.message)
+        }
+      })
+    },
+    passAgent(row) { // 通过
+      row.status = 1
+      delete row.cols
+      Dialog(AgentPass, {
+        row: row,
+        sign: 'AGENT'
+      })
+      bus.$on('done', () => {
+        this.fetchData()
+      })
+    },
+    refuseAgent(row) { // 驳回
+      // console.log(row.ChannelId)
+      Dialog(Refuse, {
+        row: row,
+        sign: 'REFUSEAGENT'
+      })
+      bus.$on('refuse-agent-success', () => {
+        this.fetchData()
+      })
+    },
+    handleSizeChange(val) {
+      this.pagination.pageSize = val
+      this.fetchData()
+    },
+    handleCurrentChange(val) {
+      this.pagination.currentPage = val
+      this.fetchData()
+    }
+  }
+}
+</script>
+
+<style scoped>
+
+</style>

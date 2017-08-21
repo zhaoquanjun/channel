@@ -1,0 +1,44 @@
+<template>
+<div>
+  <h3 class="vheader">转化率分析</h3>
+  <el-tabs type="card" value="tab1">
+    <el-tab-pane label="零申报转化为小规模" name="tab1">
+      <StatisConversionTab1></StatisConversionTab1>
+    </el-tab-pane>
+    <el-tab-pane label="零申报转化为一般纳税人" name="tab2">
+      <StatisConversionTab2></StatisConversionTab2>
+    </el-tab-pane>
+    <el-tab-pane label="小规模转化为一般纳税人" name="tab3">
+      <StatisConversionTab3></StatisConversionTab3>
+    </el-tab-pane>
+    <el-tab-pane label="预提单转化为正式订单" name="tab4">
+      <StatisConversionTab4></StatisConversionTab4>
+    </el-tab-pane>
+  </el-tabs>
+</div>
+</template>
+<script>
+import StatisConversionTab1 from '../views/components/StatisConversionTab1.vue'
+import StatisConversionTab2 from '../views/components/StatisConversionTab2.vue'
+import StatisConversionTab3 from '../views/components/StatisConversionTab3.vue'
+import StatisConversionTab4 from '../views/components/StatisConversionTab4.vue'
+
+export default {
+  name: 'StatisConversion',
+  data: function() {
+    return {}
+  },
+  methods: {
+
+  },
+  components: {
+    StatisConversionTab1,
+    StatisConversionTab2,
+    StatisConversionTab3,
+    StatisConversionTab4
+  }
+}
+</script>
+<style>
+
+</style>

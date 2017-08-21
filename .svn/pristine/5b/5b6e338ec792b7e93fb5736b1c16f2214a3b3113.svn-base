@@ -1,0 +1,144 @@
+<template>
+<el-dialog title="添加/修改代理商" :visible.sync="isShow">
+  <el-table :data="tableData" border style="width: 100%">
+    <el-table-column prop="PromotionName" label="活动类型">
+    </el-table-column>
+    <el-table-column prop="Num" label="数量">
+    </el-table-column>
+    <el-table-column prop="StartDate" :formatter="dateFormater" label="开始日期">
+    </el-table-column>
+    <el-table-column prop="EndDate" :formatter="dateFormater" label="结束日期">
+    </el-table-column>
+    <el-table-column label="操作">
+      <template scope="promotions">
+          <el-button @click="promotionDelete(promotions.row)" type="text" size="small">删除</el-button>
+        </template>
+    </el-table-column>
+  </el-table>
+  <el-form :inline="true" ref="promotionForm" :model="addPromotion" class="promotion-form" style="margin:20px 0" :rules="rules">
+    <el-form-item label="礼包类型">
+      <el-select v-model="addPromotion.PromotionId">
+        <el-option v-for="item in promotionTypes" :key="item.Id" :label="item.Name" :value="item.Id"></el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="数量" required>
+      <el-input v-model="addPromotion.Num"></el-input>
+    </el-form-item>
+    <el-form-item label="开始日期" required>
+      <el-date-picker v-model="addPromotion.StartDate" type="date" placeholder="开始日期">
+      </el-date-picker>
+    </el-form-item>
+    <el-form-item label="结束日期" required>
+      <el-date-picker v-model="addPromotion.EndDate" type="date" placeholder="结束日期">
+      </el-date-picker>
+    </el-form-item>
+    <el-form-item style="width:60px;">
+      <el-button type="primary" @click="onSubmit">添加</el-button>
+    </el-form-item>
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="dialogCacel">取 消</el-button>
+  </div>
+</el-dialog>
+</template>
+<script>
+import {
+  getPromotion,
+  getPromotionConfig,
+  deletePromotionConfig,
+  addPromotionConfig
+} from '@/api/api'
+export default {
+  name: 'PromotionSetting',
+  props: ['channelId'],
+  data() {
+    return {
+      promotionTypes: [],
+      isShow: true,
+      addPromotion: {
+        PromotionId: 1,
+        StartDate: '',
+        EndDate: ''
+      },
+      tableData: [],
+      rules: {
+        rnumber: [{
+          required: true,
+          trigger: 'blur'
+        }, {
+          type: 'number',
+          message: '年龄必须为数字值',
+          trigger: 'blur'
+        }]
+      }
+    }
+  },
+  created() {
+    this.getPromotionTypes()
+    this.fetchData()
+  },
+  watch: {
+    channelId() {
+      this.addPromotion = {
+        PromotionId: 1,
+        StartDate: '',
+        EndDate: ''
+      }
+      this.fetchData()
+    }
+  },
+  methods: {
+    getPromotionTypes() {
+      getPromotion().then((res) => {
+        this.promotionTypes = res.data
+      })
+    },
+    fetchData() {
+      getPromotionConfig({
+        ChannelId: this.channelId
+      }).then((res) => {
+        this.tableData = res.data
+      })
+    },
+    onSubmit() {
+      this.addPromotion.ChannelId = this.channelId
+      addPromotionConfig(this.addPromotion).then(res => {
+        this.addPromotion = {
+          PromotionId: 1
+        }
+        this.fetchData()
+      })
+    },
+    promotionDelete(row) {
+      this.$confirm('您确定要删除该礼包?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deletePromotionConfig(row.Id).then(res => {
+          if (res.status) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.fetchData()
+          }
+        })
+      })
+    },
+    dateFormater(row, column) {
+      return row[column.property].substr(0, 10)
+    },
+    dialogCacel: function() {
+      this.isShow = false
+    }
+  }
+}
+</script>
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style>
+.promotion-form.el-form--inline .el-form-item__content,
+.promotion-form .el-date-editor.el-input {
+  width: 115px;
+}
+</style>

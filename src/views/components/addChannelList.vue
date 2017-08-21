@@ -1,0 +1,79 @@
+<template>
+<el-dialog title="添加渠道" :visible.sync="dialogTableVisible">
+  <el-form :inline="true" label-width="150px">
+    <el-form-item label="代理商名称">
+      <el-input v-model="searchName" auto-complete="off"></el-input>
+    </el-form-item>
+    <el-button type="primary" @click="search">搜索</el-button>
+  </el-form>
+  <el-table height="250" ref="multipleTable" :data="channelList" border tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+    <el-table-column type="selection" width="55"></el-table-column>
+    <el-table-column prop="ChannelName1" label="渠道名称(一级)"></el-table-column>
+    <el-table-column prop="ChannelName2" label="渠道名称(二级)"></el-table-column>
+  </el-table>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="dialogTableVisible = false">关 闭</el-button>
+    <el-button type="primary" @click="submitForm">保 存</el-button>
+  </div>
+</el-dialog>
+</template>
+
+<script>
+import {
+  channelAgents,
+  newChannel
+} from '../../api/api'
+import bus from '../../bus.js'
+export default {
+  props: ['fqId'],
+  data() {
+    return {
+      searchName: '',
+      dialogTableVisible: true,
+      multipleSelection: [],
+      params: [],
+      allData: [],
+      channelList: [] // 获取渠道list
+    }
+  },
+  created() {
+    this.getAgents()
+  },
+  methods: {
+    getAgents() {
+      let limit = 1000
+      let offset = 0
+      channelAgents({
+        limit: limit,
+        offset: offset
+      }).then((res) => {
+        this.allData = res.data
+        this.channelList = res.data
+      })
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+    },
+    submitForm(formName) {
+      for (let i in this.multipleSelection) {
+        this.params.push(this.multipleSelection[i].ChannelId)
+      }
+      // console.log(this.params)
+      newChannel(this.fqId, this.params).then(res => {
+        if (res.status) {
+          bus.$emit('add-channel')
+        }
+      })
+      this.dialogTableVisible = false
+    },
+    search() {
+      this.channelList = window._.filter(this.allData, item => {
+        return item.ChannelName1.indexOf(this.searchName) > -1 || item.ChannelName2.indexOf(this.searchName) > -1
+      })
+    }
+  }
+}
+</script>
+
+<style scoped>
+</style>

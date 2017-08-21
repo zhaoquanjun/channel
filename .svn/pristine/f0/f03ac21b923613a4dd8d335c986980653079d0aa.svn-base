@@ -1,0 +1,95 @@
+<template>
+<div>
+  <h2 class="text-center">充值明细表</h2>
+  <FinanceSearch></FinanceSearch>
+  <el-table :data="tableData" border style="width: 100%">
+    <el-table-column prop="ChannelName1" label="一级代理" min-width="200">
+    </el-table-column>
+    <el-table-column prop="ChannelName2" label="二级代理" min-width="200">
+    </el-table-column>
+    <el-table-column prop="BillTime" label="账单日期" width="130">
+    </el-table-column>
+    <el-table-column prop="Type" label="充值类型" :formatter="TypeFormat" width="130">
+    </el-table-column>
+    <el-table-column prop="Amount" label="充值金额" width="130">
+    </el-table-column>
+    <el-table-column prop="Status" label="审核状态" :formatter="StatusFormat" width="100">
+    </el-table-column>
+  </el-table>
+  <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 30]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
+    style="text-align:center; margin:20px;">
+  </el-pagination>
+</div>
+</template>
+
+<script>
+import FinanceSearch from '@/components/financeSearch'
+export default {
+  data: function() {
+    return {
+      pagination: {
+        total: 0,
+        pageSize: 10,
+        currentPage: 1
+      },
+      tableData: [{
+        ChannelName1: 'xian1',
+        ChannelName2: 'xian2',
+        BillTime: '2017-07-19',
+        Type: 2,
+        Amount: '5000',
+        Status: 2
+      }]
+    }
+  },
+  components: {
+    FinanceSearch
+  },
+  methods: {
+    TypeFormat: function(row) {
+      var type = row.Type
+      switch (type) {
+        case 1:
+          type = '未审核'
+          break
+        case 2:
+          type = '通过'
+          break
+        case 3:
+          type = '拒审'
+          break
+      }
+      return type
+    },
+    StatusFormat: function(row) {
+      var status = row.Status
+      switch (status) {
+        case 1:
+          status = '正常充值'
+          break
+        case 2:
+          status = '退单回充'
+          break
+        case 3:
+          status = '返点'
+          break
+        case 4:
+          status = '一代提成'
+          break
+      }
+      return status
+    },
+    handleSizeChange(val) {
+      this.pagination.pageSize = val
+      this.fetchData()
+    },
+    handleCurrentChange(val) {
+      this.pagination.currentPage = val
+      this.fetchData()
+    }
+  }
+}
+</script>
+
+<style scoped>
+</style>

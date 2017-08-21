@@ -1,0 +1,114 @@
+<template>
+<div>
+  <h2 class="text-center">税期数据分析</h2>
+  <SearchParams :show="true" @search="onSearch" :reduce-search-item="true"></SearchParams>
+  <el-table :data="tableData" border style="width: 100%">
+    <el-table-column prop="PartitionName" label="大区">
+    </el-table-column>
+    <el-table-column prop="CityName" label="城市">
+    </el-table-column>
+    <el-table-column prop="ChannelName" label="代理商" width="200">
+    </el-table-column>
+    <el-table-column prop="LateMakeNum" label="补账">
+    </el-table-column>
+    <el-table-column prop="RingMakeNum" label="当前帐期" width="100">
+    </el-table-column>
+    <el-table-column label="传票客户" header-align="center">
+      <el-table-column prop="NoUpload" label="未传票">
+      </el-table-column>
+      <el-table-column prop="NoUploadConfirm" label="传票未完成" width="110">
+      </el-table-column>
+      <el-table-column prop="UploadComplete" label="传票完成" width="100">
+      </el-table-column>
+    </el-table-column>
+    <el-table-column prop="ConfirmZero" label="零票">
+    </el-table-column>
+    <el-table-column prop="UploadRate" label="传票完成率" width="110">
+    </el-table-column>
+    <el-table-column prop="DataConfirmNum" label="数据确认数" width="110">
+    </el-table-column>
+    <el-table-column prop="DataConfirmRate" label="数据确认率" width="110">
+    </el-table-column>
+    <el-table-column prop="NoMakeNum24" label="24h未出账客户" width="140">
+    </el-table-column>
+    <el-table-column prop="Upload2" label="二次传票客户" width="130">
+    </el-table-column>
+    <el-table-column prop="Upload3" label="三次传票客户" width="130">
+    </el-table-column>
+    <el-table-column prop="ClosingNum" label="结账客户" width="100">
+    </el-table-column>
+    <el-table-column prop="Reclosing" label="反结账客户数" width="130">
+    </el-table-column>
+    <el-table-column prop="Recall2" label="重新回溯" width="100">
+    </el-table-column>
+    <el-table-column label="录票数据" header-align="center">
+      <el-table-column prop="ReceiptInput" label="录票客户" width="100">
+      </el-table-column>
+      <el-table-column prop="InputReceiptNum" label="票据录入张数" width="130">
+      </el-table-column>
+      <el-table-column prop="UploadNoInput" label="已传票未录入" width="130">
+      </el-table-column>
+    </el-table-column>
+    <el-table-column prop="InputRate" label="录入完成率" width="110">
+    </el-table-column>
+    <el-table-column label="审票数据" header-align="center">
+      <el-table-column prop="AuditNum" label="录入完成审核" width="130">
+      </el-table-column>
+      <el-table-column prop="InputNoAudit" label="录入未审核" width="110">
+      </el-table-column>
+      <el-table-column prop="AuditRate" label="录入审核率" width="110">
+      </el-table-column>
+    </el-table-column>
+  </el-table>
+  <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 30]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
+    style="text-align:center; margin:20px;">
+  </el-pagination>
+</div>
+</template>
+
+<script>
+import SearchParams from '@/components/searchParams.vue'
+import {
+  getAgenttaxday
+}
+from '../../api/api'
+
+export default {
+  name: 'StatisChannelTab4',
+  data: function () {
+    return {
+      tableData: [],
+      pagination: {
+        total: 0,
+        pageSize: 10,
+        currentPage: 1
+      },
+      params: {}
+    }
+  },
+  methods: {
+    onSearch(params) {
+      this.params = params
+      let limit = this.pagination.pageSize
+      let offset = (this.pagination.currentPage - 1) * limit
+      this.params.limit = limit
+      this.params.offset = offset
+      getAgenttaxday(this.params).then(res => {
+        this.pagination.total = res.Count
+        this.tableData = res.data
+      })
+    },
+    handleSizeChange(val) {
+      this.pagination.pageSize = val
+      this.onSearch(this.params)
+    },
+    handleCurrentChange(val) {
+      this.pagination.currentPage = val
+      this.onSearch(this.params)
+    }
+  },
+  components: {
+    SearchParams
+  }
+}
+</script>

@@ -1,0 +1,39 @@
+<template>
+<div>
+  <h3 class="vheader">订单占比分析</h3>
+  <el-tabs type="card" value="tab1">
+    <el-tab-pane label="零申报订单占比" name="tab1">
+      <StatisProportionTab1></StatisProportionTab1>
+    </el-tab-pane>
+    <el-tab-pane label="预提单与正式订单占比" name="tab3">
+      <StatisProportionTab3></StatisProportionTab3>
+    </el-tab-pane>
+    <el-tab-pane label="续费订单占比" name="tab2">
+      <StatisProportionTab2></StatisProportionTab2>
+    </el-tab-pane>
+  </el-tabs>
+</div>
+</template>
+<script>
+import StatisProportionTab1 from '@/views/components/StatisProportionTab1.vue'
+import StatisProportionTab2 from '@/views/components/StatisProportionTab2.vue'
+import StatisProportionTab3 from '@/views/components/StatisProportionTab3.vue'
+
+export default {
+  name: 'StatisProportion',
+  data: function () {
+    return {}
+  },
+  methods: {
+
+  },
+  components: {
+    StatisProportionTab1,
+    StatisProportionTab2,
+    StatisProportionTab3
+  }
+}
+</script>
+<style>
+
+</style>

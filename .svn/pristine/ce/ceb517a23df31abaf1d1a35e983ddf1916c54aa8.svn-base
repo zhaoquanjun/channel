@@ -1,0 +1,90 @@
+<template>
+<div>
+  <el-dialog title="开具发票" :visible.sync="dialogFormVisible" size="tiny">
+    <el-form :model="ruleForm" :rules="rules" class="demo-ruleForm" ref="ruleForm" label-width="80px" :label-position="labelPosition">
+      <el-form-item label="税号" prop="InvoiceNumber">
+        <el-input v-model="ruleForm.InvoiceNumber"></el-input>
+      </el-form-item>
+      <el-form-item label="开票人" prop="InvoiceBy">
+        <el-input v-model="ruleForm.InvoiceBy"></el-input>
+      </el-form-item>
+      <el-form-item label="开票日期" required>
+        <el-date-picker v-model="ruleForm.InvoiceDate" type="date" placeholder="请选择日期"></el-date-picker>
+      </el-form-item>
+      <el-form-item label="审核意见">
+        <el-input v-model="ruleForm.AuditMsg"></el-input>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="dialogFormVisible = false">关 闭</el-button>
+      <el-button type="primary" @click="submitForm('ruleForm')">保 存</el-button>
+    </div>
+  </el-dialog>
+</div>
+</template>
+
+<script>
+import {
+  operateInvoice
+} from '../api/api'
+import bus from '../bus'
+export default {
+  props: ['Id'],
+  data() {
+    return {
+      labelPosition: 'left',
+      dialogFormVisible: true,
+      ruleForm: {
+        InvoiceNumber: '',
+        InvoiceBy: '',
+        InvoiceDate: '',
+        AuditMsg: '',
+        Pass: true
+      },
+      rules: {
+        InvoiceNumber: [{
+          required: true,
+          message: '请填写税号',
+          trigger: 'blur'
+        }],
+        InvoiceBy: [{
+          required: true,
+          message: '请填写开票人',
+          trigger: 'blur'
+        }]
+      }
+    }
+  },
+  methods: {
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          console.log(typeof (this.ruleForm.InvoiceDate))
+          if (!this.ruleForm.InvoiceDate) {
+            this.$message({
+              message: '请选择开票日期',
+              type: 'warning'
+            })
+          } else {
+            operateInvoice(this.Id, this.ruleForm).then(res => {
+              if (res.status) {
+                bus.$emit('change-status')
+              }
+            })
+            this.dialogFormVisible = false
+          }
+        } else {
+          return false
+        }
+      })
+    }
+  }
+}
+</script>
+
+<style scoped>
+.invoiceText {
+  padding-left: 40px;
+  text-align: left;
+}
+</style>

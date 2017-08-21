@@ -1,0 +1,95 @@
+<template>
+<div>
+  <el-dialog title="发票详情" :visible.sync="dialogTableVisible" size="small">
+    <div class="clearfix" :view="view">
+      <div class="clearfix">
+        <div class="item item-width">发票抬头：{{view.Title}}</div>
+        <div class="item">发票性质：{{view.Property | PropertyFormat}}</div>
+        <div class="item">发票类型：{{view.Category | CategoryFormat}}</div>
+        <div class="item">发票项目：{{view.Project}}</div>
+        <div class="item">税号：{{view.InvoiceNumber}}</div>
+        <div class="item">发票金额：{{view.Amount}}</div>
+        <div class="item">申请类型：{{view.ApplyType}}</div>
+        <div v-if="view.Category == 1" class="item item-width">开户银行：{{view.DepositBank}}</div>
+        <div v-if="view.Category == 1" class="item item-width">对公账户：{{view.BankNo}}</div>
+        <div class="item item-width">公司名称：{{view.ReceiveAddress.Name}}</div>
+        <div class="item item-width">发票地址：{{view.ReceiveAddress.Address}}</div>
+        <div class="item">联系电话：{{view.ReceiveAddress.Mobile}}</div>
+      </div>
+      <div class="address">
+        <span v-if="view.Status == 2">审核意见：{{view.InvoiceAudit.AuditMsg ? view.InvoiceAudit.AuditMsg : '无'}}</span>
+        <span v-if="view.Status == 3">驳回原因：{{view.InvoiceAudit.AuditMsg ? view.InvoiceAudit.AuditMsg : '无'}}</span>
+        <span v-if="view.Status != 2 && view.Status != 3">审核意见：无</span>
+      </div>
+    </div>
+  </el-dialog>
+</div>
+</template>
+
+<script>
+import { invoiceType } from '../api/api'
+export default {
+  props: {
+    view: {
+      type: Object,
+      default: null
+    }
+  },
+  data() {
+    return {
+      dialogTableVisible: true,
+      types: []
+    }
+  },
+  created() {
+    invoiceType().then((res) => {
+      window._.each(res.data, (item) => {
+        if (item.Key === this.view.ApplyType) {
+          this.view.ApplyType = item.Value
+        }
+      })
+    })
+  },
+  filters: {
+    PropertyFormat(val) {
+      switch (val) {
+        case 1:
+          val = '公司'
+          break
+        case 2:
+          val = '个人'
+          break
+      }
+      return val
+    },
+    CategoryFormat(val) {
+      switch (val) {
+        case 1:
+          val = '专票'
+          break
+        case 2:
+          val = '普票'
+          break
+      }
+      return val
+    }
+  }
+}
+</script>
+
+<style scoped>
+.clearfix .item-width {
+  width: 100%;
+  height: 100%;
+}
+.item {
+  float: left;
+  height: 30px;
+  line-height: 30px;
+  width: 50%;
+}
+.address {
+  height: 30px;
+  line-height: 30px;
+}
+</style>

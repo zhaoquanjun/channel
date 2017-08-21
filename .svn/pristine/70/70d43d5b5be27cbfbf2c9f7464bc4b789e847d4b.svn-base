@@ -1,0 +1,127 @@
+<template>
+<div>
+  <h2 class="text-center">充值明细表</h2>
+  <FinanceSearch :length="tableData.length" @search="onSearch" @download="onDownload"></FinanceSearch>
+  <el-table :data="tableData" border style="width: 100%">
+    <el-table-column prop="ChannelName1" label="一级代理" min-width="200">
+    </el-table-column>
+    <el-table-column prop="ChannelName2" label="二级代理" min-width="200">
+    </el-table-column>
+    <el-table-column prop="BillTime" label="账单日期" width="130">
+    </el-table-column>
+    <el-table-column prop="Type" label="充值类型" :formatter="TypeFormat" width="130">
+    </el-table-column>
+    <el-table-column prop="Amount" label="充值金额" width="130">
+    </el-table-column>
+    <el-table-column prop="Status" label="审核状态" :formatter="StatusFormat" width="100">
+    </el-table-column>
+  </el-table>
+  <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 30]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
+    style="text-align:center; margin:20px;">
+  </el-pagination>
+</div>
+</template>
+
+<script>
+import FinanceSearch from '@/components/financeSearch'
+export default {
+  data: function() {
+    return {
+      pagination: {
+        total: 0,
+        pageSize: 10,
+        currentPage: 1
+      },
+      tableData: [{
+        ChannelName1: 'xian1',
+        ChannelName2: 'xian2',
+        BillTime: '2017-07-19',
+        Type: 2,
+        Amount: '5000',
+        Status: 2
+      }],
+      params: {}
+    }
+  },
+  components: {
+    FinanceSearch
+  },
+  methods: {
+    onSearch(params) {
+      // params.type = this.TypeFormat(params.type)
+      // params.status = this.StatusFormat(params.status)
+      // console.log(params, 'params')
+      this.params = params
+      let limit = this.pagination.pageSize
+      let offset = (this.pagination.currentPage - 1) * limit
+      this.params.limit = limit
+      this.params.offset = offset
+      console.log(this.params, 'this.params')
+      // getPrepaynote(this.params).then(res => {
+      //   this.pagination.total = res.Count
+      //   this.tableData = res.data.DataInfo
+      //   this.total = res.data.Total[0]
+      // })
+    },
+    onDownload(params) {
+      // params.type = this.TypeFormat(params.type)
+      // params.status = this.StatusFormat(params.status)
+      const {
+        starttime,
+        endtime,
+        channelname,
+        type,
+        status
+      } = params
+      console.log(type, status, 'onDownload')
+      const url = `/api/download/prepaynote?starttime=${starttime || ''}&endtime=${endtime || ''}&channelname=${channelname || ''}&type=${type || ''}&status=${status || ''}`
+      console.log(url)
+      // window.open(url)
+    },
+    TypeFormat: function(row) {
+      var type = row.Type ? row.Type : row
+      switch (type) {
+        case 1:
+          type = '未审核'
+          break
+        case 2:
+          type = '通过'
+          break
+        case 3:
+          type = '拒审'
+          break
+      }
+      return type
+    },
+    StatusFormat: function(row) {
+      var status = row.Status ? row.Status : row
+      switch (status) {
+        case 1:
+          status = '正常充值'
+          break
+        case 2:
+          status = '退单回充'
+          break
+        case 3:
+          status = '返点'
+          break
+        case 4:
+          status = '一代提成'
+          break
+      }
+      return status
+    },
+    handleSizeChange(val) {
+      this.pagination.pageSize = val
+      this.onSearch()
+    },
+    handleCurrentChange(val) {
+      this.pagination.currentPage = val
+      this.onSearch()
+    }
+  }
+}
+</script>
+
+<style scoped>
+</style>

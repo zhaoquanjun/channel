@@ -1,0 +1,130 @@
+<template>
+<div>
+  <h3 class="vheader">签单类型统计</h3>
+  <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload"></SearchParams>
+  <el-table id="dataTable" :data="tableData" border style="width: 100%" :summary-method="getSummaries" show-summary :max-height="tableHeight" v-table-sum>
+    <el-table-column prop="PartitionName" label="大区">
+    </el-table-column>
+    <el-table-column prop="ProvinceName" label="省份">
+    </el-table-column>
+    <el-table-column prop="CityName" label="市" width="80">
+    </el-table-column>
+    <el-table-column prop="ChannelName1" label="一级代理商">
+    </el-table-column>
+    <el-table-column prop="ChannelName2" label="二级代理商">
+    </el-table-column>
+    <el-table-column v-for="p in priceNames" :key="p" :prop="p" :label="p">
+    </el-table-column>
+  </el-table>
+</div>
+</template>
+<script>
+import SearchParams from '@/components/searchParams.vue'
+import {
+  getPrices,
+  getAgentsOrderType
+} from '../api/api'
+import ExcelDown from '../service/excelDown'
+
+export default {
+  name: 'statisA',
+  data: function () {
+    return {
+      tableData: [],
+      totalData: {},
+      params: {
+        startdate: '',
+        enddate: ''
+      },
+      cities: '',
+      tableHeight: 300,
+      priceNames: []
+    }
+  },
+  created() {
+    getPrices({
+      cityCode: ''
+    }).then(res => {
+      let _ = window._
+      this.priceNames = _.keys(_.groupBy(res.data, 'PriceName'))
+      this.fetchData()
+    })
+  },
+  mounted() {
+    this.tableHeight = document.querySelector('.content-right').offsetHeight - 105
+  },
+  methods: {
+    fetchData() {
+      let _ = window._
+      getAgentsOrderType(this.params).then((res) => {
+        let rows = _.groupBy(res.data, function (item) {
+          return item.ChannelId + ',' + item.ChannelId1 || ''
+        })
+        var data = []
+        _.each(rows, (arr, key) => {
+          var temp = arr[0]
+          _.each(this.priceNames, pn => {
+            var t = _.find(arr, {
+              PriceName: pn
+            })
+            if (t) {
+              temp[pn] = t.OrderNum
+            } else {
+              temp[pn] = 0
+            }
+          })
+          data.push(temp)
+        })
+        this.tableData = data
+      })
+    },
+    onSearch(params) {
+      if (params) {
+        params.startdate = params.starttime
+        params.enddate = params.endtime
+        delete params.starttime
+        delete params.endtime
+      }
+      this.params = params || this.params
+      this.fetchData()
+    },
+    onDownload() {
+      var exportHref = ExcelDown().tableToExcel('dataTable', 'sheet name')
+      setTimeout(function() { location.href = exportHref }, 100) // trigger download
+    },
+    getSummaries(param) {
+      const {
+        columns,
+        data
+      } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '合计'
+          return
+        }
+        const values = data.map(item => Number(item[column.property]))
+        if (index > 4) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr)
+            if (!isNaN(value)) {
+              return prev + curr
+            } else {
+              return prev
+            }
+          }, 0)
+        } else {
+          sums[index] = '-'
+        }
+      })
+
+      return sums
+    }
+  },
+  components: {
+    SearchParams
+  }
+}
+</script>
+<style scoped>
+</style>

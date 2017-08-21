@@ -1,0 +1,236 @@
+<template>
+<div>
+  <h3 class="vheader">渠道返点</h3>
+  <div class="vsearch">
+    <el-form ref="params" :inline="true" :model="params">
+      <el-form-item label="代理商">
+        <el-input placeholder="代理商名称" v-model="params.channelname"></el-input>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="fetchData">查询</el-button>
+      </el-form-item>
+    </el-form>
+  </div>
+  <el-table :data="tableData" border style="width: 100%">
+    <el-table-column type="index" label="序号" width="60">
+    </el-table-column>
+    <el-table-column prop="ProvinceName" label="省">
+    </el-table-column>
+    <el-table-column prop="CityName" label="市">
+    </el-table-column>
+    <el-table-column prop="ChannelName1" label="一级代理" width="120">
+    </el-table-column>
+    <el-table-column prop="ChannelName2" label="二级代理" width="120">
+    </el-table-column>
+    <el-table-column prop="Address" label="地址">
+    </el-table-column>
+    <!-- <el-table-column prop="Tel,Mobile" label="联系方式">
+      </el-table-column> -->
+    <el-table-column prop="Tel" label="联系方式">
+    </el-table-column>
+    <el-table-column prop="Status" :formatter="StatusFormat" label="状态">
+    </el-table-column>
+    <el-table-column label="操作" width="200">
+      <template scope="scope">
+          <el-button @click="setTask(scope.row)" type="text" size="small">设置任务</el-button>
+          <el-button @click="fandian(scope.row)" type="text" size="small">返点</el-button>
+        </template>
+    </el-table-column>
+  </el-table>
+  <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 30]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
+    style="text-align:center; margin:20px;">
+  </el-pagination>
+</div>
+</template>
+
+<script>
+import {
+  getAgents,
+  agents,
+  setTask,
+  fdSalestask,
+  fdRewardnotes
+} from '../api/api'
+import Dialog from '../service/dialog.js'
+import SetTask from './components/setTaskChannel.vue'
+import fdChild from './components/fdChild.vue'
+import bus from '../bus'
+export default {
+  data() {
+    return {
+      pagination: {
+        total: 0,
+        pageSize: 10,
+        currentPage: 1
+      },
+      tableData: [],
+      agents: [],
+      salestask: null, // 存储已经设置任务的返回值
+      params: {
+        channelname: ''
+      },
+      // save: '',
+      tasks: null,
+      id: '', // 储存channelId
+      data: '' // 当设置任务没有数据的时候显示月份 任务为0
+    }
+  },
+  created() {
+    this.fetchData()
+    this.getAgents()
+    // this.$on('change', this.fdR())
+  },
+  methods: {
+    fetchData() {
+      let limit = this.pagination.pageSize
+      let offset = (this.pagination.currentPage - 1) * limit
+      let channelname = this.params.channelname
+      getAgents({
+        limit: limit,
+        offset: offset,
+        channelname: channelname
+      }).then((res) => {
+        this.tableData = res.data
+        this.pagination.total = res.Count
+      })
+    },
+    getAgents() {
+      agents().then((res) => {
+        this.agents = res.data
+      })
+    },
+    StatusFormat: function(row) {
+      var status = row.Status
+      switch (status) {
+        case 1:
+          status = '通过'
+          break
+        case 2:
+          status = '审核中'
+          break
+        default:
+          status = '拒审'
+      }
+      return status
+    },
+    setTask(row) {
+      var year = new Date().getFullYear()
+      this.data = []
+      for (var i = 1; i < 13; i++) {
+        this.data.push({
+          Id: i,
+          ChannelId: row.ChannelId,
+          TaskMonth: [year, i, '1'].join('-'),
+          TaskNumMonth: 0
+        })
+      }
+      var item = {
+        channelId: row.ChannelId,
+        currYear: year
+      }
+      setTask(item).then((res) => {
+        if (res.data.length > 0) {
+          window._.each(res.data, (item) => {
+            console.log(item.TaskMonth, 'TaskMonth')
+            item.Name = (+item.TaskMonth.split('-')[1]) + '月'
+          })
+          this.salestask = res.data
+        } else {
+          window._.each(this.data, (item) => {
+            item.Name = item.Id + '月'
+          })
+          this.salestask = this.data
+        }
+        Dialog(SetTask, {
+          year: year,
+          salestasks: this.salestask
+        })
+      })
+    },
+    fandian(row) {
+      this.id = this.id ? this.id : row.ChannelId
+      // 点击两次数据请求 ==> 两次数据请求结果合并成一个新表 然后传递给弹出层
+      var year = new Date()
+      var currYear = year.getFullYear()
+      var item = {
+        channelId: row.ChannelId,
+        currYear: currYear
+      }
+      fdSalestask(item).then(res => {
+        // console.log(res)
+        // if (res.data.length > 0) {
+        //   this.save = true
+        // } else {
+        //   return
+        // }
+        window._.each(res.data, function(item) {
+          item.Name = (+item.TaskMonth.split('-')[1]) + '月'
+          if (parseInt(item.TaskMonth.split('-')[1]) > year.getMonth() + 1) {
+            item.access = false
+          } else {
+            item.access = true
+          }
+        })
+        this.tasks = res.data
+        this.fdR()
+        Dialog(fdChild, {
+          year: currYear,
+          tasks: this.tasks
+        })
+        bus.$on('fd-success', () => {
+          this.fandian()
+        })
+      })
+    },
+    fdR() { // 返点保存及弹框数据获取列表1
+      var year = new Date()
+      var currYear = year.getFullYear()
+      var item = {
+        channelId: this.id,
+        currYear: currYear
+      }
+      fdRewardnotes(item).then(res => {
+        var curTasks = this.tasks
+        // console.log(this.tasks)
+        window._.each(res.data, function(item) {
+          // console.log(curTasks)
+          var fd = window._.find(curTasks, {
+            TaskMonth: item.YearMonth
+          })
+          if (fd) {
+            var month = +fd.TaskMonth.split('-')[1]
+            if (month % 3 > 0) {
+              fd.CompleteNum = item.MonthCompleteNum
+              fd.GoalRate = item.MonthGoalRate
+              fd.RewardsMoney = item.RewardsMoney
+              fd.RebatesRatio = item.MonthRebatesRatio
+              fd.fdStatus = item.Status
+            } else {
+              fd.CompleteNum = item.QuarterCompleteNum
+              fd.GoalRate = item.QuarterGoalRate
+              fd.RewardsMoney = item.RewardsMoney
+              fd.RebatesRatio = item.QuarterRebatesRatio
+              fd.fdStatus = item.Status
+            }
+            fd.access = false
+            fd.fd = item // fd是最终合并成功的表 并把值赋值给curTasks
+          }
+        })
+        this.tasks = curTasks
+      })
+    },
+    handleSizeChange(val) {
+      this.pagination.pageSize = val
+      this.fetchData()
+    },
+    handleCurrentChange(val) {
+      this.pagination.currentPage = val
+      this.fetchData()
+    }
+  }
+}
+</script>
+
+<style scoped>
+</style>

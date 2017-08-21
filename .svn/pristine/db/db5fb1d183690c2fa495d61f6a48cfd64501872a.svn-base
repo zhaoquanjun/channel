@@ -1,0 +1,135 @@
+<template>
+<div>
+  <h2 class="text-center">返点明细表</h2>
+  <div class="vsearch">
+    <el-form ref="params" :inline="true" :model="params">
+      <el-form-item label="年">
+        <el-select v-model="params.year" placeholder="请选择" clearable>
+          <el-option v-for="item in years" :key="item" :label="item" :value="item">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="月">
+        <el-select v-model="params.months" multiple placeholder="全部">
+          <el-option v-for="item in months" :key="item" :label="item" :value="item">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="代理商">
+        <el-autocomplete class="inline-input" v-model="params.channelname" :trigger-on-focus="false" :fetch-suggestions="querySearch"></el-autocomplete>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="onSearch">查询</el-button>
+        <el-button type="primary" @click="onDownload" :disabled="!tableData.length">导出</el-button>
+      </el-form-item>
+    </el-form>
+  </div>
+  <el-table :data="tableData" border style="width: 100%">
+    <el-table-column prop="BackMonth" label="返点月份" width="130"></el-table-column>
+    <el-table-column prop="ChannelName1" label="一级代理" min-width="200"></el-table-column>
+    <el-table-column prop="ChannelName2" label="二级代理" min-width="200"></el-table-column>
+    <el-table-column prop="BackAmount" label="返点金额" width="200"></el-table-column>
+  </el-table>
+  <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 30]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
+    style="text-align:center; margin:20px;">
+  </el-pagination>
+</div>
+</template>
+
+<script>
+import {
+  agents
+} from '../../api/api'
+export default {
+  data: function() {
+    return {
+      pagination: {
+        total: 0,
+        pageSize: 10,
+        currentPage: 1
+      },
+      tableData: [{
+        BackMonth: '5',
+        ChannelName1: 'xian1',
+        ChannelName2: 'xian2',
+        BackAmount: '9000'
+      }],
+      params: {
+        year: 2017,
+        months: '',
+        channelname: ''
+      },
+      years: [2017, 2016],
+      months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+      agents: []
+    }
+  },
+  created() {
+    this.Agents()
+  },
+  methods: {
+    onSearch() {
+      var months = this.params.months
+      months = months.map(str => {
+        return parseInt(str) < 10 ? ('0' + parseInt(str)) : parseInt(str)
+      })
+      this.params.months = months.join(',')
+      let limit = this.pagination.pageSize
+      let offset = (this.pagination.currentPage - 1) * limit
+      this.params.limit = limit
+      this.params.offset = offset
+      console.log(this.params, 'this.params')
+      // getPrepaynote(this.params).then(res => {
+      //   this.pagination.total = res.Count
+      //   this.tableData = res.data.DataInfo
+      //   this.total = res.data.Total[0]
+      // })
+    },
+    onDownload() {
+      var paramsmonths = this.params.months
+      paramsmonths = paramsmonths.map(str => {
+        return parseInt(str) < 10 ? ('0' + parseInt(str)) : parseInt(str)
+      })
+      this.params.months = paramsmonths.join(',')
+      const {
+        year,
+        months,
+        channelname
+      } = this.params
+      const url = `/api/download/prepaynote?year=${year || ''}&months=${months || ''}&channelname=${channelname || ''}`
+      console.log(url)
+      // window.open(url)
+    },
+    Agents() {
+      agents().then((res) => {
+        this.agents = res.data
+        for (let i in this.agents) {
+          this.agents[i].value = this.agents[i].ChannelName
+        }
+        // console.log(this.agents)
+      })
+    },
+    querySearch(queryString, cb) {
+      var channels = this.agents
+      var results = queryString ? channels.filter(this.createFilter(queryString)) : channels
+      cb(results)
+    },
+    createFilter(queryString) {
+      return (channel) => {
+        return (channel.value.indexOf(queryString) >= 0)
+      }
+    },
+    handleSizeChange(val) {
+      this.pagination.pageSize = val
+      this.onSearch()
+    },
+    handleCurrentChange(val) {
+      this.pagination.currentPage = val
+      this.onSearch()
+    }
+  }
+}
+</script>
+
+<style scoped>
+</style>

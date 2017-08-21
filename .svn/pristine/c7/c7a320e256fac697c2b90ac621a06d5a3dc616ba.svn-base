@@ -1,0 +1,173 @@
+<template>
+<div>
+  <h3 class="vheader">发票查询</h3>
+  <div class="vsearch">
+    <el-form ref="params" :inline="true" :model="params">
+      <el-form-item label="代理商">
+        <el-select v-model="params.agents " clearable placeholder="请选择">
+          <el-option v-for="data in agents" :key="data.ChannelId" :label="data.ChannelName" :value="data.ChannelId">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="开票时间">
+        <el-date-picker v-model="params.starttime" type="date" placeholder="开始日期">
+        </el-date-picker>
+        <span>-</span>
+        <el-date-picker v-model="params.endtime" type="date" placeholder="结束日期">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="税号">
+        <el-input v-model="params.InvoiceNumber"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="fetchData">查询</el-button>
+      </el-form-item>
+    </el-form>
+  </div>
+  <el-table :data="tableData" border style="width: 100%">
+    <el-table-column prop="InvoiceId" label="发票申请编号" width="200" align="center">
+    </el-table-column>
+    <el-table-column prop="InvoiceNumber" label="税号" width="200" align="center">
+    </el-table-column>
+    <el-table-column prop="ProvinceName" label="省" align="center">
+    </el-table-column>
+    <el-table-column prop="CityName" label="市" align="center">
+    </el-table-column>
+    <el-table-column prop="ChannelName1" label="一级代理商" width="200" align="center">
+    </el-table-column>
+    <el-table-column prop="ChannelName2" label="二级代理商" width="200" align="center">
+    </el-table-column>
+    <el-table-column prop="Property" label="发票性质" :formatter="PropertyFormat" align="center" width="110">
+    </el-table-column>
+    <el-table-column prop="Category" label="发票类型" :formatter="CategoryFormat" align="center" width="110">
+    </el-table-column>
+    <el-table-column prop="Title" label="发票抬头" width="200" align="center">
+    </el-table-column>
+    <el-table-column prop="Amount" label="发票金额" align="center" width="130">
+    </el-table-column>
+    <el-table-column prop="InvoiceDate" label="开票时间" :formatter="StatusDate" align="center" width="120">
+    </el-table-column>
+    <el-table-column label="操作" align="center">
+      <template scope="scope">
+          <el-button @click="scan(scope.row)" type="text" size="small">查看</el-button>
+        </template>
+    </el-table-column>
+  </el-table>
+  <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 30]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
+    style="text-align:center; margin:20px;">
+  </el-pagination>
+</div>
+</template>
+
+<script>
+import {
+  invoiceSearch,
+  agents,
+  viewInvoice
+} from '../api/api'
+import Dialog from '../service/dialog.js'
+import InvoiceView from '../components/invoiceView.vue'
+export default {
+  name: 'invoiceReview',
+  data: function() {
+    return {
+      pagination: {
+        total: 0,
+        pageSize: 10,
+        currentPage: 1
+      },
+      tableData: [],
+      agents: [],
+      scanView: null,
+      params: {
+        channelname: '',
+        starttime: null,
+        endtime: null,
+        agents: '',
+        status: 1,
+        invoicecode: null
+      }
+    }
+  },
+  created() {
+    this.fetchData()
+    this.getAgents()
+  },
+  methods: {
+    fetchData() {
+      let limit = this.pagination.pageSize
+      let offset = (this.pagination.currentPage - 1) * limit
+      let cid = this.params.agents
+      let start = this.params.starttime
+      let end = this.params.endtime
+      let status = this.params.status
+      let invoicecode = this.params.InvoiceNumber
+      invoiceSearch({
+        limit: limit,
+        offset: offset,
+        cid: cid,
+        start: start,
+        end: end,
+        status: status,
+        invoicecode: invoicecode
+      }).then((res) => {
+        this.tableData = res.data
+        this.pagination.total = res.Count
+      })
+    },
+    getAgents() {
+      agents().then((res) => {
+        this.agents = res.data
+      })
+    },
+    PropertyFormat(row) {
+      var property = row.Property
+      switch (property) {
+        case 1:
+          property = '公司'
+          break
+        case 2:
+          property = '个人'
+          break
+      }
+      return property
+    },
+    CategoryFormat(row) {
+      var category = row.Category
+      switch (category) {
+        case 1:
+          category = '专票'
+          break
+        case 2:
+          category = '普票'
+          break
+      }
+      return category
+    },
+    StatusDate(row) {
+      var date = row.InvoiceDate
+      return date.substring(0, 10)
+    },
+    scan(row) {
+      var InvoiceId = row.InvoiceId
+      viewInvoice(InvoiceId).then((res) => {
+        this.scanView = res.data
+        Dialog(InvoiceView, {
+          view: this.scanView
+        })
+      })
+    },
+    handleSizeChange(val) {
+      this.pagination.pageSize = val
+      this.fetchData()
+    },
+    handleCurrentChange(val) {
+      this.pagination.currentPage = val
+      this.fetchData()
+    }
+  }
+}
+</script>
+
+<style scoped>
+</style>

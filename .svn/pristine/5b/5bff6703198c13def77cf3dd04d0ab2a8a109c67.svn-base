@@ -1,0 +1,150 @@
+<template>
+  <div class="vsearch">
+    <el-form ref="params" :inline="true" :model="params">
+      <el-form-item label="账单日期">
+        <el-date-picker v-model="params.starttime" type="date">
+        </el-date-picker>
+        <span>-</span>
+        <el-date-picker v-model="params.endtime" type="date">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="代理商">
+        <el-autocomplete class="inline-input" v-model="params.channelname" :trigger-on-focus="false" :fetch-suggestions="querySearch"></el-autocomplete>
+      </el-form-item>
+      <el-form-item label="充值类型">
+        <el-select v-model="params.type">
+          <el-option v-for="item in financeType" :key="item.type" :label="item.name" :value="item.type"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="params.type === 1" label="审核状态">
+        <el-select v-model="params.status">
+          <el-option v-for="item in checkStatus" :key="item.status" :label="item.name" :value="item.status"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="onSearch">查询</el-button>
+        <el-button type="primary" @click="onDownload" :disabled="canClick">导出</el-button>
+      </el-form-item>
+    </el-form>
+  </div>
+</template>
+
+<script>
+import {
+  agents
+} from '../api/api'
+export default {
+  props: ['length'],
+  data: function() {
+    return {
+      params: {
+        starttime: '',
+        endtime: '',
+        channelname: '',
+        type: 0,
+        status: 0
+      },
+      agents: [],
+      financeType: [{
+        name: '全部',
+        type: 0
+      }, {
+        name: '正常充值',
+        type: 1
+      }, {
+        name: '退单回充',
+        type: 2
+      }, {
+        name: '返点',
+        type: 3
+      }, {
+        name: '一代提成',
+        type: 4
+      }],
+      checkStatus: [{
+        name: '全部',
+        status: 0
+      }, {
+        name: '未审核',
+        status: 1
+      }, {
+        name: '通过',
+        status: 2
+      }, {
+        name: '拒审',
+        status: 3
+      }]
+    }
+  },
+  created() {
+    this.Agents()
+  },
+  computed: {
+    canClick: function () {
+      if (!this.length) {
+        return true
+      } else {
+        return false
+      }
+    }
+  },
+  methods: {
+    onSearch() {
+      let {
+        starttime,
+        endtime,
+        channelname,
+        type,
+        status
+      } = this.params
+      var params = {
+        starttime,
+        endtime,
+        channelname,
+        type,
+        status
+      }
+      this.$emit('search', params)
+    },
+    onDownload() {
+      let {
+        starttime,
+        endtime,
+        channelname,
+        type,
+        status
+      } = this.params
+      let params = {
+        starttime,
+        endtime,
+        channelname,
+        type,
+        status
+      }
+      this.$emit('download', params)
+    },
+    Agents() {
+      agents().then((res) => {
+        this.agents = res.data
+        for (let i in this.agents) {
+          this.agents[i].value = this.agents[i].ChannelName
+        }
+        // console.log(this.agents)
+      })
+    },
+    querySearch(queryString, cb) {
+      var channels = this.agents
+      var results = queryString ? channels.filter(this.createFilter(queryString)) : channels
+      cb(results)
+    },
+    createFilter(queryString) {
+      return (channel) => {
+        return (channel.value.indexOf(queryString) >= 0)
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+</style>

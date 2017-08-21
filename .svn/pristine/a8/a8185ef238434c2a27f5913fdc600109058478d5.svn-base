@@ -1,0 +1,305 @@
+<template>
+<el-dialog title="添加/修改代理商" :visible.sync="isShow">
+  <el-form :inline="true" :model="agent" label-width="150px" :rules="rules" ref="agent">
+    <el-form-item label="代理商名称" required prop="ChannelName">
+      <el-input v-model="agent.ChannelName" auto-complete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="大区" prop="ChannelPartitionId">
+      <el-select v-model="agent.ChannelPartitionId" placeholder="请选择">
+        <el-option v-for="item in partitions" :key="item.Id" :label="item.PartitionName" :value="item.Id">
+        </el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="省份" required prop="ProvinceCode">
+      <el-select v-model="agent.ProvinceCode" placeholder="请选择" @change="filterCities()">
+        <el-option v-for="item in provinces" :key="item.ProvinceCode" :label="item.ProvinceName" :value="item.ProvinceCode">
+        </el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="城市" required prop="CityCode">
+      <el-select v-model="agent.CityCode" placeholder="请选择城市">
+        <el-option v-for="item in cities" :key="item.Code" :label="item.Name" :value="item.Code"></el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="负责人">
+      <el-input v-model="agent.Principal" auto-complete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="手机">
+      <el-input v-model="agent.Mobile" auto-complete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="固定电话">
+      <el-input v-model="agent.Tel" auto-complete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="传真">
+      <el-input v-model="agent.Fax" auto-complete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="地址">
+      <el-input v-model="agent.Address" auto-complete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="邮政编码">
+      <el-input v-model="agent.Postcode" auto-complete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="法人">
+      <el-input v-model="agent.LegalPerson" auto-complete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="开户行">
+      <el-input v-model="agent.DepositBank" auto-complete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="开户行支行">
+      <el-input v-model="agent.BranchBank" auto-complete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="开户名">
+      <el-input v-model="agent.AccountName" auto-complete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="银行账户">
+      <el-input v-model="agent.BankAccount" auto-complete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="总经理用户名" prop="UserName" v-if="isCenter && !agent.ChannelId">
+      <el-input v-model="agent.UserName" auto-complete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="总经理密码" prop="PassWrod" v-if="isCenter && !agent.ChannelId">
+      <el-input v-model="agent.PassWrod" auto-complete="off"></el-input>
+    </el-form-item>
+    <el-row>
+      <el-col :span="8" class="text-center">
+        <el-upload class="avatar-uploader" action="/api/files/4" :show-file-list="false" :on-success="handleIdCard" :before-upload="beforeAvatarUpload" thumbnail-mode="true">
+          <img v-if="agent.IdCard" :src="agent.IdCard" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+        <div>上传身份证</div>
+      </el-col>
+      <el-col :span="8">
+        <el-upload class="avatar-uploader" action="/api/files/4" :show-file-list="false" :on-success="handleAptitude" :before-upload="beforeAvatarUpload" thumbnail-mode="true">
+          <img v-if="agent.Aptitude" :src="agent.Aptitude" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+        <div>代帐资质</div>
+      </el-col>
+      <el-col :span="8">
+        <el-upload class="avatar-uploader" action="/api/files/4" :show-file-list="false" :on-success="handleDocuments" :before-upload="beforeAvatarUpload" thumbnail-mode="true">
+          <img v-if="agent.Documents" :src="agent.Documents" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+        <div>营业执照(三证合一)</div>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="8" class="text-center">
+        <el-upload class="avatar-uploader" action="/api/files/4" :show-file-list="false" :on-success="handleDocuments2" :before-upload="beforeAvatarUpload" thumbnail-mode="true">
+          <img v-if="agent.Documents2" :src="agent.Documents2" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+        <div>税务登记证</div>
+      </el-col>
+      <el-col :span="8">
+        <el-upload class="avatar-uploader" action="/api/files/4" :show-file-list="false" :on-success="handleDocuments3" :before-upload="beforeAvatarUpload" thumbnail-mode="true">
+          <img v-if="agent.Documents3" :src="agent.Documents3" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+        <div>组织机构代码证</div>
+      </el-col>
+    </el-row>
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="dialogCacel">取 消</el-button>
+    <el-button type="primary" @click="dialogSave('agent')">确 定</el-button>
+  </div>
+</el-dialog>
+</template>
+<script>
+import {
+  getPartitions,
+  getParamsProvince,
+  getCities,
+  saveAgent,
+  getAgent
+} from '@/api/api'
+export default {
+  name: 'AgentDialog',
+  props: ['channelId'],
+  data() {
+    const userInfo = sessionStorage.userInfo && JSON.parse(sessionStorage.userInfo)
+    return {
+      agent: {
+        ChannelPartitionId: '',
+        ProvinceCode: '',
+        CityCode: '',
+        BankAccount: '',
+        ChannelName: '',
+        IdCard: '',
+        Aptitude: '',
+        Documents: '',
+        Documents2: '',
+        Documents3: ''
+      },
+      rules: {
+        ChannelName: [{
+          required: true,
+          message: '请输入渠道名称',
+          trigger: 'blur'
+        }],
+        ChannelPartitionId: [{
+          required: true,
+          message: '请选择所在大区',
+          trigger: 'change'
+        }],
+        ProvinceCode: [{
+          required: true,
+          message: '请选择所在省份',
+          trigger: 'change'
+        }],
+        CityCode: [{
+          required: true,
+          message: '请选择所在城市',
+          trigger: 'change'
+        }],
+        UserName: [{
+          required: true,
+          message: '请输入总经理用户名',
+          trigger: 'blur'
+        }],
+        PassWrod: [{
+          required: true,
+          message: '请输入总经理密码',
+          trigger: 'blur'
+        }]
+      },
+      isShow: true,
+      isCenter: userInfo.IsCenter,
+      allCities: [],
+      cities: [],
+      partitions: [],
+      provinces: []
+    }
+  },
+  created() {
+    this.getPartitions()
+    this.getParamsProvince()
+    this.getParamsCities()
+    this.fetchData()
+  },
+  watch: {
+    channelId() {
+      this.fetchData()
+    }
+  },
+  methods: {
+    getPartitions() {
+      getPartitions().then((res) => {
+        this.partitions = res.data
+        for (let i in this.partitions) {
+          this.partitions[i].Id = this.partitions[i].Id + ''
+        }
+      })
+    },
+    getParamsProvince() {
+      const param = {
+        ChannelPartitionIds: ''
+      }
+      getParamsProvince(param).then((res) => {
+        this.provinces = res.data
+      })
+    },
+    getParamsCities() {
+      getCities().then((res) => {
+        this.allCities = res.data
+        this.filterCities()
+      })
+    },
+    filterCities() {
+      if (!this.agent.ProvinceCode) {
+        this.cities = this.allCities
+      } else {
+        this.cities = window._.filter(this.allCities, item => {
+          return item.ProvinceCode === this.agent.ProvinceCode
+        })
+      }
+    },
+    beforeAvatarUpload(file) {
+      let isJPG = true
+      const isLt2M = file.size / 1024 / 1024 < 2
+      const reg = /^.*\/(?:png|jpg|bmp|gif|jpeg)$/
+      console.log(file.type.toLowerCase())
+      if (!reg.test(file.type.toLowerCase())) {
+        this.$message.error('上传头像图片只能是 jpg,bmp,gif,jpeg 格式!')
+        isJPG = false
+      }
+
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
+    },
+    handleIdCard(res) {
+      this.agent.IdCard = res.data
+    },
+    handleAptitude(res) {
+      this.agent.Aptitude = res.data
+    },
+    handleDocuments(res) {
+      this.agent.Documents = res.data
+    },
+    handleDocuments2(res) {
+      this.agent.Documents2 = res.data
+    },
+    handleDocuments3(res) {
+      this.agent.Documents3 = res.data
+    },
+    // getCities () {
+    //   getCities().then(res => {
+    //     this.cities = res.data
+    //   })
+    // },
+    fetchData() {
+      if (this.channelId) {
+        getAgent(this.channelId).then(res => {
+          // console.log(res.data[0], '修改数据赋值')
+          var resAgent = res.data[0]
+          if (!resAgent.ChannelPartitionId) {
+            resAgent.ChannelPartitionId = ''
+          }
+          this.agent = resAgent
+          if (this.agent.ChannelPartitionId === 0) {
+            this.agent.ChannelPartitionId = ''
+          } else {
+            this.agent.ChannelPartitionId = res.data[0].ChannelPartitionId + ''
+          }
+        })
+      }
+    },
+    // onClose() {
+    //   this.$emit('cancel')
+    //   setTimeout(() => {
+    //     this.$destroy()
+    //     this.$el.parentNode.removeChild(this.$el)
+    //   }, 1000)
+    // },
+    dialogSave: function(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          saveAgent(this.agent).then((res) => {
+            if (res.status) {
+              this.$message.info('保存成功!')
+              this.isShow = false
+              this.$emit('done')
+            } else {
+              this.$message.error(res.message)
+            }
+          })
+        } else {
+          return false
+        }
+      })
+    },
+    dialogCacel: function() {
+      this.isShow = false
+    }
+  }
+}
+</script>
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+.el-form--inline .el-form-item {
+  width: 380px;
+}
+</style>

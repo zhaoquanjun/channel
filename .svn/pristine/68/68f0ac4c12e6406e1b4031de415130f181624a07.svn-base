@@ -1,0 +1,131 @@
+<template>
+<div>
+  <h2 class="text-center">票据分析</h2>
+  <SearchParams :show="true" @search="onSearch"></SearchParams>
+  <el-table :data="tableData" border style="width: 100%">
+    <el-table-column prop="PartitionName" label="大区">
+    </el-table-column>
+    <el-table-column prop="ProvinceName" label="省份">
+    </el-table-column>
+    <el-table-column prop="CityName" label="城市">
+    </el-table-column>
+    <el-table-column prop="ChannelName" label="代理商">
+    </el-table-column>
+    <el-table-column prop="MakeNum" label="需做账">
+    </el-table-column>
+    <el-table-column prop="RingMakeNum" label="当前账期">
+    </el-table-column>
+    <el-table-column prop="IsZero" label="提单零票">
+    </el-table-column>
+    <el-table-column prop="ConfirmZero" label="确认零票">
+    </el-table-column>
+    <el-table-column prop="NoReceiptNum" label="未传票">
+    </el-table-column>
+    <el-table-column label="传票客户" header-align="center">
+      <el-table-column prop="Img15Num" label="15张以内">
+      </el-table-column>
+      <el-table-column prop="Img16Num" label="15张以上">
+      </el-table-column>
+    </el-table-column>
+    <el-table-column prop="ReceiptNum" label="票据张数">
+    </el-table-column>
+    <el-table-column label="上传时间分析" header-align="center">
+      <el-table-column prop="Receipt10Num" label="10号前传票">
+      </el-table-column>
+      <el-table-column prop="Receipt15Num" label="10-15号">
+      </el-table-column>
+      <el-table-column prop="Receipt16Num" label="16号以后传票">
+      </el-table-column>
+      <el-table-column prop="ReceiptTotal" label="合计">
+      </el-table-column>
+    </el-table-column>
+    <el-table-column label="税期前后占比分析" header-align="center">
+      <el-table-column prop="ReceiptTotal" label="税前传票占比">
+      </el-table-column>
+      <el-table-column prop="TaxRatePre" label="税后传票占比">
+      </el-table-column>
+    </el-table-column>
+    <el-table-column label="数据确认分析" header-align="center">
+      <el-table-column prop="Confirm10Num" label="10号前确认">
+      </el-table-column>
+      <el-table-column prop="Confirm15Num" label="10-15号确认">
+      </el-table-column>
+      <el-table-column prop="Confirm16Num" label="16号以后确认">
+      </el-table-column>
+      <el-table-column prop="ConfirmTotal" label="合计">
+      </el-table-column>
+    </el-table-column>
+    <el-table-column label="数据确认占比分析" header-align="center">
+      <el-table-column prop="ConfirmTaxRatePre" label="税前确认占比">
+      </el-table-column>
+      <el-table-column prop="ConfirmTaxRateAfter" label="税后确认占比">
+      </el-table-column>
+    </el-table-column>
+    <el-table-column label="票据类型" header-align="center">
+      <el-table-column prop="SaleReceiptNum" label="销售票">
+      </el-table-column>
+      <el-table-column prop="BuyReceiptNum" label="采购票">
+      </el-table-column>
+      <el-table-column prop="CostReceiptNum" label="费用票">
+      </el-table-column>
+      <el-table-column prop="BankReceiptNum" label="银行回单">
+      </el-table-column>
+      <el-table-column prop="TaxReceiptNum" label="交税回单">
+      </el-table-column>
+      <el-table-column prop="OtherReceiptNum" label="其他票据">
+      </el-table-column>
+    </el-table-column>
+
+  </el-table>
+  <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 30]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
+    style="text-align:center; margin:20px;">
+  </el-pagination>
+</div>
+</template>
+
+<script>
+import SearchParams from '@/components/searchParams.vue'
+import {
+  getAgentreceipt
+}
+from '../../api/api'
+
+export default {
+  name: 'StatisChannelTab3',
+  data: function () {
+    return {
+      tableData: [],
+      pagination: {
+        total: 0,
+        pageSize: 10,
+        currentPage: 1
+      },
+      params: {}
+    }
+  },
+  methods: {
+    onSearch(params) {
+      this.params = params
+      let limit = this.pagination.pageSize
+      let offset = (this.pagination.currentPage - 1) * limit
+      this.params.limit = limit
+      this.params.offset = offset
+      getAgentreceipt(this.params).then(res => {
+        this.pagination.total = res.Count
+        this.tableData = res.data
+      })
+    },
+    handleSizeChange(val) {
+      this.pagination.pageSize = val
+      this.onSearch(this.params)
+    },
+    handleCurrentChange(val) {
+      this.pagination.currentPage = val
+      this.onSearch(this.params)
+    }
+  },
+  components: {
+    SearchParams
+  }
+}
+</script>

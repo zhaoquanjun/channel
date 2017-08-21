@@ -1,0 +1,133 @@
+<template>
+<div>
+  <h3 class="vheader">财务明细</h3>
+  <div class="vsearch">
+    <el-form ref="params" :inline="true" :model="params">
+      <el-form-item label="选择代理">
+        <el-select v-model="params.agents" filterable clearable placeholder="请选择">
+          <el-option v-for="data in agents" :key="data.ChannelId" :label="data.ChannelName" :value="data.ChannelId">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="选择类型">
+        <el-select v-model="params.type " clearable placeholder="请选择">
+          <el-option v-for="data in typeModel" :key="data.type" :label="data.name" :value="data.type">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="fetchData">查询</el-button>
+      </el-form-item>
+    </el-form>
+  </div>
+  <el-table :data="tableData" border style="width: 100%">
+    <el-table-column prop="ProvinceName" label="省" width="120">
+    </el-table-column>
+    <el-table-column prop="CityName" label="市" width="120">
+    </el-table-column>
+    <el-table-column prop="ChannelName1" label="一级代理" min-width="200">
+    </el-table-column>
+    <el-table-column prop="ChannelName2" label="二级代理" min-width="200">
+    </el-table-column>
+    <el-table-column v-if="params.type == 1" prop="Amount" label="订单金额" width="120">
+    </el-table-column>
+    <el-table-column v-if="params.type == 2" prop="Amount" label="充值金额" width="120">
+    </el-table-column>
+    <el-table-column prop="Balance" label="余额" width="120">
+    </el-table-column>
+    <el-table-column prop="Description" label="订单描述" width="500">
+    </el-table-column>
+    <el-table-column prop="BillTime" label="订单时间" width="200">
+    </el-table-column>
+    <el-table-column label="操作">
+      <template scope="scope">
+          <el-button @click="financeView(scope.row)" type="text" size="small" v-if="scope.row.OrderId">查看订单</el-button>
+        </template>
+    </el-table-column>
+  </el-table>
+  <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 30]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
+    style="text-align:center; margin:20px;">
+  </el-pagination>
+</div>
+</template>
+
+<script>
+import {
+  rechargeDetail,
+  agents,
+  orderTitle
+} from '../api/api'
+import AddOrder from '../components/addOrder'
+import Dialog from '../service/dialog.js'
+export default {
+  data: function() {
+    return {
+      pagination: {
+        total: 0,
+        pageSize: 10,
+        currentPage: 1
+      },
+      tableData: [],
+      agents: [],
+      params: {
+        channelname: '',
+        agents: '',
+        type: 1
+      },
+      typeModel: [{
+        name: '支付',
+        type: 1
+      }, {
+        name: '充值',
+        type: 2
+      }]
+    }
+  },
+  created() {
+    this.fetchData()
+    this.getAgents()
+  },
+  methods: {
+    fetchData() {
+      let limit = this.pagination.pageSize
+      let offset = (this.pagination.currentPage - 1) * limit
+      let channelId = this.params.agents
+      let type = this.params.type
+      rechargeDetail({
+        limit: limit,
+        offset: offset,
+        channelId: channelId,
+        type: type
+      }).then((res) => {
+        this.tableData = res.data
+        this.pagination.total = res.Count
+      })
+    },
+    getAgents() {
+      agents().then((res) => {
+        this.agents = res.data
+      })
+    },
+    financeView(row) {
+      var postData = ''
+      orderTitle(row.OrderId).then(res => {
+        postData = res.data
+        Dialog(AddOrder, {
+          postData: postData
+        })
+      })
+    },
+    handleSizeChange(val) {
+      this.pagination.pageSize = val
+      this.fetchData()
+    },
+    handleCurrentChange(val) {
+      this.pagination.currentPage = val
+      this.fetchData()
+    }
+  }
+}
+</script>
+
+<style scoped>
+</style>

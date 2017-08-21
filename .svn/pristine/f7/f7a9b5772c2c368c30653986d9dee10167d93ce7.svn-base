@@ -1,0 +1,84 @@
+<template>
+<div class="recharge-details">
+  <el-dialog title="充值详情" :visible.sync="dialogFormVisible" size="small">
+  <div class="content">
+    <el-form :model='ruleForm' class="demo-ruleForm" label-width="100px">
+      <el-form-item label="充值金额" required>
+        <span>{{ruleForm.Amount}}元</span>
+      </el-form-item>
+      <el-form-item class="form-height" label="付款明细" required>
+        <el-table :data="ruleForm.datalist" border style="width: 100%" :summary-method="getSummaries" show-summary v-table-sum>
+          <el-table-column prop="PayCount" label="付款账户" min-width="200"></el-table-column>
+          <el-table-column prop="PayTime" label="付款时间" min-width="120"></el-table-column>
+          <el-table-column prop="PayAmount" label="付款金额(元)" min-width="120"></el-table-column>
+        </el-table>
+      </el-form-item>
+      <el-form-item class="form-height" label="付款凭证" required>
+        <img-upl v-for="item in url" :key="item.id" action="/api/files/2" :value='item' :readonly='true'></img-upl>
+      </el-form-item>
+    </el-form>
+  </div>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="dialogFormVisible = false" type="primary">关 闭</el-button>
+  </div>
+  </el-dialog>
+</div>
+</template>
+
+<script>
+import ImageUploader from '../../components/imageUploader'
+export default {
+  props: ['row'],
+  data: function() {
+    return {
+      dialogFormVisible: true,
+      ruleForm: {
+        Amount: 5000,
+        datalist: [{
+          PayCount: '6227000012850205675',
+          PayTime: '2017-05-28',
+          PayAmount: 5000
+        }, {
+          PayCount: '6227000012850205675',
+          PayTime: '2017-05-28',
+          PayAmount: 5000
+        }],
+        total: {
+          SumPayAmount: 5000
+        },
+        payUrl: '/FileUploads/Order/BusinessLicense/201707/BodyPart_881648a1-acd6-42a6-b390-b9c77ee2e3a1.png, /FileUploads/Order/BusinessLicense/201707/BodyPart_668b1e9f-15d5-4d59-81f6-c946f63bd713.jpg, /FileUploads/Order/BusinessLicense/201707/BodyPart_0a20f417-3d31-4c39-b6da-297e6a83d697.jpg'
+      },
+      url: []
+    }
+  },
+  created() {
+    console.log(this.ruleForm.payUrl, 'payUrl')
+    this.handleImgUrlToArray(this.ruleForm.payUrl)
+    console.log(this.row, '弹窗显示充值详情')
+  },
+  components: {
+    imgUpl: ImageUploader
+  },
+  methods: {
+    getSummaries(param) {
+      const sums = ['合计', '-', this.ruleForm.total.SumPayAmount]
+      return sums
+    },
+    handleImgUrlToArray(payUrl) {
+      this.url = payUrl.split(',')
+      console.log(this.url)
+    }
+  }
+}
+</script>
+
+<style>
+.recharge-details .content .form-height .el-form-item__content{
+  height: 100%;
+  line-height: 0;
+}
+.recharge-details .content .form-height .el-form-item__content .image-uploader {
+  float: left;
+  padding-right: 10px
+}
+</style>

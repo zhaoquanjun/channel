@@ -1,0 +1,214 @@
+<template>
+<div>
+  <h2 class="text-center">发票清单</h2>
+  <div class="vsearch">
+    <el-form ref="params" :inline="true" :model="params">
+      <el-form-item label="订单日期">
+        <el-date-picker v-model="params.orderstartTime" type="date">
+        </el-date-picker>
+        <span>-</span>
+        <el-date-picker v-model="params.orderendTime" type="date">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="发票申请日期">
+        <el-date-picker v-model="params.invoicestartTime" type="date">
+        </el-date-picker>
+        <span>-</span>
+        <el-date-picker v-model="params.invoiceendTime" type="date">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="发票审核日期">
+        <el-date-picker v-model="params.invoiceCheckstartTime" type="date">
+        </el-date-picker>
+        <span>-</span>
+        <el-date-picker v-model="params.invoiceCheckendTime" type="date">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="代理商">
+        <el-autocomplete class="inline-input" v-model="params.channelname" :trigger-on-focus="false" :fetch-suggestions="querySearch"></el-autocomplete>
+      </el-form-item>
+      <el-form-item label="是否开发票">
+        <el-select v-model="params.status">
+          <el-option v-for="item in invoiceStatus" :key="item.status" :label="item.name" :value="item.status"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="发票申请编号">
+        <el-input v-model="params.invoiceNum"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="onSearch">查询</el-button>
+        <el-button type="primary" @click="onDownload" :disabled="!tableData.length">导出</el-button>
+      </el-form-item>
+    </el-form>
+  </div>
+  <el-table :data="tableData" border style="width: 100%">
+    <el-table-column prop="ChannelName1" label="一级代理" min-width="200">
+    </el-table-column>
+    <el-table-column prop="ChannelName2" label="二级代理" min-width="200">
+    </el-table-column>
+    <el-table-column prop="OrderTime" label="订单日期" width="120">
+    </el-table-column>
+    <el-table-column prop="OrderNum" label="订单编号" width="130">
+    </el-table-column>
+    <el-table-column prop="Name" label="公司名称" width="130">
+    </el-table-column>
+    <el-table-column prop="CompanyProperty" label="公司性质" width="100">
+    </el-table-column>
+    <el-table-column prop="ContractAmount" label="合同金额" width="100">
+    </el-table-column>
+    <el-table-column prop="BillAmount" label="提单金额" width="100">
+    </el-table-column>
+    <el-table-column prop="Status" label="是否开具发票" :formatter="StatusFormat" width="130">
+    </el-table-column>
+    <el-table-column prop="InvoiceStartDate" label="发票申请日期" width="120">
+    </el-table-column>
+    <el-table-column prop="InvoiceCheckDate" label="发票审核日期" width="120">
+    </el-table-column>
+    <el-table-column prop="invoiceNum" label="发票申请编号" width="140">
+    </el-table-column>
+    <el-table-column prop="InvoiceAmount" label="发票金额" width="120">
+    </el-table-column>
+  </el-table>
+  <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 30]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
+    style="text-align:center; margin:20px;">
+  </el-pagination>
+</div>
+</template>
+
+<script>
+import {
+  agents
+} from '../../api/api'
+export default {
+  data: function() {
+    return {
+      pagination: {
+        total: 0,
+        pageSize: 10,
+        currentPage: 1
+      },
+      tableData: [{
+        ChannelName1: 'xian1',
+        ChannelName2: 'xian2',
+        OrderTime: '2017-07-20',
+        OrderNum: '1111111111111',
+        Name: 'aaa',
+        CompanyProperty: '小规模',
+        ContractAmount: '800',
+        BillAmount: '322',
+        Status: 1,
+        InvoiceStartDate: '2017-07-10',
+        InvoiceCheckDate: '2017-07-19',
+        invoiceNum: '1232423',
+        InvoiceAmount: '399'
+      }],
+      params: {
+        orderstartTime: '',
+        orderendTime: '',
+        invoicestartTime: '',
+        invoiceendTime: '',
+        invoiceCheckstartTime: '',
+        invoiceCheckendTime: '',
+        channelname: '',
+        invoiceNum: '',
+        status: 0
+      },
+      agents: [],
+      invoiceStatus: [{
+        name: '全部',
+        status: 0
+      }, {
+        name: '是',
+        status: 1
+      }, {
+        name: '否',
+        status: 2
+      }]
+    }
+  },
+  created() {
+    this.Agents()
+  },
+  methods: {
+    StatusFormat: function(row) {
+      var status = row.Status
+      switch (status) {
+        case 0:
+          status = '全部'
+          break
+        case 1:
+          status = '是'
+          break
+        case 2:
+          status = '否'
+          break
+      }
+      return status
+    },
+    onSearch(params) {
+      // params.type = this.TypeFormat(params.type)
+      // params.status = this.StatusFormat(params.status)
+      // console.log(params, 'params')
+      let limit = this.pagination.pageSize
+      let offset = (this.pagination.currentPage - 1) * limit
+      this.params.limit = limit
+      this.params.offset = offset
+      console.log(this.params, 'this.params')
+      // getPrepaynote(this.params).then(res => {
+      //   this.pagination.total = res.Count
+      //   this.tableData = res.data.DataInfo
+      //   this.total = res.data.Total[0]
+      // })
+    },
+    onDownload(params) {
+      // params.type = this.TypeFormat(params.type)
+      // params.status = this.StatusFormat(params.status)
+      const {
+        orderstartTime,
+        orderendTime,
+        invoicestartTime,
+        invoiceendTime,
+        invoiceCheckstartTime,
+        invoiceCheckendTime,
+        channelname,
+        invoiceNum,
+        status
+      } = this.params
+      console.log(orderstartTime, orderendTime, invoicestartTime, invoiceendTime, invoiceCheckstartTime, invoiceCheckendTime, channelname, invoiceNum, status)
+      const url = `/api/download/prepaynote?channelname=${channelname || ''}`
+      console.log(url)
+      // window.open(url)
+    },
+    Agents() {
+      agents().then((res) => {
+        this.agents = res.data
+        for (let i in this.agents) {
+          this.agents[i].value = this.agents[i].ChannelName
+        }
+        // console.log(this.agents)
+      })
+    },
+    querySearch(queryString, cb) {
+      var channels = this.agents
+      var results = queryString ? channels.filter(this.createFilter(queryString)) : channels
+      cb(results)
+    },
+    createFilter(queryString) {
+      return (channel) => {
+        return (channel.value.indexOf(queryString) >= 0)
+      }
+    },
+    handleSizeChange(val) {
+      this.pagination.pageSize = val
+      this.onSearch()
+    },
+    handleCurrentChange(val) {
+      this.pagination.currentPage = val
+      this.onSearch()
+    }
+  }
+}
+</script>
+
+<style scoped>
+</style>

@@ -1,0 +1,150 @@
+<template>
+<div>
+  <div class="left">
+    <h3 class="vheader">全国分区</h3>
+    <div class="vsearch">
+      <el-button @click="addFq()" type="primary">添加分区</el-button>
+    </div>
+    <div class="fq">
+      <ul>
+        <li class="clearfix" v-for="(item, index) in fqList" @click="getChannelList(index)" :class="{ select: item.select }">
+          <span class="pull-left" v-text="item.PartitionName"></span>
+          <i class="el-icon-close pull-right icon" @click="deleteItem(item.Id)"></i>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="right">
+    <h3 class="vheader">渠道列表</h3>
+    <div class="vsearch pull-right">
+      <el-button @click="addChannel" type="primary">添加渠道</el-button>
+    </div>
+    <el-table :data="tableData" border style="width: 100%">
+      <el-table-column type="index" label="序号" width="100" align="center">
+      </el-table-column>
+      <el-table-column prop="ChannelName" label="渠道名称" align="center">
+      </el-table-column>
+    </el-table>
+  </div>
+</div>
+</template>
+
+<script>
+import {
+  getFqList,
+  getChannel,
+  deleteFq
+} from '../api/api'
+import Dialog from '../service/dialog.js'
+import addFq from './components/addFq.vue'
+import addChannelList from './components/addChannelList.vue'
+import bus from '../bus.js'
+export default {
+  data() {
+    return {
+      tableData: [],
+      fqList: [],
+      select: false,
+      fqId: '' // 当前分区ID
+    }
+  },
+  created() {
+    this.getFq()
+  },
+  methods: {
+    getFq() {
+      getFqList().then(res => {
+        this.fqList = res.data
+        for (let i in this.fqList) {
+          this.fqList[i].select = Number(i) === 0
+        }
+        getChannel(this.fqList[0].Id).then(res => {
+          this.tableData = res.data
+        })
+      })
+    },
+    getChannelList(index) {
+      var list = this.fqList
+      for (let i in list) {
+        this.fqList[i].select = false
+      }
+      this.fqList[index].select = true
+      var item = this.fqList[index]
+      this.fqId = item.Id
+      getChannel(this.fqId).then(res => {
+        this.tableData = res.data
+      })
+    },
+    addFq() {
+      Dialog(addFq)
+      bus.$on('add-fq', () => {
+        this.getFq()
+      })
+    },
+    deleteItem(id) {
+      this.$confirm('您确定要删除此分区吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteFq(id).then(res => {
+          if (res.status) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.getFq()
+          }
+        })
+      })
+    },
+    addChannel() {
+      Dialog(addChannelList, {
+        fqId: this.fqId
+      })
+      bus.$on('add-channel', () => {
+        getChannel(this.fqId).then(res => {
+          this.tableData = res.data
+        })
+      })
+    }
+  }
+}
+</script>
+
+<style scoped>
+.left {
+  float: left;
+  width: 200px;
+  margin-left: 10px;
+}
+
+.right {
+  margin-left: 220px;
+}
+
+.vsearch {
+  margin-bottom: 20px;
+}
+
+.fq ul li {
+  padding-left: 5px;
+  height: 40px;
+  line-height: 40px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.fq ul li.select {
+  border-radius: 5px 5px 0 0;
+  background: #20a0ff;
+  color: #eee;
+}
+
+.icon {
+  height: 40px;
+  line-height: 40px;
+  padding-right: 5px;
+  color: #ccc;
+}
+</style>

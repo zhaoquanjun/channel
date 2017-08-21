@@ -1,0 +1,47 @@
+<template>
+<div class="image-uploader">
+  <img :src="value" v-show="value">
+  <el-upload :on-success="handleSuccess" :action="action" :file-list="fileList" :show-file-list="false" v-show="!readonly">
+    <el-button size="small" type="primary">点击上传</el-button>
+    <div slot="tip" class="el-upload__tip">上传的图片大小请不要超过1M</div>
+  </el-upload>
+</div>
+</template>
+<script>
+import Viewer from 'viewerjs'
+import 'viewerjs/dist/viewer.css'
+export default {
+  name: 'searchParams',
+  props: ['action', 'value', 'readonly'],
+  data() {
+    return {
+      fileList: [],
+      viewer: null
+    }
+  },
+  mounted() {
+    let that = this
+    this.viewer = new Viewer(this.$el.querySelector('img'), {
+      navbar: false,
+      title: false,
+      view: function () {
+        document.querySelector('.viewer-canvas').onclick = function (e) {
+          if (e.target.tagName.toUpperCase() !== 'IMG') that.viewer.hide()
+        }
+      }
+    })
+  },
+  methods: {
+    handleSuccess(res) {
+      this.$emit('input', res.data)
+    }
+  }
+}
+</script>
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+img {
+  max-height: 50px;
+  max-width: 100px;
+}
+</style>

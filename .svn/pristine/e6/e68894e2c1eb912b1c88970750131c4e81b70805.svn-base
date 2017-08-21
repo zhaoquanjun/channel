@@ -1,0 +1,111 @@
+<template>
+<div>
+  <el-dialog title="充值金额" :visible.sync="dialogFormVisible" size="tiny">
+    <div class="content">
+      <div class="con">
+        <span v-text="data.ChannelName1"ss></span>
+        <span v-if="data.ChannelName2"> > {{data.ChannelName2}}</span>
+      </div>
+      <div class="con bottom">余额：{{data.Balance}}</div>
+      <el-form :model="ruleForm" :rules="rules" class="demo-ruleForm" ref="ruleForm" label-width="100px">
+        <el-form-item label="充值金额" prop="Amount">
+          <el-input v-model="ruleForm.Amount" auto-complete="off" class="moneyWid"></el-input>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="dialogFormVisible = false">关 闭</el-button>
+      <el-button type="primary" @click="submitForm('ruleForm')">充 值</el-button>
+    </div>
+  </el-dialog>
+</div>
+</template>
+
+<script>
+import {
+  finance
+} from '../api/api'
+import bus from '../bus'
+export default {
+  props: {
+    row: {
+      type: Object,
+      default: null
+    }
+  },
+  data() {
+    return {
+      dialogFormVisible: true,
+      ruleForm: {
+        Amount: ''
+      },
+      rules: {
+        Amount: [{
+          required: true,
+          message: '请输入充值金额',
+          trigger: 'blur'
+        }]
+      },
+      data: {
+        ChannelName1: '',
+        ChannelName2: '',
+        Balance: ''
+      }
+    }
+  },
+  created() {
+    this.data = this.row
+  },
+  methods: {
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          let amount = this.ruleForm.Amount
+          let channelname1 = this.data.ChannelName1
+          let channelname2 = this.data.ChannelName2
+          if (channelname2) {
+            channelname1 = `${channelname1} > ${channelname2}`
+          }
+          var str = `您确认为 ${channelname1} 充值 ${amount}元？`
+          let ChannelId = this.row.ChannelId
+          this.ruleForm.ChannelId = ChannelId
+          this.$confirm(str, '充值提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            finance(this.ruleForm).then(res => {
+              if (res.status) {
+                this.$message({
+                  type: 'success',
+                  message: '充值成功!'
+                })
+                bus.$emit('finance-success')
+                this.dialogFormVisible = false
+              }
+            })
+          })
+        } else {
+          return false
+        }
+      })
+    }
+  }
+}
+</script>
+
+<style scoped>
+.con {
+  padding-left: 28px;
+  height: 30px;
+  line-height: 30px;
+}
+
+.bottom {
+  padding-bottom: 80px;
+}
+
+.moneyWid {
+  width: 200px;
+}
+</style>

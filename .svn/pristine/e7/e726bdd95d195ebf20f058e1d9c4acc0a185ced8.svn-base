@@ -1,0 +1,77 @@
+<template>
+<div class="recharge-details">
+  <el-dialog title="充值详情" :visible.sync="dialogFormVisible" size="small">
+  <div class="content">
+    <el-form :model='ruleForm' class="demo-ruleForm" label-width="100px">
+      <el-form-item label="充值金额" required>
+        <span>{{ruleForm.Amount}}元</span>
+      </el-form-item>
+      <el-form-item class="form-height" label="付款明细" required>
+        <el-table :data="ruleForm.PrepayDetails" border style="width: 100%" :summary-method="getSummaries" show-summary v-table-sum>
+          <el-table-column prop="AccountOfPayment" label="付款账户" min-width="200"></el-table-column>
+          <el-table-column prop="PayTime" label="付款时间" :formatter="StatusDate" min-width="120"></el-table-column>
+          <el-table-column prop="Amount" label="付款金额(元)" min-width="120"></el-table-column>
+        </el-table>
+      </el-form-item>
+      <el-form-item class="form-height" label="付款凭证" required>
+        <img-upl v-for="item in url" :key="item" action="/api/files/2" :value='item' :readonly='true'></img-upl>
+      </el-form-item>
+    </el-form>
+  </div>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="dialogFormVisible = false" type="primary">关 闭</el-button>
+  </div>
+  </el-dialog>
+</div>
+</template>
+
+<script>
+import {
+  rechargeListDetail
+} from '../../api/api'
+import ImageUploader from '../../components/imageUploader'
+export default {
+  props: ['Id'],
+  data: function() {
+    return {
+      dialogFormVisible: true,
+      ruleForm: {},
+      url: []
+    }
+  },
+  created() {
+    this.getDataList()
+  },
+  components: {
+    imgUpl: ImageUploader
+  },
+  methods: {
+    getDataList() {
+      var id = this.Id
+      rechargeListDetail(id).then((res) => {
+        this.ruleForm = res.data
+        this.url = JSON.parse(this.ruleForm.PhotoPath)
+      })
+    },
+    getSummaries(param) {
+      const sums = ['付款金额合计', '-', this.ruleForm.Amount]
+      return sums
+    },
+    StatusDate(row) {
+      var date = row.PayTime
+      return date.substring(0, 10)
+    }
+  }
+}
+</script>
+
+<style>
+.recharge-details .content .form-height .el-form-item__content{
+  height: 100%;
+  line-height: 0;
+}
+.recharge-details .content .form-height .el-form-item__content .image-uploader {
+  float: left;
+  padding-right: 10px
+}
+</style>
