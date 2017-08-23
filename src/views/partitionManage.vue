@@ -15,11 +15,12 @@
   <el-table :data="tableData" border style="width: 100%">
     <el-table-column type="index" width="80" label="序号"></el-table-column>
     <el-table-column prop="PartitionName" width="150" label="大区"></el-table-column>
-    <el-table-column prop="ProvinceName" label="管辖省份"></el-table-column>
+    <el-table-column prop="ChannelPartition" label="管辖省份"></el-table-column>
     <el-table-column label="操作" align="center" width="200">
       <template scope="scope">
         <el-button @click="scan(scope.row)" type="text" size="small">查看</el-button>
         <el-button @click="modify(scope.row)" type="text" size="small">修改</el-button>
+        <el-button @click="deleteItem(scope.row)" type="text" size="small">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -28,23 +29,15 @@
 
 <script>
 import {
-  getPartitions
-  // getPartitionsList
+  getFqList1,
+  deleteFq
 } from '@/api/api'
 import Dialog from '../service/dialog.js'
 import partitionChild from './components/partitionChild'
 export default {
   data: function() {
     return {
-      pagination: {
-        total: 0,
-        pageSize: 10,
-        currentPage: 1
-      },
-      tableData: [
-        {'PartitionName': '华北大区', 'ProvinceName': '河北省,河南省'},
-        {'PartitionName': '华北大区', 'ProvinceName': '河北省,河南省,辽宁省'}
-      ],
+      tableData: [],
       params: {
         partitionName: ''
       },
@@ -52,26 +45,14 @@ export default {
     }
   },
   created() {
-    this.getPartitions()
     this.fetchData()
   },
   methods: {
     fetchData() {
-      let limit = this.pagination.pageSize
-      let offset = (this.pagination.currentPage - 1) * limit
-      let partitionId = this.handlepartitionsSearch(this.params.partitionName) || 0
-      console.log(limit, offset, partitionId)
-      // getPartitionsList({
-      //   limit: limit,
-      //   offset: offset,
-      //   partitionId: partitionId
-      // }).then((res) => {
-      //   this.tableData = res.data
-      //   this.pagination.total = res.Count
-      // })
-    },
-    getPartitions() {
-      getPartitions().then((res) => {
+      let id = this.handlepartitionsSearch(this.params.partitionName) || ''
+      console.log(id)
+      getFqList1({id: id}).then((res) => {
+        this.tableData = res.data
         this.partitions = res.data
         for (let i in this.partitions) {
           this.partitions[i].Id = this.partitions[i].Id + ''
@@ -97,6 +78,24 @@ export default {
         row: row,
         sign: 'MODIFY'
       })
+    },
+    deleteItem(row) {
+      this.$confirm('您确定要删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        console.log('删除')
+        deleteFq(row.Id).then(res => {
+          if (res.status) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.fetchData()
+          }
+        })
+      }).catch(() => {})
     },
     handlepartitionsSearch(param) { // 处理查询时要传给后台大区ID
       for (let i in this.partitions) {

@@ -26,8 +26,8 @@
     </el-table-column>
     <el-table-column label="操作">
       <template scope="scope">
-          <el-button @click="deleteItem(scope.row)" type="text" size="small">删除</el-button>
-        </template>
+        <el-button @click="deleteItem(scope.row)" type="text" size="small">删除</el-button>
+      </template>
     </el-table-column>
   </el-table>
 </div>

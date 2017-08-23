@@ -581,9 +581,12 @@ export const accountChange = (userId, params) => {
 export const removeUser = (userId) => {
   return axios.delete(`${base}/account/${userId}`).then(res => res.data)
 }
-// 员工管理--分区管理--分区列表
+// 员工管理--大区列表
 export const getFqList = () => {
   return axios.get(`${base}/channelpartition`).then(res => res.data)
+}
+export const getFqList1 = (params) => {
+  return axios.get(`${base}/channelpartition`, {params: params}).then(res => res.data)
 }
 // 员工管理--分区管理--渠道列表
 export const getChannel = (id) => {
@@ -593,7 +596,7 @@ export const getChannel = (id) => {
 export const addFq = (params) => {
   return axios.post(`${base}/channelpartition`, params).then(res => res.data)
 }
-// 员工管理--分区管理--删除分区
+// 员工管理--删除分区
 export const deleteFq = (id) => {
   return axios.delete(`${base}/channelpartition/${id}`).then(res => res.data)
 }

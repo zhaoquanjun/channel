@@ -6,10 +6,10 @@
         <el-input v-model="ruleForm.PartitionName" auto-complete="off" class="moneyWid" :disabled="canChange"></el-input>
       </el-form-item>
       <el-form-item v-if="sign === 'SCAN'" label="管辖省份" required>
-        <el-input v-model="ruleForm.ProvinceName" auto-complete="off" class="moneyWid" :disabled="canChange"></el-input>
+        <el-input v-model="ruleForm.ChannelPartition" auto-complete="off" class="moneyWid" :disabled="canChange"></el-input>
       </el-form-item>
       <el-form-item v-if="sign != 'SCAN'" label="管辖省份" required>
-        <el-select v-model="ruleForm.ProvinceName" multiple placeholder="全部">
+        <el-select v-model="ruleForm.ChannelPartition" multiple placeholder="全部">
           <el-option v-for="item in provinces" :key="item.Code" :label="item.Name" :value="item.Code"></el-option>
         </el-select>
       </el-form-item>
