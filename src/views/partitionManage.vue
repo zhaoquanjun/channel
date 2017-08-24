@@ -15,7 +15,7 @@
   <el-table :data="tableData" border style="width: 100%">
     <el-table-column type="index" width="80" label="序号"></el-table-column>
     <el-table-column prop="PartitionName" width="150" label="大区"></el-table-column>
-    <el-table-column prop="ChannelPartition" label="管辖省份"></el-table-column>
+    <el-table-column prop="Provinces" label="管辖省份"></el-table-column>
     <el-table-column label="操作" align="center" width="200">
       <template scope="scope">
         <el-button @click="scan(scope.row)" type="text" size="small">查看</el-button>
@@ -29,7 +29,7 @@
 
 <script>
 import {
-  getFqList1,
+  getFqList,
   deleteFq
 } from '@/api/api'
 import Dialog from '../service/dialog.js'
@@ -50,8 +50,12 @@ export default {
   methods: {
     fetchData() {
       let id = this.handlepartitionsSearch(this.params.partitionName) || ''
+      let name = this.params.partitionName || ''
       console.log(id)
-      getFqList1({id: id}).then((res) => {
+      getFqList({
+        id: id,
+        name: name
+      }).then((res) => {
         this.tableData = res.data
         this.partitions = res.data
         for (let i in this.partitions) {
@@ -63,10 +67,11 @@ export default {
     addPartition() {
       Dialog(partitionChild, {
         sign: 'ADD'
+      }).then((res) => {
+        this.fetchData()
       })
     },
     scan(row) {
-      console.log(row)
       Dialog(partitionChild, {
         row: row,
         sign: 'SCAN'
@@ -77,6 +82,8 @@ export default {
       Dialog(partitionChild, {
         row: row,
         sign: 'MODIFY'
+      }).then((res) => {
+        this.fetchData()
       })
     },
     deleteItem(row) {
@@ -85,7 +92,6 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        console.log('删除')
         deleteFq(row.Id).then(res => {
           if (res.status) {
             this.$message({
@@ -99,7 +105,7 @@ export default {
     },
     handlepartitionsSearch(param) { // 处理查询时要传给后台大区ID
       for (let i in this.partitions) {
-        console.log(this.partitions[i].PartitionName, param, this.partitions[i].PartitionName === param)
+        // console.log(this.partitions[i].PartitionName, param, this.partitions[i].PartitionName === param)
         if (this.partitions[i].PartitionName === param) {
           return this.partitions[i].Id
         }

@@ -24,6 +24,42 @@
           </el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="主数据权限" required>
+        <el-dropdown trigger="click">
+          <el-input v-model="mainChannelData" auto-complete="off"></el-input>
+          <el-dropdown-menu slot="dropdown">
+            <el-tabs v-model="activeName" type="card">
+            <el-tab-pane label="大区" name="first">
+              <el-checkbox-group v-model="checkboxGroup1">
+                <el-checkbox-button v-for="item in channelpartitions" :label="item.PartitionName" :key="item.Id">{{item.PartitionName}}</el-checkbox-button>
+              </el-checkbox-group>
+            </el-tab-pane>
+            <el-tab-pane label="省份" name="second">
+              <el-checkbox-group v-model="checkboxGroup2">
+                <el-checkbox-button v-for="item in provinces" :label="item.Name" :key="item.Code">{{item.Name}}</el-checkbox-button>
+              </el-checkbox-group>
+            </el-tab-pane>
+            <el-tab-pane label="城市" name="third">
+              <el-checkbox-group v-model="checkboxGroup3">
+                <el-checkbox-button v-for="item in cities" :label="item.Name" :key="item.Code">{{item.Name}}</el-checkbox-button>
+              </el-checkbox-group>
+            </el-tab-pane>
+            <el-tab-pane label="代理商" name="fourth">
+              <el-table :data="Agents" border tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+                <el-table-column type="selection" width="55"></el-table-column>
+                <el-table-column prop="ChannelName1" label="渠道名称(一级)" width="120"></el-table-column>
+                <el-table-column prop="ChannelName2" label="渠道名称(一级)" width="120"></el-table-column>
+              </el-table>
+            </el-tab-pane>
+          </el-tabs>
+            <!-- <el-dropdown-item command="a">黄金糕</el-dropdown-item>
+            <el-dropdown-item command="b">狮子头</el-dropdown-item>
+            <el-dropdown-item command="c">螺蛳粉</el-dropdown-item>
+            <el-dropdown-item command="d" disabled>双皮奶</el-dropdown-item>
+            <el-dropdown-item command="e" divided>蚵仔煎</el-dropdown-item> -->
+          </el-dropdown-menu>
+        </el-dropdown>
+      </el-form-item>
       <el-form-item v-if="!item.UserId" label="部门" required>
         <el-input v-model="department" auto-complete="off" :disabled="true"></el-input>
       </el-form-item>
@@ -67,7 +103,11 @@ import {
   getFunctions,
   accountChange,
   account,
-  getFqList
+  getFqList,
+  getProvince,
+  getCities,
+  agents,
+  dataauthorityinfos
 } from '../api/api'
 export default {
   props: ['department', 'DepartmentId', 'item', 'tree'],
@@ -166,7 +206,15 @@ export default {
       defaultCheckedKey: [], // 放selected为true的id
       curList: '',
       ChannelOperatePartitionId: [],
-      initRoleId: ''
+      initRoleId: '',
+      activeName: 'first', // 制定选择第一个选项卡
+      checkboxGroup1: [], // 最终选择大区集合
+      provinces: [], // 获取省份
+      checkboxGroup2: [], // 最终选择省份集合
+      cities: [], // 获取所有城市
+      checkboxGroup3: [],
+      mainChannelData: '', // 主数据权限集合
+      Agents: [] // 代理商列表
     }
   },
   created() {
@@ -189,6 +237,7 @@ export default {
         }
       } else if (this.ruleForm.RoleId === 19) {
         this.ruleForm.ChannelPartitionId = this.filterChannelPartitionIdToArr(this.item.ChannelPartitionId)
+        console.log(this.ruleForm.ChannelPartitionId, 'this.ruleForm.ChannelPartitionId')
         this.ChannelOperatePartitionId = this.ruleForm.ChannelPartitionId
       }
       // console.log(this.item.ChannelPartitionId, 'ChannelPartitionId')
@@ -208,9 +257,36 @@ export default {
     }
     this.getRole()
     this.getChannelpartition()
+    this.getProvinceList()
+    this.getCityList()
+    this.getAgents()
+    this.getdataauthorityinfos()
     this.department = this.department ? this.department : 0
   },
   methods: {
+    getdataauthorityinfos() {
+      dataauthorityinfos().then((res) => {
+        console.log(res)
+      })
+    },
+    getProvinceList() {
+      getProvince().then((res) => {
+        this.provinces = res.data
+      })
+    },
+    getCityList() {
+      getCities().then((res) => {
+        this.cities = res.data
+      })
+    },
+    getAgents() {
+      agents().then((res) => {
+        this.Agents = res.data
+      })
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+    },
     initialFunctionList() {
       var list = this.curList
       function getCheckedItem(list) {

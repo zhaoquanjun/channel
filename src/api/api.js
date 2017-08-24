@@ -200,7 +200,12 @@ export const getProvince = params => {
     params: params
   })
 }
-
+export const getProvinceNew = () => {
+  return axios.get(`${base}/channelpartition/province`).then(res => res.data)
+}
+export const getProvinceModify = (id) => {
+  return axios.get(`${base}/channelpartition/province?id=${id}`).then(res => res.data)
+}
 // 城市列表 params: {ChannelPartitionIds: '', pcodes: ''}
 export const getParamsCities = params => {
   return useCache(`${base}/dataanalysis/cityinfo`, {
@@ -582,19 +587,23 @@ export const removeUser = (userId) => {
   return axios.delete(`${base}/account/${userId}`).then(res => res.data)
 }
 // 员工管理--大区列表
-export const getFqList = () => {
-  return axios.get(`${base}/channelpartition`).then(res => res.data)
-}
-export const getFqList1 = (params) => {
+// export const getFqList = () => {
+//   return axios.get(`${base}/channelpartition`).then(res => res.data)
+// }
+export const getFqList = (params) => {
   return axios.get(`${base}/channelpartition`, {params: params}).then(res => res.data)
 }
 // 员工管理--分区管理--渠道列表
 export const getChannel = (id) => {
   return axios.get(`${base}/channelpartition/${id}`).then(res => res.data)
 }
-// 员工管理--分区管理--新增分区
+// 新增分区
 export const addFq = (params) => {
   return axios.post(`${base}/channelpartition`, params).then(res => res.data)
+}
+// 修改大区
+export const modifyFq = (params) => {
+  return axios.put(`${base}/channelpartition`, params).then(res => res.data)
 }
 // 员工管理--删除分区
 export const deleteFq = (id) => {
@@ -650,4 +659,8 @@ export const getChannelGift = (params) => {
   return axios.get(`${base}/gift`, {
     params: params
   }).then(res => res.data)
+}
+// 获取数据权限相关表
+export const dataauthorityinfos = () => {
+  return axios.get(`${base}/dataauthorityinfos`).then(res => res.data)
 }

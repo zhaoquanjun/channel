@@ -4,12 +4,12 @@
     <el-form-item label="代理商名称" required prop="ChannelName">
       <el-input v-model="agent.ChannelName" auto-complete="off"></el-input>
     </el-form-item>
-    <el-form-item label="大区" prop="ChannelPartitionId">
+    <!-- <el-form-item label="大区" prop="ChannelPartitionId">
       <el-select v-model="agent.ChannelPartitionId" placeholder="请选择">
         <el-option v-for="item in partitions" :key="item.Id" :label="item.PartitionName" :value="item.Id">
         </el-option>
       </el-select>
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item label="省份" required prop="ProvinceCode">
       <el-select v-model="agent.ProvinceCode" placeholder="请选择" @change="filterCities()">
         <el-option v-for="item in provinces" :key="item.Code" :label="item.Name" :value="item.Code">
