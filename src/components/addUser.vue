@@ -31,7 +31,7 @@
             <el-tabs v-model="activeName" type="card">
             <el-tab-pane label="大区" name="first">
               <el-checkbox-group v-model="checkboxGroup1">
-                <el-checkbox-button v-for="item in channelpartitions" :label="item.PartitionName" :key="item.Id">{{item.PartitionName}}</el-checkbox-button>
+                <el-checkbox-button v-for="item in partitions" :label="item.PartitionName" :key="item.Id">{{item.PartitionName}}</el-checkbox-button>
               </el-checkbox-group>
             </el-tab-pane>
             <el-tab-pane label="省份" name="second">
@@ -104,9 +104,9 @@ import {
   accountChange,
   account,
   getFqList,
-  getProvince,
-  getCities,
-  agents,
+  // getProvince,
+  // getCities,
+  // agents,
   dataauthorityinfos
 } from '../api/api'
 export default {
@@ -208,6 +208,7 @@ export default {
       ChannelOperatePartitionId: [],
       initRoleId: '',
       activeName: 'first', // 制定选择第一个选项卡
+      partitions: [], // 存放大区列表
       checkboxGroup1: [], // 最终选择大区集合
       provinces: [], // 获取省份
       checkboxGroup2: [], // 最终选择省份集合
@@ -257,9 +258,9 @@ export default {
     }
     this.getRole()
     this.getChannelpartition()
-    this.getProvinceList()
-    this.getCityList()
-    this.getAgents()
+    // this.getProvinceList()
+    // this.getCityList()
+    // this.getAgents()
     this.getdataauthorityinfos()
     this.department = this.department ? this.department : 0
   },
@@ -267,23 +268,27 @@ export default {
     getdataauthorityinfos() {
       dataauthorityinfos().then((res) => {
         console.log(res)
+        this.partitions = res.data[0]
+        this.provinces = res.data[1]
+        this.cities = res.data[2]
+        this.Agents = res.data[3]
       })
     },
-    getProvinceList() {
-      getProvince().then((res) => {
-        this.provinces = res.data
-      })
-    },
-    getCityList() {
-      getCities().then((res) => {
-        this.cities = res.data
-      })
-    },
-    getAgents() {
-      agents().then((res) => {
-        this.Agents = res.data
-      })
-    },
+    // getProvinceList() {
+    //   getProvince().then((res) => {
+    //     this.provinces = res.data
+    //   })
+    // },
+    // getCityList() {
+    //   getCities().then((res) => {
+    //     this.cities = res.data
+    //   })
+    // },
+    // getAgents() {
+    //   agents().then((res) => {
+    //     this.Agents = res.data
+    //   })
+    // },
     handleSelectionChange(val) {
       this.multipleSelection = val
     },
