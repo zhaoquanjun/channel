@@ -34,7 +34,7 @@
                 <el-checkbox-button v-for="item in partitions" :label="item.PartitionName" :key="item.Id">{{item.PartitionName}}</el-checkbox-button>
               </el-checkbox-group>
             </el-tab-pane>
-            <el-tab-pane label="省份" name="second">
+            <el-tab-pane label="省份" name="second">            
               <el-checkbox-group v-model="checkboxGroup2">
                 <el-checkbox-button v-for="item in provinces" :label="item.Name" :key="item.Code">{{item.Name}}</el-checkbox-button>
               </el-checkbox-group>
