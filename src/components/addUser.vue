@@ -29,29 +29,29 @@
           <el-input v-model="mainChannelData" auto-complete="off"></el-input>
           <el-dropdown-menu slot="dropdown">
             <el-tabs v-model="activeName" type="card">
-            <el-tab-pane label="大区" name="first">
-              <el-checkbox-group v-model="checkboxGroup1">
-                <el-checkbox-button v-for="item in partitions" :label="item.PartitionName" :key="item.Id">{{item.PartitionName}}</el-checkbox-button>
-              </el-checkbox-group>
-            </el-tab-pane>
-            <el-tab-pane label="省份" name="second">
-              <el-checkbox-group v-model="checkboxGroup2">
-                <el-checkbox-button v-for="item in provinces" :label="item.Name" :key="item.Code">{{item.Name}}</el-checkbox-button>
-              </el-checkbox-group>
-            </el-tab-pane>
-            <el-tab-pane label="城市" name="third">
-              <el-checkbox-group v-model="checkboxGroup3">
-                <el-checkbox-button v-for="item in cities" :label="item.Name" :key="item.Code">{{item.Name}}</el-checkbox-button>
-              </el-checkbox-group>
-            </el-tab-pane>
-            <el-tab-pane label="代理商" name="fourth">
-              <el-table :data="Agents" border tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
-                <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column prop="ChannelName1" label="渠道名称(一级)" width="120"></el-table-column>
-                <el-table-column prop="ChannelName2" label="渠道名称(一级)" width="120"></el-table-column>
-              </el-table>
-            </el-tab-pane>
-          </el-tabs>
+              <el-tab-pane label="大区" name="first">
+                <el-checkbox-group v-model="checkboxGroup1">
+                  <el-checkbox-button v-for="item in partitions" :label="item.PartitionName" :key="item.Id">{{item.PartitionName}}</el-checkbox-button>
+                </el-checkbox-group>
+              </el-tab-pane>
+              <el-tab-pane label="省份" name="second">
+                <el-checkbox-group v-model="checkboxGroup2">
+                  <el-checkbox-button v-for="item in provinces" :label="item.Name" :key="item.Code">{{item.Name}}</el-checkbox-button>
+                </el-checkbox-group>
+              </el-tab-pane>
+              <el-tab-pane label="城市" name="third">
+                <el-checkbox-group v-model="checkboxGroup3">
+                  <el-checkbox-button v-for="item in cities" :label="item.Name" :key="item.Code">{{item.Name}}</el-checkbox-button>
+                </el-checkbox-group>
+              </el-tab-pane>
+              <el-tab-pane label="代理商" name="fourth">
+                <el-table :data="Agents" border tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+                  <el-table-column type="selection" width="55"></el-table-column>
+                  <el-table-column prop="ChannelName1" label="渠道名称(一级)" width="120"></el-table-column>
+                  <el-table-column prop="ChannelName2" label="渠道名称(一级)" width="120"></el-table-column>
+                </el-table>
+              </el-tab-pane>
+            </el-tabs>
             <!-- <el-dropdown-item command="a">黄金糕</el-dropdown-item>
             <el-dropdown-item command="b">狮子头</el-dropdown-item>
             <el-dropdown-item command="c">螺蛳粉</el-dropdown-item>
@@ -59,6 +59,9 @@
             <el-dropdown-item command="e" divided>蚵仔煎</el-dropdown-item> -->
           </el-dropdown-menu>
         </el-dropdown>
+      </el-form-item>
+      <el-form-item label="附数据权限">
+        <Auty v-model="attData"></Auty>
       </el-form-item>
       <el-form-item v-if="!item.UserId" label="部门" required>
         <el-input v-model="department" auto-complete="off" :disabled="true"></el-input>
@@ -109,6 +112,7 @@ import {
   // agents,
   dataauthorityinfos
 } from '../api/api'
+import Auty from '@/views/components/authority.vue'
 export default {
   props: ['department', 'DepartmentId', 'item', 'tree'],
   data() {
@@ -132,14 +136,12 @@ export default {
           required: true,
           message: '请输入用户名',
           trigger: 'blur'
-        },
-        {
+        }, {
           min: 1,
           max: 20,
           message: '长度20个字符内',
           trigger: 'blur'
-        }
-        ],
+        }],
         RealName: [{
           required: true,
           message: '请输入真实姓名',
@@ -149,30 +151,25 @@ export default {
           required: true,
           message: '请输入邮箱',
           trigger: 'blur'
-        },
-        {
+        }, {
           type: 'email',
           message: '请输入正确的邮箱地址',
           trigger: 'blur,change'
-        }
-        ],
+        }],
         Password: [{
           required: true,
           message: '请输入密码',
           trigger: 'blur'
-        },
-        {
+        }, {
           min: 6,
           message: '密码最小长度为6位',
           trigger: 'blur'
-        }
-        ],
+        }],
         Mobile: [{
           required: true,
           message: '请输入电话号码',
           trigger: 'blur'
-        },
-        {
+        }, {
           min: 11,
           max: 11,
           message: '请输入正确的手机号码',
@@ -207,6 +204,7 @@ export default {
       curList: '',
       ChannelOperatePartitionId: [],
       initRoleId: '',
+      attData: '',
       activeName: 'first', // 制定选择第一个选项卡
       partitions: [], // 存放大区列表
       checkboxGroup1: [], // 最终选择大区集合
@@ -255,6 +253,12 @@ export default {
       this.initialFunctionList()
       this.treeSelectedId = this.item.DepartmentId // 初始默认选择的组织
       this.trssSelectedDepartmentName = this.item.DepartmentName ? this.item.DepartmentName : '全部'
+      this.attData = {
+        partitions: this.item.AttChannelPartitions,
+        provinces: this.item.AttProvinces,
+        cities: this.item.AttCitys,
+        agents: this.item.AttChannels
+      }
     }
     this.getRole()
     this.getChannelpartition()
@@ -263,6 +267,9 @@ export default {
     // this.getAgents()
     this.getdataauthorityinfos()
     this.department = this.department ? this.department : 0
+  },
+  components: {
+    Auty
   },
   methods: {
     getdataauthorityinfos() {
@@ -294,6 +301,7 @@ export default {
     },
     initialFunctionList() {
       var list = this.curList
+
       function getCheckedItem(list) {
         window._.each(list, (item, key) => {
           item.selectd = true
@@ -497,8 +505,13 @@ export default {
               this.ruleForm.ChannelPartitionId = this.ruleForm.ChannelPartitionId.join()
             }
             this.ruleForm.FunctionList = JSON.stringify(this.curList)
-            if (this.item.UserId) {  // 修改用户
-              this.ruleForm.DepartmentId = this.treeSelectedId  // 把最终被选择的组织传递给后台 不选择默认就是之前的组织
+            this.ruleForm.AttChannelPartitions = this.attData.partitions.join(',')
+            this.ruleForm.AttProvinces = this.attData.provinces.join(',')
+            this.ruleForm.AttCitys = this.attData.cities.join(',')
+            this.ruleForm.AttChannels = this.attData.agents.join(',')
+            console.log(this.ruleForm)
+            if (this.item.UserId) { // 修改用户
+              this.ruleForm.DepartmentId = this.treeSelectedId // 把最终被选择的组织传递给后台 不选择默认就是之前的组织
               accountChange(this.item.UserId, this.ruleForm).then(res => {
                 this.$emit('done')
               })
@@ -511,6 +524,7 @@ export default {
                 })
               } else {
                 this.ruleForm.DepartmentId = this.DepartmentId
+
                 account(this.ruleForm).then((res) => {
                   if (res.status) {
                     this.$emit('done')
@@ -533,16 +547,20 @@ export default {
 .selectd {
   color: red
 }
+
 .addUser .clearH .el-form-item__content {
   height: 100%;
 }
+
 .addUser .demo-ruleForm {
   padding-right: 80px;
   padding-left: 10px;
 }
+
 .addUser .select-width .el-form-item__content {
   height: 100%;
 }
+
 .addUser .select-width .el-select {
   width: 100%;
 }
