@@ -24,60 +24,27 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="主数据权限" required>
-        <el-dropdown trigger="click">
-          <el-input v-model="mainChannelData" auto-complete="off"></el-input>
-          <el-dropdown-menu slot="dropdown">
-            <el-tabs v-model="activeName" type="card">
-              <el-tab-pane label="大区" name="first">
-                <el-checkbox-group v-model="checkboxGroup1">
-                  <el-checkbox-button v-for="item in partitions" :label="item.PartitionName" :key="item.Id">{{item.PartitionName}}</el-checkbox-button>
-                </el-checkbox-group>
-              </el-tab-pane>
-              <el-tab-pane label="省份" name="second">
-                <el-checkbox-group v-model="checkboxGroup2">
-                  <el-checkbox-button v-for="item in provinces" :label="item.Name" :key="item.Code">{{item.Name}}</el-checkbox-button>
-                </el-checkbox-group>
-              </el-tab-pane>
-              <el-tab-pane label="城市" name="third">
-                <el-checkbox-group v-model="checkboxGroup3">
-                  <el-checkbox-button v-for="item in cities" :label="item.Name" :key="item.Code">{{item.Name}}</el-checkbox-button>
-                </el-checkbox-group>
-              </el-tab-pane>
-              <el-tab-pane label="代理商" name="fourth">
-                <el-table :data="Agents" border tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
-                  <el-table-column type="selection" width="55"></el-table-column>
-                  <el-table-column prop="ChannelName1" label="渠道名称(一级)" width="120"></el-table-column>
-                  <el-table-column prop="ChannelName2" label="渠道名称(一级)" width="120"></el-table-column>
-                </el-table>
-              </el-tab-pane>
-            </el-tabs>
-            <!-- <el-dropdown-item command="a">黄金糕</el-dropdown-item>
-            <el-dropdown-item command="b">狮子头</el-dropdown-item>
-            <el-dropdown-item command="c">螺蛳粉</el-dropdown-item>
-            <el-dropdown-item command="d" disabled>双皮奶</el-dropdown-item>
-            <el-dropdown-item command="e" divided>蚵仔煎</el-dropdown-item> -->
-          </el-dropdown-menu>
-        </el-dropdown>
+      <el-form-item v-if="ruleForm.RoleId === 18 || ruleForm.RoleId === 19 || ruleForm.RoleId === 26  || ruleForm.RoleId === 27 " label="主数据权限" required>
+        <Auty v-model="mainData"></Auty>
       </el-form-item>
-      <el-form-item label="附数据权限">
+      <el-form-item v-if="ruleForm.RoleId === 18 || ruleForm.RoleId === 19 || ruleForm.RoleId === 26  || ruleForm.RoleId === 27 " label="附数据权限">
         <Auty v-model="attData"></Auty>
       </el-form-item>
       <el-form-item v-if="!item.UserId" label="部门" required>
         <el-input v-model="department" auto-complete="off" :disabled="true"></el-input>
       </el-form-item>
-      <el-form-item v-show="ruleForm.RoleId === 18" label="选择大区" required>
+      <!-- <el-form-item v-show="ruleForm.RoleId === 18" label="选择大区" required>
         <el-select v-model="ruleForm.ChannelPartitionId" placeholder="请选择">
           <el-option v-for="item in channelpartitions" :key="item.Id" :label="item.PartitionName" :value="item.Id">
           </el-option>
         </el-select>
-      </el-form-item>
-      <el-form-item class="select-width" v-show="ruleForm.RoleId === 19" label="选择大区" required>
+      </el-form-item> -->
+      <!-- <el-form-item class="select-width" v-show="ruleForm.RoleId === 19" label="选择大区" required>
         <el-select v-model="ChannelOperatePartitionId" multiple placeholder="请选择">
           <el-option v-for="item in channelpartitions" :key="item.Id" :label="item.PartitionName" :value="item.Id">
           </el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="选择模块" class="clearH" required>
         <el-tree :highlight-current=true ref="tree" :data="dataFunction" :show-checkbox="true" node-key="FunctionId" :props="defaultProps" @check-change="handleNodeClick" :default-checked-keys="defaultCheckedKey">
         </el-tree>
@@ -107,9 +74,6 @@ import {
   accountChange,
   account,
   getFqList,
-  // getProvince,
-  // getCities,
-  // agents,
   dataauthorityinfos
 } from '../api/api'
 import Auty from '@/views/components/authority.vue'
@@ -205,15 +169,7 @@ export default {
       ChannelOperatePartitionId: [],
       initRoleId: '',
       attData: '',
-      activeName: 'first', // 制定选择第一个选项卡
-      partitions: [], // 存放大区列表
-      checkboxGroup1: [], // 最终选择大区集合
-      provinces: [], // 获取省份
-      checkboxGroup2: [], // 最终选择省份集合
-      cities: [], // 获取所有城市
-      checkboxGroup3: [],
-      mainChannelData: '', // 主数据权限集合
-      Agents: [] // 代理商列表
+      mainData: ''
     }
   },
   created() {
@@ -227,18 +183,20 @@ export default {
       this.ruleForm.Mobile = this.item.Mobile
       this.ruleForm.RoleId = this.item.RoleId
       this.initRoleId = this.item.RoleId // 存储修改时默认返回的角色
+      // 之前选择大区方法 新需求没用
       // console.log(this.ruleForm.RoleId, 'RoleId')
-      if (this.ruleForm.RoleId === 18) {
-        if (this.item.ChannelPartitionId === 0) {
-          this.ruleForm.ChannelPartitionId = this.item.ChannelPartitionId
-        } else {
-          this.ruleForm.ChannelPartitionId = this.item.ChannelPartitionId ? +this.item.ChannelPartitionId : ''
-        }
-      } else if (this.ruleForm.RoleId === 19) {
-        this.ruleForm.ChannelPartitionId = this.filterChannelPartitionIdToArr(this.item.ChannelPartitionId)
-        console.log(this.ruleForm.ChannelPartitionId, 'this.ruleForm.ChannelPartitionId')
-        this.ChannelOperatePartitionId = this.ruleForm.ChannelPartitionId
-      }
+      // if (this.ruleForm.RoleId === 18) {
+      //   if (this.item.ChannelPartitionId === 0) {
+      //     this.ruleForm.ChannelPartitionId = this.item.ChannelPartitionId
+      //   } else {
+      //     this.ruleForm.ChannelPartitionId = this.item.ChannelPartitionId ? +this.item.ChannelPartitionId : ''
+      //   }
+      // } else if (this.ruleForm.RoleId === 19) {
+      //   console.log(this.item.ChannelPartitionId, 'this.item.ChannelPartitionId')
+      //   this.ruleForm.ChannelPartitionId = this.filterChannelPartitionIdToArr(this.item.ChannelPartitionId)
+      //   console.log(this.ruleForm.ChannelPartitionId, 'this.ruleForm.ChannelPartitionId')
+      //   this.ChannelOperatePartitionId = this.ruleForm.ChannelPartitionId
+      // }
       // console.log(this.item.ChannelPartitionId, 'ChannelPartitionId')
       if (this.item.ChannelPartitionId === 0) {
         this.ruleForm.ChannelPartitionId = this.item.ChannelPartitionId
@@ -253,6 +211,14 @@ export default {
       this.initialFunctionList()
       this.treeSelectedId = this.item.DepartmentId // 初始默认选择的组织
       this.trssSelectedDepartmentName = this.item.DepartmentName ? this.item.DepartmentName : '全部'
+      // 主数据权限修改赋值
+      this.mainData = {
+        partitions: this.item.MainChannelPartitions,
+        provinces: this.item.MainProvinces,
+        cities: this.item.MainCitys,
+        agents: this.item.MainChannels
+      }
+      // 附属数据权限修改赋值
       this.attData = {
         partitions: this.item.AttChannelPartitions,
         provinces: this.item.AttProvinces,
@@ -313,20 +279,22 @@ export default {
       getCheckedItem(list)
       // console.log(list, 'initialFunctionList')
     },
-    filterChannelPartitionIdToArr(arr) {
-      if (arr === '0') {
-        arr = []
-      } else {
-        arr = arr.split(',')
-        for (let i in arr) {
-          arr[i] = +arr[i]
-        }
-      }
-      return arr
-    },
+    // 之前选择大区方法 新需求没用
+    // filterChannelPartitionIdToArr(arr) {
+    //   if (arr === 0) {
+    //     arr = []
+    //   } else {
+    //     arr = arr.split(',')
+    //     for (let i in arr) {
+    //       arr[i] = +arr[i]
+    //     }
+    //   }
+    //   return arr
+    // },
     getRole() {
       getRoles().then(res => {
         this.modelRoles = res.data
+        console.log(this.modelRoles, 'modelRoles')
       })
     },
     getChannelpartition() {
@@ -505,10 +473,19 @@ export default {
               this.ruleForm.ChannelPartitionId = this.ruleForm.ChannelPartitionId.join()
             }
             this.ruleForm.FunctionList = JSON.stringify(this.curList)
+            // 提交的时候把主数据权限赋值给后台需要的
+            console.log(this.mainData)
+            this.ruleForm.MainChannelPartitions = this.mainData.partitions.join(',')
+            this.ruleForm.MainProvinces = this.mainData.provinces.join(',')
+            this.ruleForm.MainCitys = this.mainData.cities.join(',')
+            this.ruleForm.MainChannels = this.mainData.agents.join(',')
+            // 提交的时候把附属数据权限赋值给后台需要的
+            console.log(this.attData)
             this.ruleForm.AttChannelPartitions = this.attData.partitions.join(',')
             this.ruleForm.AttProvinces = this.attData.provinces.join(',')
             this.ruleForm.AttCitys = this.attData.cities.join(',')
             this.ruleForm.AttChannels = this.attData.agents.join(',')
+
             console.log(this.ruleForm)
             if (this.item.UserId) { // 修改用户
               this.ruleForm.DepartmentId = this.treeSelectedId // 把最终被选择的组织传递给后台 不选择默认就是之前的组织

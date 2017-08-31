@@ -124,11 +124,11 @@ export default {
         if (index > 2) return
         this.modelValue[vmap[index]] = []
         el.querySelectorAll('input:checked').forEach((input) => {
-          this.modelValue[vmap[index]].push(input.parentNode.__vue__.value)
+          this.modelValue[vmap[index]].push('"' + input.parentNode.__vue__.value + '"')
         })
       })
       this.modelValue.agents = this.selected.agents.map(item => {
-        return item.ChannelId
+        return ('"' + item.ChannelId + '"')
       })
       this.$emit('input', this.modelValue)
     },
