@@ -25,6 +25,10 @@ import StatisChannel from '@/views/StatisChannel'  // 渠道统计
 import UserList from '@/views/userList' // 员工管理
 // import UserFq from '@/views/usersFq' // 分区设置
 import PartitionManage from '@/views/partitionManage' // 大区管理
+import OperateAccount from '@/views/operateAccount' // 做账数据管理--运营会计数据总览
+import WaitSetAccount from '@/views/waitSetAccount' // 做账数据管理--待建账数据统计
+import Receipt from '@/views/receipt' // 做账数据管理--传票数据统计
+import MakeAccount from '@/views/makeAccount' // 做账数据管理--做账与报税数据统计
 
 Vue.use(Router)
 const router = new Router({
@@ -121,6 +125,22 @@ const router = new Router({
       name: 'main.statis_channel',
       path: 'statis_channel',
       component: StatisChannel
+    }, {
+      name: 'main.operateAccount',
+      path: 'operateAccount',
+      component: OperateAccount
+    }, {
+      name: 'main.waitSetAccount',
+      path: 'waitSetAccount',
+      component: WaitSetAccount
+    }, {
+      name: 'main.receipt',
+      path: 'receipt',
+      component: Receipt
+    }, {
+      name: 'main.makeAccount',
+      path: 'makeAccount',
+      component: MakeAccount
     }]
   }, {
     path: '/login',

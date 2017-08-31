@@ -664,3 +664,27 @@ export const getChannelGift = (params) => {
 export const dataauthorityinfos = () => {
   return axios.get(`${base}/dataauthorityinfos`).then(res => res.data)
 }
+// 做账数据管理--运营会计数据总览
+export const agenttotalcustomer = params => {
+  return axios.get(`${base}/dataanalysis/agenttotalcustomer`, {
+    params: params
+  }).then(res => res.data)
+}
+// 做账数据管理--待建账数据统计
+export const agentrecallcustomer = params => {
+  return axios.get(`${base}/dataanalysis/agentrecallcustomer`, {
+    params: params
+  }).then(res => res.data)
+}
+// 做账数据管理--传票数据统计
+export const agentreceiptcustomer = params => {
+  return axios.get(`${base}/dataanalysis/agentreceiptcustomer`, {
+    params: params
+  }).then(res => res.data)
+}
+// 做账数据管理--做账与报税数据统计
+export const agentaccountcustomer = params => {
+  return axios.get(`${base}/dataanalysis/agentaccountcustomer`, {
+    params: params
+  }).then(res => res.data)
+}

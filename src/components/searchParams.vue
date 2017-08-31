@@ -1,6 +1,6 @@
 <template>
 <el-form :inline="true" :model="params" class="searchForm">
-  <el-form-item v-if="!reduceSearchItem" label="" v-show="!hideDate">
+  <el-form-item v-if="!reduceSearchItem && !makeAccount" label="" v-show="!hideDate">
     <el-date-picker v-model="params.starttime" type="date" placeholder="开始日期" :clearable="clearable">
     </el-date-picker>
     <span>-</span>
@@ -12,6 +12,11 @@
     </el-date-picker>
     <span>-</span>
     <el-date-picker v-model="params.lastendtime" type="date" placeholder="结束日期" :clearable="clearable">
+    </el-date-picker>
+  </el-form-item>
+  <!-- 做账数据管理需要显示单个截止日期 -->
+  <el-form-item v-if="makeAccount" label="截止时间" v-show="!hideDate">
+    <el-date-picker v-model="params.cuttime" type="date" placeholder="截止时间" :clearable="clearable">
     </el-date-picker>
   </el-form-item>
   <el-form-item label="统计日" v-show="reduceSearchItem">
@@ -36,9 +41,12 @@
       </el-option>
     </el-select>
   </el-form-item>
-  <el-form-item label="代理商" v-show="!hideChannel">
-    <el-input placeholder="代理商名称" v-model="params.channelname"></el-input>
+  <el-form-item label="代理商">
+    <el-autocomplete class="inline-input" v-model="params.channelname" :trigger-on-focus="false" :fetch-suggestions="querySearch" placeholder="代理商名称"></el-autocomplete>
   </el-form-item>
+  <!-- <el-form-item label="代理商" v-show="!hideChannel">
+    <el-input placeholder="代理商名称" v-model="params.channelname"></el-input>
+  </el-form-item> -->
   <el-form-item>
     <el-button type="primary" @click="onSearch">查询</el-button>
     <el-button v-if="!show" type="primary" @click="onDownload" :disabled="canClick">导出</el-button>
@@ -49,12 +57,13 @@
 import {
   getPartitions,
   getParamsProvince,
-  getParamsCities
+  getParamsCities,
+  agents
 } from '../api/api'
 import ElSelect from '@/components/select.vue'
 export default {
   name: 'searchParams',
-  props: ['hideChannel', 'hideDate', 'showDateRange', 'length', 'show', 'reduceSearchItem'],
+  props: ['hideChannel', 'hideDate', 'showDateRange', 'length', 'show', 'reduceSearchItem', 'makeAccount'],
   data() {
     return {
       params: {
@@ -62,6 +71,7 @@ export default {
         endtime: '',
         laststarttime: '',
         lastendtime: '',
+        cuttime: '',
         partitions: [],
         provinces: [],
         ccodes: [],
@@ -70,13 +80,15 @@ export default {
       partitions: [],
       provinces: [],
       cities: [],
-      clearable: false
+      clearable: false,
+      agents: []
     }
   },
   created() {
     this.getPartitions()
     this.getParamsProvince()
     this.getParamsCities()
+    this.Agents()
   },
   computed: {
     canClick: function () {
@@ -116,12 +128,19 @@ export default {
       let {
         starttime,
         endtime,
+        cuttime,
         ccodes,
         channelname
       } = this.params
       if (this.reduceSearchItem) {
         var params = {
           endtime,
+          channelname
+        }
+      } else if (this.makeAccount) {
+        params = {
+          cuttime,
+          ccodes,
           channelname
         }
       } else {
@@ -150,7 +169,7 @@ export default {
       if (!this.reduceSearchItem && ccodes !== 0) {
         params.ccodes = ccodes.join(',')
       }
-      // console.log(params, 'params')
+      console.log(params, 'params')
       this.$emit('search', params, this.cities)
     },
     onDownload() {
@@ -175,6 +194,25 @@ export default {
       }
       params.ccodes = ccodes.join(',')
       this.$emit('download', params, this.cities)
+    },
+    Agents() {
+      agents().then((res) => {
+        this.agents = res.data
+        for (let i in this.agents) {
+          this.agents[i].value = this.agents[i].ChannelName
+        }
+        // console.log(this.agents)
+      })
+    },
+    querySearch(queryString, cb) {
+      var channels = this.agents
+      var results = queryString ? channels.filter(this.createFilter(queryString)) : channels
+      cb(results)
+    },
+    createFilter(queryString) {
+      return (channel) => {
+        return (channel.value.indexOf(queryString) >= 0)
+      }
     }
   },
   components: {

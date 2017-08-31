@@ -469,23 +469,24 @@ export default {
               type: 'warning'
             })
           } else {
-            if (this.ruleForm.RoleId === 19) {
-              this.ruleForm.ChannelPartitionId = this.ruleForm.ChannelPartitionId.join()
-            }
+            // if (this.ruleForm.RoleId === 19) {
+            //   this.ruleForm.ChannelPartitionId = this.ruleForm.ChannelPartitionId.join()
+            // }
             this.ruleForm.FunctionList = JSON.stringify(this.curList)
             // 提交的时候把主数据权限赋值给后台需要的
-            console.log(this.mainData)
-            this.ruleForm.MainChannelPartitions = this.mainData.partitions.join(',')
-            this.ruleForm.MainProvinces = this.mainData.provinces.join(',')
-            this.ruleForm.MainCitys = this.mainData.cities.join(',')
-            this.ruleForm.MainChannels = this.mainData.agents.join(',')
-            // 提交的时候把附属数据权限赋值给后台需要的
-            console.log(this.attData)
-            this.ruleForm.AttChannelPartitions = this.attData.partitions.join(',')
-            this.ruleForm.AttProvinces = this.attData.provinces.join(',')
-            this.ruleForm.AttCitys = this.attData.cities.join(',')
-            this.ruleForm.AttChannels = this.attData.agents.join(',')
-
+            if (this.ruleForm.RoleId === 18 || this.ruleForm.RoleId === 19 || this.ruleForm.RoleId === 26 || this.ruleForm.RoleId === 27) {
+              console.log(this.mainData)
+              this.ruleForm.MainChannelPartitions = this.mainData.partitions.join(',')
+              this.ruleForm.MainProvinces = this.mainData.provinces.join(',')
+              this.ruleForm.MainCitys = this.mainData.cities.join(',')
+              this.ruleForm.MainChannels = this.mainData.agents.join(',')
+              // 提交的时候把附属数据权限赋值给后台需要的
+              console.log(this.attData)
+              this.ruleForm.AttChannelPartitions = this.attData.partitions.join(',')
+              this.ruleForm.AttProvinces = this.attData.provinces.join(',')
+              this.ruleForm.AttCitys = this.attData.cities.join(',')
+              this.ruleForm.AttChannels = this.attData.agents.join(',')
+            }
             console.log(this.ruleForm)
             if (this.item.UserId) { // 修改用户
               this.ruleForm.DepartmentId = this.treeSelectedId // 把最终被选择的组织传递给后台 不选择默认就是之前的组织
