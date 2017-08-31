@@ -1,17 +1,17 @@
 <template>
 <el-form :inline="true" :model="params" class="searchForm">
   <el-form-item v-if="!reduceSearchItem" label="" v-show="!hideDate">
-    <el-date-picker v-model="params.starttime" type="date" placeholder="开始日期">
+    <el-date-picker v-model="params.starttime" type="date" placeholder="开始日期" :clearable="clearable">
     </el-date-picker>
     <span>-</span>
-    <el-date-picker v-model="params.endtime" type="date" placeholder="结束日期">
+    <el-date-picker v-model="params.endtime" type="date" placeholder="结束日期" :clearable="clearable">
     </el-date-picker>
   </el-form-item>
   <el-form-item label="环比" v-show="showDateRange">
-    <el-date-picker v-model="params.laststarttime" type="date" placeholder="开始日期">
+    <el-date-picker v-model="params.laststarttime" type="date" placeholder="开始日期" :clearable="clearable">
     </el-date-picker>
     <span>-</span>
-    <el-date-picker v-model="params.lastendtime" type="date" placeholder="结束日期">
+    <el-date-picker v-model="params.lastendtime" type="date" placeholder="结束日期" :clearable="clearable">
     </el-date-picker>
   </el-form-item>
   <el-form-item label="统计日" v-show="reduceSearchItem">
@@ -69,7 +69,8 @@ export default {
       },
       partitions: [],
       provinces: [],
-      cities: []
+      cities: [],
+      clearable: false
     }
   },
   created() {
@@ -93,6 +94,7 @@ export default {
       })
     },
     getParamsProvince() {
+      this.params.provinces = []
       const param = {
         ChannelPartitionIds: this.params.partitions.join(',')
       }
@@ -130,17 +132,25 @@ export default {
           channelname
         }
       }
+
       if (this.params.partitions.length > 0 || this.params.provinces.length > 0 && ccodes.length === 0) {
         ccodes = this.cities.map(item => item.CityCode)
       }
-
+      // console.log(ccodes, 'ccodes')
+      // c处理大区没有城市时候需要给后台传递codes 值为0
+      if (this.params.partitions.length > 0 && ccodes.length === 0 || this.params.provinces.length > 0 && ccodes.length === 0) {
+        params.ccodes = ccodes = 0
+      }
+      // console.log(ccodes, 'ccodes之后')
       if (this.showDateRange) {
         params.laststarttime = this.params.laststarttime
         params.lastendtime = this.params.lastendtime
       }
-      if (!this.reduceSearchItem) {
+      // c处理大区没有城市时候需要给后台传递codes 值为0
+      if (!this.reduceSearchItem && ccodes !== 0) {
         params.ccodes = ccodes.join(',')
       }
+      // console.log(params, 'params')
       this.$emit('search', params, this.cities)
     },
     onDownload() {

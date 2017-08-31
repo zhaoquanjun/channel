@@ -10,10 +10,10 @@
         <el-input class="inputWid" placeholder="法人" v-model="params.legalPerson"></el-input>
       </el-form-item>
       <el-form-item label="">
-        <el-date-picker class="inputWid" v-model="params.starttime" type="date" placeholder="开始日期">
+        <el-date-picker class="inputWid" v-model="params.starttime" type="date" placeholder="开始日期" :clearable="clearable">
         </el-date-picker>
         <span>-</span>
-        <el-date-picker class="inputWid" v-model="params.endtime" type="date" placeholder="结束日期">
+        <el-date-picker class="inputWid" v-model="params.endtime" type="date" placeholder="结束日期" :clearable="clearable">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="审核状态">
@@ -143,7 +143,8 @@ export default {
         status: 0,
         Category: 0
       },
-      category: ''
+      category: '',
+      clearable: false
     }
   },
   created() {

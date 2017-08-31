@@ -4,10 +4,10 @@
   <div class="vsearch">
     <el-form ref="params" :inline="true" :model="params">
       <el-form-item label="账单日期">
-        <el-date-picker class="dataWidth" v-model="params.starttime" type="date">
+        <el-date-picker class="dataWidth" v-model="params.starttime" type="date" :clearable="clearable">
         </el-date-picker>
         <span>-</span>
-        <el-date-picker class="dataWidth" v-model="params.endtime" type="date">
+        <el-date-picker class="dataWidth" v-model="params.endtime" type="date" :clearable="clearable">
         </el-date-picker>
       </el-form-item>
       <el-form-item class="form-width" label="代理商">
@@ -78,7 +78,8 @@ export default {
       }, {
         name: '一代提成',
         type: 5
-      }]
+      }],
+      clearable: false
     }
   },
   created() {

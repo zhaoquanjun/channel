@@ -163,4 +163,7 @@ export default {
   color: #bbb;
   cursor: not-allowed;
 }
+.partition-child .el-dialog__body {
+  padding: 30px 150px 30px 20px;
+}
 </style>

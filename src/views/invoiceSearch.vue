@@ -18,17 +18,17 @@
         </el-select>
       </el-form-item>
       <el-form-item label="申请时间">
-        <el-date-picker v-model="params.start" type="date" placeholder="开始日期">
+        <el-date-picker v-model="params.start" type="date" placeholder="开始日期" :clearable="clearable">
         </el-date-picker>
         <span>-</span>
-        <el-date-picker v-model="params.end" type="date" placeholder="结束日期">
+        <el-date-picker v-model="params.end" type="date" placeholder="结束日期" :clearable="clearable">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="审核时间">
-        <el-date-picker v-model="params.auditstart" type="date" placeholder="开始日期">
+        <el-date-picker v-model="params.auditstart" type="date" placeholder="开始日期" :clearable="clearable">
         </el-date-picker>
         <span>-</span>
-        <el-date-picker v-model="params.auditend" type="date" placeholder="结束日期">
+        <el-date-picker v-model="params.auditend" type="date" placeholder="结束日期" :clearable="clearable">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -109,7 +109,8 @@ export default {
       }, {
         name: '拒审',
         status: 3
-      }]
+      }],
+      clearable: false
     }
   },
   created() {

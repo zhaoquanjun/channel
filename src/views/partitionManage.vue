@@ -8,7 +8,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="fetchData">查询</el-button>
-        <el-button type="primary" @click="addPartition">添加分区</el-button>
+        <el-button type="primary" @click="addPartition">添加大区</el-button>
       </el-form-item>
     </el-form>
   </div>

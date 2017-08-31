@@ -74,8 +74,11 @@ export default {
       })
     },
     onSearch(params) {
+      console.log(params)
       this.params.startdate = params.starttime
       this.params.enddate = params.endtime
+      // 当大区选择没有对应的城市时候 需要传递城市值默认是0
+
       this.params.cityCodes = params.ccodes
       this.params.channelname = params.channelname
       this.fetchData()

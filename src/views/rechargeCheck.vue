@@ -4,10 +4,10 @@
   <div class="vsearch">
     <el-form ref="params" :inline="true" :model="params">
       <el-form-item label="申请时间">
-        <el-date-picker v-model="params.starttime" type="date">
+        <el-date-picker v-model="params.starttime" type="date" :clearable="clearable">
         </el-date-picker>
         <span>-</span>
-        <el-date-picker v-model="params.endtime" type="date">
+        <el-date-picker v-model="params.endtime" type="date" :clearable="clearable">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="代理商">
@@ -90,7 +90,8 @@ export default {
       }, {
         name: '拒审',
         status: 3
-      }]
+      }],
+      clearable: false
     }
   },
   created() {

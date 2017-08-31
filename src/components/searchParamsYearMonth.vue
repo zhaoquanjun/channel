@@ -52,6 +52,7 @@ import {
   getParamsProvince,
   getParamsCities
 } from '../api/api'
+import ElSelect from '@/components/select.vue'
 export default {
   name: 'searchParams',
   props: ['length', 'onlyOneMonth'],
@@ -94,6 +95,7 @@ export default {
       })
     },
     getParamsProvince() {
+      this.params.provinces = []
       const param = {
         ChannelPartitionIds: this.params.partitions.join(',')
       }
@@ -127,7 +129,15 @@ export default {
       if ((this.params.partitions.length > 0 || this.params.provinces.length) > 0 && ccodes.length === 0) {
         ccodes = this.cities.map(item => item.CityCode)
       }
-      params.ccodes = ccodes.join(',')
+      // console.log(ccodes, 'ccodes')
+      // c处理大区没有城市时候需要给后台传递codes 值为0
+      if (this.params.partitions.length > 0 && ccodes.length === 0 || this.params.provinces.length > 0 && ccodes.length === 0) {
+        params.ccodes = ccodes = 0
+      } else {
+        params.ccodes = ccodes.join(',')
+      }
+      // console.log(params.ccodes, 'ccodes之后')
+
       if (!this.onlyOneMonth) {
         params.months = months.map(str => {
           return parseInt(str) < 10 ? ('0' + parseInt(str)) : parseInt(str)
@@ -173,6 +183,9 @@ export default {
         this.$emit('download', params)
       }
     }
+  },
+  components: {
+    ElSelect
   }
 }
 </script>
