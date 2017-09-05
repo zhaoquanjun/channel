@@ -175,6 +175,7 @@ export default {
   },
   created() {
     // console.log(this.item, '所有信息')
+    console.log(this.item, 'item')
     if (this.item.UserId) {
       this.title = '修改员工信息'
       this.ruleForm.UserName = this.item.UserName
@@ -235,6 +236,7 @@ export default {
     // this.getAgents()
     this.getdataauthorityinfos()
     this.department = this.department ? this.department : 0
+    console.log(this.mainData, this.attData, 'data created')
   },
   components: {
     Auty,
@@ -439,6 +441,7 @@ export default {
     submitForm(formName) {
       // console.log(this.dataFunction, 'ruleForm.FunctionList')
       // return ''
+      console.log(this.mainData, this.attData, 'data')
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // console.log(this.treeSelectedId, 'treeSelectedId')
@@ -475,14 +478,15 @@ export default {
               this.ruleForm.MainChannels = this.mainData.agents.join(',')
               // 提交的时候把附属数据权限赋值给后台需要的
               console.log(this.attData)
-              this.ruleForm.AttChannelPartitions = this.attData.partitions.join(',')
-              this.ruleForm.AttProvinces = this.attData.provinces.join(',')
-              this.ruleForm.AttCitys = this.attData.cities.join(',')
-              this.ruleForm.AttChannels = this.attData.agents.join(',')
+              this.ruleForm.AttChannelPartitions = this.attData.partitions instanceof Array ? this.attData.partitions.join(',') : ''
+              this.ruleForm.AttProvinces = this.attData.provinces instanceof Array ? this.attData.provinces.join(',') : ''
+              this.ruleForm.AttCitys = this.attData.cities instanceof Array ? this.attData.cities.join(',') : ''
+              this.ruleForm.AttChannels = this.attData.agents instanceof Array ? this.attData.agents.join(',') : ''
             }
             console.log(this.ruleForm)
             if (this.item.UserId) { // 修改用户
               this.ruleForm.DepartmentId = this.treeSelectedId // 把最终被选择的组织传递给后台 不选择默认就是之前的组织
+              console.log(accountChange)
               accountChange(this.item.UserId, this.ruleForm).then((res) => {
                 if (res.status) {
                   this.$emit('done')
@@ -497,7 +501,7 @@ export default {
                 })
               } else {
                 this.ruleForm.DepartmentId = this.DepartmentId
-
+                console.log(account)
                 account(this.ruleForm).then((res) => {
                   if (res.status) {
                     this.$emit('done')

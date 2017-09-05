@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="baobiao">
   <h3 class="vheader">做账与报税数据统计</h3>
   <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload" :make-account="true"></SearchParams>
   <el-table id="dataTable" :data="tableData" @cell-click="downloadColumn" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum>
@@ -141,17 +141,17 @@ export default {
 }
 </script>
 <style>
-.el-table__body tr td:nth-child(9) .cell{
+.baobiao .el-table__body tr td:nth-child(9) .cell{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;
 }
-.el-table__body tr td:nth-child(10) .cell{
+.baobiao .el-table__body tr td:nth-child(10) .cell{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;
 }
-.el-table__body tr td:nth-child(14) .cell{
+.baobiao .el-table__body tr td:nth-child(14) .cell{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;

@@ -56,7 +56,7 @@ export default {
       this.getAllProvince()
       this.title = '修改大区'
       this.canChange = false
-      this.ruleForm = this.row
+      this.ruleForm = {...this.row}
       console.log(this.ruleForm, '修改大区初始值')
       this.ruleForm.Provinceids = this.filterChannelPartitionIdToArr(this.ruleForm.ProvincesCode)
       for (let i in this.ruleForm.Provinceids) {

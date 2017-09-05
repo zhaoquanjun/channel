@@ -10,7 +10,7 @@
       </el-tab-pane>
       <el-tab-pane label="省份" name="second">
         <div>
-          <el-input placeholder="查询省份" icon="search" v-model="pstr" @change="qProvince(pstr)"></el-input>
+          <el-input placeholder="查询省份" icon="search" v-model="pstr" @change="qProvince"></el-input>
         </div>
         <el-checkbox-group v-model="selected.provinces" class="pnlist">
           <el-checkbox-button v-show="!item.hidden" v-for="item in provinces" :label="item.Name" :value="item.Code" :key="item.Code">{{item.Name}}</el-checkbox-button>
@@ -18,7 +18,7 @@
       </el-tab-pane>
       <el-tab-pane label="城市" name="third">
         <div>
-          <el-input placeholder="查询城市" icon="search" v-model="cstr" @change="qCity(pstr)"></el-input>
+          <el-input placeholder="查询城市" icon="search" v-model="cstr" @change="qCity"></el-input>
         </div>
         <el-checkbox-group v-model="selected.cities">
           <el-checkbox-button v-show="!item.hidden" v-for="item in cities" :label="item.Name" :value="item.Code" :key="item.Code">{{item.Name}}</el-checkbox-button>
@@ -145,15 +145,17 @@ export default {
             this.modelValue[vmap[index]].push("'" + input.parentNode.__vue__.value + "'")
           })
         })
-        this.modelValue.agents = this.selected.agents.map(item => {
-          return ("'" + item.ChannelId + "'")
-        })
-        console.log(this.modelValue, 'this.modelValue')
-        this.$emit('input', this.modelValue)
-      }, 1000)
+      }, 0)
+      this.modelValue.agents = this.selected.agents.map(item => {
+        return ("'" + item.ChannelId + "'")
+      })
+      console.log(this.modelValue, 'this.modelValue')
+      this.$emit('input', this.modelValue)
     },
-    qProvince(str) {
+    qProvince() {
+      var str = this.pstr.replace(/\s/g, '')
       this.provinces.forEach(item => {
+        item.Name = item.Name.replace(/\s/g, '')
         if (item.Name.indexOf(str) === -1) {
           item.hidden = true
         } else {
@@ -161,8 +163,10 @@ export default {
         }
       })
     },
-    qCity(str) {
+    qCity() {
+      var str = this.cstr.replace(/\s/g, '')
       this.cities.forEach(item => {
+        item.Name = item.Name.replace(/\s/g, '')
         if (item.Name.indexOf(str) === -1) {
           item.hidden = true
         } else {
@@ -239,5 +243,9 @@ export default {
 
 input[type="text"] {
   cursor: pointer;
+}
+
+.au-container .el-dropdown-menu .el-tabs__content {
+  height: 200px;
 }
 </style>

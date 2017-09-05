@@ -103,9 +103,9 @@ export default {
           sums[index] = values.reduce((prev, curr) => {
             const value = Number(curr)
             if (!isNaN(value)) {
-              return prev + curr
+              return (parseFloat(prev) + parseFloat(curr)).toFixed(2)
             } else {
-              return prev
+              return parseFloat(prev).toFixed(2)
             }
           }, 0)
         } else {
