@@ -77,6 +77,7 @@ export default {
   },
   created() {
     this.getdataauthorityinfos()
+    console.log(this.value, 'AutyMain')
   },
 
   methods: {
@@ -93,7 +94,7 @@ export default {
     },
     setSelected() {
       if (this.value.agents) {
-        // console.log('agentIds:', this.value.agents)
+        console.log('agentIds:', this.value.agents)
         const agentIds = this.value.agents.replace(/'/g, '').split(',')
         this.agents.forEach(item => {
           // console.log('agent:', item.ChannelId, agentIds.indexOf(item.ChannelId) > -1)
@@ -134,23 +135,17 @@ export default {
       }))
       this.selectedText = selectedTextArr.join(',')
       const vmap = ['partitions', 'provinces', 'cities']
-      setTimeout(() => {
-        console.log(this.$el.querySelectorAll('.el-tab-pane'))
-        this.$el.querySelectorAll('.el-tab-pane').forEach((el, index) => {
-          if (index > 2) return
-          this.modelValue[vmap[index]] = []
-          console.log(el.querySelectorAll('input:checked'))
-          el.querySelectorAll('input:checked').forEach((input) => {
-            console.log(input, 'input')
-            this.modelValue[vmap[index]].push("'" + input.parentNode.__vue__.value + "'")
-          })
+      this.$el.querySelectorAll('.el-tab-pane').forEach((el, index) => {
+        if (index > 2) return
+        this.modelValue[vmap[index]] = []
+        el.querySelectorAll('input:checked').forEach((input) => {
+          this.modelValue[vmap[index]].push("'" + input.parentNode.__vue__.value + "'")
         })
-        this.modelValue.agents = this.selected.agents.map(item => {
-          return ("'" + item.ChannelId + "'")
-        })
-        console.log(this.modelValue, 'this.modelValue')
-        this.$emit('input', this.modelValue)
-      }, 1000)
+      })
+      this.modelValue.agents = this.selected.agents.map(item => {
+        return ("'" + item.ChannelId + "'")
+      })
+      this.$emit('input', this.modelValue)
     },
     qProvince(str) {
       this.provinces.forEach(item => {

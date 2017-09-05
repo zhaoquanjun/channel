@@ -242,7 +242,10 @@ export default {
   position: relative;
   overflow: hidden;
 }
-
+.el-table__body tr td:nth-child(5) .cell{
+  cursor: pointer;
+  color: #20a0ff;
+}
 .avatar-uploader .el-upload:hover {
   border-color: #20a0ff;
 }

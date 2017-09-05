@@ -25,7 +25,7 @@
         </el-select>
       </el-form-item>
       <el-form-item v-if="ruleForm.RoleId === 18 || ruleForm.RoleId === 19 || ruleForm.RoleId === 26  || ruleForm.RoleId === 27 " label="主数据权限" required>
-        <Auty v-model="mainData"></Auty>
+        <AutyMain v-model="mainData"></AutyMain>
       </el-form-item>
       <el-form-item v-if="ruleForm.RoleId === 18 || ruleForm.RoleId === 19 || ruleForm.RoleId === 26  || ruleForm.RoleId === 27 " label="附数据权限">
         <Auty v-model="attData"></Auty>
@@ -77,6 +77,7 @@ import {
   dataauthorityinfos
 } from '../api/api'
 import Auty from '@/views/components/authority.vue'
+import AutyMain from '@/views/components/authoritymain.vue'
 export default {
   props: ['department', 'DepartmentId', 'item', 'tree'],
   data() {
@@ -218,6 +219,7 @@ export default {
         cities: this.item.MainCitys,
         agents: this.item.MainChannels
       }
+      console.log(this.mainData, 'this.mainData')
       // 附属数据权限修改赋值
       this.attData = {
         partitions: this.item.AttChannelPartitions,
@@ -235,7 +237,8 @@ export default {
     this.department = this.department ? this.department : 0
   },
   components: {
-    Auty
+    Auty,
+    AutyMain
   },
   methods: {
     getdataauthorityinfos() {
@@ -453,16 +456,6 @@ export default {
               message: '请选择角色',
               type: 'warning'
             })
-          } else if (this.ruleForm.RoleId === 18 && !this.ruleForm.ChannelPartitionId) {
-            this.$message({
-              message: '请选择渠道经理所在大区',
-              type: 'warning'
-            })
-          } else if (this.ruleForm.RoleId === 19 && this.ruleForm.ChannelPartitionId.length === 0) {
-            this.$message({
-              message: '请选择渠道运营经理所在大区',
-              type: 'warning'
-            })
           } else if (this.ruleForm.FunctionList.length === 0) {
             this.$message({
               message: '请选择模块',
@@ -490,10 +483,12 @@ export default {
             console.log(this.ruleForm)
             if (this.item.UserId) { // 修改用户
               this.ruleForm.DepartmentId = this.treeSelectedId // 把最终被选择的组织传递给后台 不选择默认就是之前的组织
-              accountChange(this.item.UserId, this.ruleForm).then(res => {
-                this.$emit('done')
+              accountChange(this.item.UserId, this.ruleForm).then((res) => {
+                if (res.status) {
+                  this.$emit('done')
+                  this.dialogFormVisible = false
+                }
               })
-              this.dialogFormVisible = false
             } else { // 新增用户
               if (!this.ruleForm.Password) {
                 this.$message({

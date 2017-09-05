@@ -151,16 +151,21 @@ export default {
           channelname
         }
       }
-
+      // 选择大区省份后下面对应的所有城市
       if (this.params.partitions.length > 0 || this.params.provinces.length > 0 && ccodes.length === 0) {
         ccodes = this.cities.map(item => item.CityCode)
+      } else if (ccodes.length > 0) { // 当选择城市之后按当前选择的城市查询
+        ccodes = params.ccodes
       }
       // console.log(ccodes, 'ccodes')
       // c处理大区没有城市时候需要给后台传递codes 值为0
       if (this.params.partitions.length > 0 && ccodes.length === 0 || this.params.provinces.length > 0 && ccodes.length === 0) {
         params.ccodes = ccodes = 0
       }
-      // console.log(ccodes, 'ccodes之后')
+
+      // 选择城市后需要传对应已选择的城市code值到后台 params.ccodes
+
+      console.log(params.ccodes, 'params.ccodes')
       if (this.showDateRange) {
         params.laststarttime = this.params.laststarttime
         params.lastendtime = this.params.lastendtime

@@ -2,9 +2,9 @@
 <div>
   <h3 class="vheader">传票数据统计</h3>
   <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload" :make-account="true"></SearchParams>
-  <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum>
-    <el-table-column prop="PartitionName" label="日期" width="120">
-    </el-table-column>
+  <el-table id="dataTable" :data="tableData" @cell-click="downloadColumn" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum>
+    <!-- <el-table-column prop="PartitionName" label="日期" width="120">
+    </el-table-column> -->
     <el-table-column prop="PartitionName" label="大区" width="120">
     </el-table-column>
     <el-table-column prop="ProvinceName" label="省" width="120">
@@ -15,29 +15,29 @@
     </el-table-column>
     <el-table-column prop="ChannelName2" label="二级代理商" width="200">
     </el-table-column>
-    <el-table-column prop="ChannelName2" label="当前账期">
+    <el-table-column prop="CurrentBusinessDateCompanyCount" label="当前账期">
     </el-table-column>
-    <el-table-column prop="ChannelName2" label="零申报">
+    <el-table-column prop="TiDanZero" label="零申报">
     </el-table-column>
     <el-table-column label="催票" header-align="center">
-      <el-table-column prop="YSSmall" label="未催" width="130">
+      <el-table-column prop="UnUrgeCount" label="未催" width="130">
       </el-table-column>
-      <el-table-column prop="YSGeneral" label="已催" width="130">
+      <el-table-column prop="UrgeCount" label="已催" width="130">
       </el-table-column>
     </el-table-column>
-    <el-table-column prop="ChannelName2" label="确认零票">
+    <el-table-column prop="ConfirmZero" label="确认零票">
     </el-table-column>
     <el-table-column label="传票" header-align="center">
-      <el-table-column prop="YSSmall" label="待传票" width="130">
+      <el-table-column prop="UnMonitionCount" label="待传票" width="130">
       </el-table-column>
-      <el-table-column prop="YSGeneral" label="传票未完成" width="130">
+      <el-table-column prop="MonitionCount" label="传票未完成" width="130">
       </el-table-column>
-      <el-table-column prop="YSHJ" label="传票完成（有票）" width="150">
+      <el-table-column prop="MonitionCompleteCount" label="传票完成（有票）" width="150">
       </el-table-column>
     </el-table-column>
-    <el-table-column prop="ChannelName2" label="传票完成率">
+    <el-table-column prop="CompleteRate" label="传票完成率">
     </el-table-column>
-    <el-table-column prop="ChannelName2" label="驳票客户数">
+    <el-table-column prop="RejectCount" label="驳票客户数">
     </el-table-column>
   </el-table>
 </div>
@@ -112,6 +112,33 @@ export default {
       })
 
       return sums
+    },
+    downloadColumn(row, column, cell) {
+      var AccountId = row.AccountId
+      console.log(AccountId)
+      var enddate = this.params.enddate
+      if (!enddate) {
+        var date = new Date()
+        enddate = date
+      }
+      console.log(enddate)
+      var agent = 'http://123.56.31.133:8083/api/v1/agentdata'
+      var url = ''
+      if (cell.cellIndex === 6) {
+        url = agent + `/ReceiptDetail?accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else if (cell.cellIndex === 8) {
+        url = agent + `/unurge?accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else if (cell.cellIndex === 9) {
+        url = agent + `/urge?accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else if (cell.cellIndex === 11) {
+        url = agent + `/requirereceipt?accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else if (cell.cellIndex === 15) {
+        url = agent + `/rejectreceipt?accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else {
+        console.log(url, '不能点')
+        return
+      }
+      window.open(url)
     }
   },
   components: {
@@ -119,5 +146,30 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style>
+.el-table__body tr td:nth-child(6) .cell{
+  cursor: pointer;
+  color: #20a0ff;
+  text-decoration: underline;
+}
+.el-table__body tr td:nth-child(8) .cell{
+  cursor: pointer;
+  color: #20a0ff;
+  text-decoration: underline;
+}
+.el-table__body tr td:nth-child(9) .cell{
+  cursor: pointer;
+  color: #20a0ff;
+  text-decoration: underline;
+}
+.el-table__body tr td:nth-child(11) .cell{
+  cursor: pointer;
+  color: #20a0ff;
+  text-decoration: underline;
+}
+.el-table__body tr td:nth-child(15) .cell{
+  cursor: pointer;
+  color: #20a0ff;
+  text-decoration: underline;
+}
 </style>

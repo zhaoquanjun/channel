@@ -1,8 +1,8 @@
 <template>
 <div>
   <h3 class="vheader">运营会计数据总览</h3>
-  <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload" :make-account="true"></SearchParams>
-  <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum>
+  <SearchParams :length="tableData.length"  @search="onSearch" @download="onDownload" :make-account="true"></SearchParams>
+  <el-table id="dataTable" :data="tableData" @cell-click="downloadColumn" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum>
     <el-table-column prop="PartitionName" label="大区" width="120">
     </el-table-column>
     <el-table-column prop="ProvinceName" label="省" width="120">
@@ -13,21 +13,21 @@
     </el-table-column>
     <el-table-column prop="ChannelName2" label="二级代理商" width="200">
     </el-table-column>
-    <el-table-column prop="ChannelName2" label="全部客户数">
+    <el-table-column prop="AllCusNum" label="全部客户数">
     </el-table-column>
-    <el-table-column prop="ChannelName2" label="Agent系统客户数">
+    <el-table-column prop="TotalNum" label="Agent系统客户数" >
     </el-table-column>
-    <el-table-column prop="ChannelName2" label="未建账">
+    <el-table-column prop="NoSetUpNum" label="未建账">
     </el-table-column>
     <el-table-column label="建账完成" header-align="center">
-      <el-table-column prop="YSSmall" label="当前账期" width="130">
+      <el-table-column prop="RingNum" label="当前账期" width="130">
       </el-table-column>
-      <el-table-column prop="YSGeneral" label="历史账期-需补账" width="130">
+      <el-table-column prop="LateNum" label="历史账期-需补账" width="130">
       </el-table-column>
-      <el-table-column prop="YSHJ" label="未开始做账" width="150">
+      <el-table-column prop="UnstartNum" label="未开始做账" width="150">
       </el-table-column>
     </el-table-column>
-    <el-table-column prop="ChannelName2" label="挂起">
+    <el-table-column prop="HungNum" label="挂起">
     </el-table-column>
   </el-table>
 </div>
@@ -102,6 +102,32 @@ export default {
       })
 
       return sums
+    },
+    downloadColumn(row, column, cell) {
+      // console.log(arguments, 'arguments')
+      // 不同列下载东西不一样
+      // console.log(cell.cellIndex)
+      var AccountId = row.AccountId
+      console.log(AccountId)
+      var enddate = this.params.enddate
+      if (!enddate) {
+        var date = new Date()
+        enddate = date
+      }
+      console.log(enddate)
+      var agent = 'http://123.56.31.133:8083/api/v1/agentdata'
+      var url = ''
+      if (cell.cellIndex === 6) {
+        url = agent + `/totalcustomer?accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else if (cell.cellIndex === 9) {
+        url = `/historybusinessdate?accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else if (cell.cellIndex === 11) {
+        url = `/totalhung?accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else {
+        // console.log(url, '不能点')
+        return
+      }
+      window.open(url)
     }
   },
   components: {
@@ -109,5 +135,20 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style>
+.el-table__body tr td:nth-child(6) .cell{
+  cursor: pointer;
+  color: #20a0ff;
+  text-decoration: underline;
+}
+.el-table__body tr td:nth-child(9) .cell{
+  cursor: pointer;
+  color: #20a0ff;
+  text-decoration: underline;
+}
+.el-table__body tr td:nth-child(11) .cell{
+  cursor: pointer;
+  color: #20a0ff;
+  text-decoration: underline;
+}
 </style>

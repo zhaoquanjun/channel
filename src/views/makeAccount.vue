@@ -2,7 +2,7 @@
 <div>
   <h3 class="vheader">做账与报税数据统计</h3>
   <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload" :make-account="true"></SearchParams>
-  <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum>
+  <el-table id="dataTable" :data="tableData" @cell-click="downloadColumn" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum>
     <el-table-column prop="PartitionName" label="大区" width="120">
     </el-table-column>
     <el-table-column prop="ProvinceName" label="省" width="120">
@@ -13,26 +13,28 @@
     </el-table-column>
     <el-table-column prop="ChannelName2" label="二级代理商" width="200">
     </el-table-column>
-    <el-table-column prop="ChannelName2" label="当前账期">
+    <el-table-column prop="CurrentBusinessDateCompanyCount" label="当前账期">
     </el-table-column>
-    <el-table-column prop="ChannelName2" label="零申报">
+    <el-table-column prop="TiDanZero" label="零申报">
     </el-table-column>
-    <el-table-column prop="ChannelName2" label="确认零票">
+    <el-table-column prop="ConfirmZero" label="确认零票">
     </el-table-column>
-    <el-table-column prop="ChannelName2" label="未传票">
+    <el-table-column prop="UnMonition" label="未传票">
     </el-table-column>
     <el-table-column label="账务确认" header-align="center">
-      <el-table-column prop="YSSmall" label="待出账" width="130">
+      <el-table-column prop="UnMakeAccount" label="待出账" width="130">
       </el-table-column>
-      <el-table-column prop="YSGeneral" label="出账待确认" width="130">
+      <el-table-column prop="MakeAccountUnConfirm" label="出账待确认" width="130">
       </el-table-column>
-      <el-table-column prop="YSHJ" label="已确认" width="150">
+      <el-table-column prop="ReceiptCompleteUnMakeAccount" label="传票完成未出账" width="150">
+      </el-table-column>
+      <el-table-column prop="Confirm" label="已确认" width="130">
       </el-table-column>
     </el-table-column>
     <el-table-column label="报税" header-align="center">
-      <el-table-column prop="YSSmall" label="申报" width="130">
+      <el-table-column prop="Tax" label="申报" width="130">
       </el-table-column>
-      <el-table-column prop="YSGeneral" label="未申报" width="130">
+      <el-table-column prop="UnTax" label="未申报" width="130">
       </el-table-column>
     </el-table-column>
   </el-table>
@@ -108,6 +110,29 @@ export default {
       })
 
       return sums
+    },
+    downloadColumn(row, column, cell) {
+      var AccountId = row.AccountId
+      console.log(AccountId)
+      var enddate = this.params.enddate
+      if (!enddate) {
+        var date = new Date()
+        enddate = date
+      }
+      console.log(enddate)
+      var agent = 'http://123.56.31.133:8083/api/v1/agentdata'
+      var url = ''
+      if (cell.cellIndex === 9) {
+        url = agent + `/getmonitionandunmakeaccount?accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else if (cell.cellIndex === 10) {
+        url = agent + `/getmakeaccountandunconfirm?accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else if (cell.cellIndex === 14) {
+        url = agent + `/getuntax?accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else {
+        console.log(url, '不能点')
+        return
+      }
+      window.open(url)
     }
   },
   components: {
@@ -115,5 +140,20 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style>
+.el-table__body tr td:nth-child(9) .cell{
+  cursor: pointer;
+  color: #20a0ff;
+  text-decoration: underline;
+}
+.el-table__body tr td:nth-child(10) .cell{
+  cursor: pointer;
+  color: #20a0ff;
+  text-decoration: underline;
+}
+.el-table__body tr td:nth-child(14) .cell{
+  cursor: pointer;
+  color: #20a0ff;
+  text-decoration: underline;
+}
 </style>
