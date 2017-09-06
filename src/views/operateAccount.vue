@@ -1,5 +1,5 @@
 <template>
-<div class="baobiao">
+<div class="baobiao1">
   <h3 class="vheader">运营会计数据总览</h3>
   <SearchParams :length="tableData.length"  @search="onSearch" @download="onDownload" :make-account="true"></SearchParams>
   <el-table id="dataTable" :data="tableData" @cell-click="downloadColumn" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum>
@@ -108,21 +108,21 @@ export default {
       // 不同列下载东西不一样
       // console.log(cell.cellIndex)
       var AccountId = row.AccountId
-      console.log(AccountId)
+      // console.log(AccountId)
       var enddate = this.params.enddate
       if (!enddate) {
         var date = new Date()
         enddate = date
       }
-      console.log(enddate)
-      var agent = 'http://123.56.31.133:8083/api/v1/agentdata'
+      // console.log(enddate)
+      var agent = 'http://123.56.31.133:8083/api/v1/AgentExport.ashx'
       var url = ''
       if (cell.cellIndex === 6) {
-        url = agent + `/totalcustomer?accountid=${AccountId || ''}&enddate=${enddate || ''}`
+        url = agent + `?type=totalcustomer&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else if (cell.cellIndex === 9) {
-        url = `/historybusinessdate?accountid=${AccountId || ''}&enddate=${enddate || ''}`
+        url = `?type=historybusinessdate&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else if (cell.cellIndex === 11) {
-        url = `/totalhung?accountid=${AccountId || ''}&enddate=${enddate || ''}`
+        url = `type=totalhung&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else {
         // console.log(url, '不能点')
         return
@@ -136,17 +136,17 @@ export default {
 }
 </script>
 <style>
-.baobiao .el-table__body tr td:nth-child(6) .cell{
+.baobiao1 .el-table__body tr td:nth-child(7) .cell{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;
 }
-.baobiao .el-table__body tr td:nth-child(9) .cell{
+.baobiao1 .el-table__body tr td:nth-child(10) .cell{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;
 }
-.baobiao .el-table__body tr td:nth-child(11) .cell{
+.baobiao1 .el-table__body tr td:nth-child(12) .cell{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;

@@ -1,5 +1,5 @@
 <template>
-<div class="baobiao">
+<div class="baobiao2">
   <h3 class="vheader">待建账数据统计</h3>
   <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload" :make-account="true"></SearchParams>
   <el-table id="dataTable" :data="tableData" @cell-click="downloadColumn" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum>
@@ -95,19 +95,19 @@ export default {
     },
     downloadColumn(row, column, cell) {
       var AccountId = row.AccountId
-      console.log(AccountId)
+      // console.log(AccountId)
       var enddate = this.params.enddate
       if (!enddate) {
         var date = new Date()
         enddate = date
       }
-      console.log(enddate)
-      var agent = 'http://123.56.31.133:8083/api/v1/agentdata'
+      // console.log(enddate)
+      var agent = 'http://123.56.31.133:8083/api/v1/AgentExport.ashx'
       var url = ''
       if (cell.cellIndex === 5) {
-        url = agent + `/getunaccount?accountid=${AccountId || ''}&enddate=${enddate || ''}`
+        url = agent + `?type=getunaccount&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else if (cell.cellIndex === 7) {
-        url = agent + `/getunaccountmore10day?accountid=${AccountId || ''}&enddate=${enddate || ''}`
+        url = agent + `?type=getunaccountmore10day&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else {
         // console.log(url, '不能点')
         return
@@ -121,12 +121,12 @@ export default {
 }
 </script>
 <style>
-.baobiao .el-table__body tr td:nth-child(5) .cell{
+.baobiao2 .el-table__body tr td:nth-child(6) .cell{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;
 }
-.baobiao .el-table__body tr td:nth-child(7) .cell{
+.baobiao2 .el-table__body tr td:nth-child(8) .cell{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;

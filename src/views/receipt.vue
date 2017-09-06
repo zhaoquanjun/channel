@@ -1,5 +1,5 @@
 <template>
-<div class="baobiao">
+<div class="baobiao3">
   <h3 class="vheader">传票数据统计</h3>
   <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload" :make-account="true"></SearchParams>
   <el-table id="dataTable" :data="tableData" @cell-click="downloadColumn" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum>
@@ -35,7 +35,7 @@
       <el-table-column prop="MonitionCompleteCount" label="传票完成（有票）" width="150">
       </el-table-column>
     </el-table-column>
-    <el-table-column prop="CompleteRate" label="传票完成率">
+    <el-table-column prop="CompleteRate" :formatter="handleNum" label="传票完成率">
     </el-table-column>
     <el-table-column prop="RejectCount" label="驳票客户数">
     </el-table-column>
@@ -73,6 +73,12 @@ export default {
       agentreceiptcustomer(this.params).then((res) => {
         this.tableData = res.data
       })
+    },
+    handleNum(row) {
+      console.log(row)
+      var completeRate = row.CompleteRate
+      completeRate = completeRate * 100 + '%'
+      return completeRate
     },
     onSearch(params) {
       console.log(params)
@@ -115,27 +121,27 @@ export default {
     },
     downloadColumn(row, column, cell) {
       var AccountId = row.AccountId
-      console.log(AccountId)
+      // console.log(AccountId)
       var enddate = this.params.enddate
       if (!enddate) {
         var date = new Date()
         enddate = date
       }
-      console.log(enddate)
-      var agent = 'http://123.56.31.133:8083/api/v1/agentdata'
+      // console.log(enddate)
+      var agent = 'http://123.56.31.133:8083/api/v1/AgentExport.ashx'
       var url = ''
-      if (cell.cellIndex === 6) {
-        url = agent + `/ReceiptDetail?accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      if (cell.cellIndex === 5) {
+        url = agent + `?type=ReceiptDetail&accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else if (cell.cellIndex === 7) {
+        url = agent + `?type=unurge&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else if (cell.cellIndex === 8) {
-        url = agent + `/unurge?accountid=${AccountId || ''}&enddate=${enddate || ''}`
-      } else if (cell.cellIndex === 9) {
-        url = agent + `/urge?accountid=${AccountId || ''}&enddate=${enddate || ''}`
-      } else if (cell.cellIndex === 11) {
-        url = agent + `/requirereceipt?accountid=${AccountId || ''}&enddate=${enddate || ''}`
-      } else if (cell.cellIndex === 15) {
-        url = agent + `/rejectreceipt?accountid=${AccountId || ''}&enddate=${enddate || ''}`
+        url = agent + `?type=urge&accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else if (cell.cellIndex === 10) {
+        url = agent + `?type=requirereceipt&accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else if (cell.cellIndex === 14) {
+        url = agent + `?type=rejectreceipt&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else {
-        console.log(url, '不能点')
+        // console.log(url, '不能点')
         return
       }
       window.open(url)
@@ -147,27 +153,27 @@ export default {
 }
 </script>
 <style>
-.baobiao .el-table__body tr td:nth-child(6) .cell{
+.baobiao3 .el-table__body tr td:nth-child(6) .cell{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;
 }
-.baobiao .el-table__body tr td:nth-child(8) .cell{
+.baobiao3 .el-table__body tr td:nth-child(8) .cell{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;
 }
-.baobiao .el-table__body tr td:nth-child(9) .cell{
+.baobiao3 .el-table__body tr td:nth-child(9) .cell{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;
 }
-.baobiao .el-table__body tr td:nth-child(11) .cell{
+.baobiao3 .el-table__body tr td:nth-child(11) .cell{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;
 }
-.baobiao .el-table__body tr td:nth-child(15) .cell{
+.baobiao3 .el-table__body tr td:nth-child(15) .cell{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;
