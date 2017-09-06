@@ -1,6 +1,7 @@
 <template>
 <div class="au-container" v-clickoutside="handleClose">
-  <el-input v-model="selectedText" @focus="visible = true" auto-complete="off" readonly></el-input>
+  <!-- <el-input v-model="selectedText" @focus="visible = true" auto-complete="off" readonly></el-input> -->
+  <div @click="visible = true" class="select-style">{{selectedText}}</div>
   <div class="el-dropdown-menu" v-show="visible">
     <el-tabs v-model="activeName" type="card">
       <el-tab-pane label="大区" name="first">
@@ -77,7 +78,7 @@ export default {
   },
   created() {
     this.getdataauthorityinfos()
-    console.log(this.value, 'AutyMain')
+    // console.log(this.value, 'AutyMain')
   },
 
   methods: {
@@ -94,7 +95,7 @@ export default {
     },
     setSelected() {
       if (this.value.agents) {
-        console.log('agentIds:', this.value.agents)
+        // console.log('agentIds:', this.value.agents)
         const agentIds = this.value.agents.replace(/'/g, '').split(',')
         this.agents.forEach(item => {
           // console.log('agent:', item.ChannelId, agentIds.indexOf(item.ChannelId) > -1)
@@ -139,8 +140,8 @@ export default {
         this.$el.querySelectorAll('.el-tab-pane').forEach((el, index) => {
           if (index > 2) return
           this.modelValue[vmap[index]] = []
-          console.log(el.querySelectorAll('.is-checked input'), 'xxxinput')
-          console.log('input')
+          // console.log(el.querySelectorAll('.is-checked input'), 'xxxinput')
+          // console.log('input')
           el.querySelectorAll('.is-checked input').forEach((input) => {
             this.modelValue[vmap[index]].push("'" + input.parentNode.__vue__.value + "'")
           })
@@ -149,7 +150,7 @@ export default {
       this.modelValue.agents = this.selected.agents.map(item => {
         return ("'" + item.ChannelId + "'")
       })
-      console.log(this.modelValue, 'modelValue')
+      // console.log(this.modelValue, 'modelValue')
       this.$emit('input', this.modelValue)
     },
     qProvince() {
@@ -193,7 +194,7 @@ export default {
   },
   watch: {
     value(val) {
-      console.log('value', val)
+      // console.log('value', val)
     },
     'selected.partitions': function(val) {
       this.setText()
@@ -220,9 +221,11 @@ export default {
 .au-container .el-dropdown-menu {
   width: 500px;
   overflow: auto;
-  top: 32px;
+  top: auto !important;
 }
-
+.demo-ruleForm .el-form-item__content{
+  height: auto !important;
+}
 .au-container .el-tabs {
   padding-bottom: 0;
 }
@@ -243,5 +246,17 @@ export default {
 
 input[type="text"] {
   cursor: pointer;
+}
+
+.au-container .el-dropdown-menu .el-tabs__content {
+  height: 200px;
+}
+
+.au-container .select-style {
+  width: 100%;
+  min-height: 36px;
+  border: 1px solid #8391a5;
+  border-radius: 4px;
+  padding: 3px 10px;
 }
 </style>

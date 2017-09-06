@@ -464,6 +464,12 @@ export default {
               message: '请选择模块',
               type: 'warning'
             })
+          } else if ((this.ruleForm.RoleId === 18 || this.ruleForm.RoleId === 19 || this.ruleForm.RoleId === 26 || this.ruleForm.RoleId === 27) && this.mainData.partitions.length === 0 && this.mainData.provinces.length === 0 && this.mainData.cities.length === 0 && this.mainData.agents.length === 0) {
+            console.log('aaaa')
+            this.$message({
+              message: '请选择主数据权限',
+              type: 'warning'
+            })
           } else {
             // if (this.ruleForm.RoleId === 19) {
             //   this.ruleForm.ChannelPartitionId = this.ruleForm.ChannelPartitionId.join()
@@ -472,10 +478,10 @@ export default {
             // 提交的时候把主数据权限赋值给后台需要的
             if (this.ruleForm.RoleId === 18 || this.ruleForm.RoleId === 19 || this.ruleForm.RoleId === 26 || this.ruleForm.RoleId === 27) {
               console.log(this.mainData)
-              this.ruleForm.MainChannelPartitions = this.mainData.partitions.join(',')
-              this.ruleForm.MainProvinces = this.mainData.provinces.join(',')
-              this.ruleForm.MainCitys = this.mainData.cities.join(',')
-              this.ruleForm.MainChannels = this.mainData.agents.join(',')
+              this.ruleForm.MainChannelPartitions = this.mainData.partitions instanceof Array ? this.mainData.partitions.join(',') : ''
+              this.ruleForm.MainProvinces = this.mainData.provinces instanceof Array ? this.mainData.provinces.join(',') : ''
+              this.ruleForm.MainCitys = this.mainData.cities instanceof Array ? this.mainData.cities.join(',') : ''
+              this.ruleForm.MainChannels = this.mainData.agents instanceof Array ? this.mainData.agents.join(',') : ''
               // 提交的时候把附属数据权限赋值给后台需要的
               console.log(this.attData)
               this.ruleForm.AttChannelPartitions = this.attData.partitions instanceof Array ? this.attData.partitions.join(',') : ''
