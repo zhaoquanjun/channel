@@ -95,7 +95,7 @@ export default {
         year,
         channelname
       } = this.params
-      if (this.pagination.total > 4000) {
+      if (this.pagination.total > 1000) {
         this.$message({
           type: 'warning',
           message: '总条数过多，请缩小查询范围'
