@@ -13,16 +13,16 @@
     </el-table-column>
     <el-table-column prop="ChannelName2" label="二级代理商" width="200">
     </el-table-column>
-    <el-table-column prop="AllCusNum" label="全部客户数" width="150">
+    <el-table-column prop="AllCusNum" label="全部客户数">
     </el-table-column>
-    <el-table-column prop="TotalNum" label="Agent系统客户数" width="150">
+    <el-table-column prop="TotalNum" label="Agent系统客户数" >
     </el-table-column>
     <el-table-column prop="NoSetUpNum" label="未建账">
     </el-table-column>
     <el-table-column label="建账完成" header-align="center">
       <el-table-column prop="RingNum" label="当前账期" width="130">
       </el-table-column>
-      <el-table-column prop="LateNum" label="历史账期-需补账" width="150">
+      <el-table-column prop="LateNum" label="历史账期-需补账" width="130">
       </el-table-column>
       <el-table-column prop="UnstartNum" label="未开始做账" width="150">
       </el-table-column>

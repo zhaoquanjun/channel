@@ -450,6 +450,9 @@ export default {
           // console.log(accountChange, account, bus)
           this.ruleForm.FunctionList = this.curList
           // console.log(this.curList)
+          // if (this.ruleForm.RoleId === 19) {
+          //   this.ruleForm.ChannelPartitionId = this.ChannelOperatePartitionId
+          // }
           // return
           if (!this.ruleForm.RoleId) {
             this.$message({

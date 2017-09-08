@@ -13,16 +13,16 @@
     </el-table-column>
     <el-table-column prop="ChannelName2" label="二级代理商" width="200">
     </el-table-column>
-    <el-table-column prop="AllCusNum" label="全部客户数" width="150">
+    <el-table-column prop="AllCusNum" label="全部客户数">
     </el-table-column>
-    <el-table-column prop="TotalNum" label="Agent系统客户数" width="150">
+    <el-table-column prop="TotalNum" label="Agent系统客户数" >
     </el-table-column>
     <el-table-column prop="NoSetUpNum" label="未建账">
     </el-table-column>
     <el-table-column label="建账完成" header-align="center">
       <el-table-column prop="RingNum" label="当前账期" width="130">
       </el-table-column>
-      <el-table-column prop="LateNum" label="历史账期-需补账" width="150">
+      <el-table-column prop="LateNum" label="历史账期-需补账" width="130">
       </el-table-column>
       <el-table-column prop="UnstartNum" label="未开始做账" width="150">
       </el-table-column>
@@ -115,14 +115,14 @@ export default {
         enddate = date
       }
       // console.log(enddate)
-      var agent = 'http://ri.i-counting.cn/api/v1/AgentExport.ashx'
+      var agent = 'http://123.56.31.133:8083/api/v1/AgentExport.ashx'
       var url = ''
       if (cell.cellIndex === 6) {
         url = agent + `?type=totalcustomer&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else if (cell.cellIndex === 9) {
-        url = agent + `?type=historybusinessdate&accountid=${AccountId || ''}&enddate=${enddate || ''}`
+        url = `?type=historybusinessdate&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else if (cell.cellIndex === 11) {
-        url = agent + `?type=totalhung&accountid=${AccountId || ''}&enddate=${enddate || ''}`
+        url = `type=totalhung&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else {
         // console.log(url, '不能点')
         return
