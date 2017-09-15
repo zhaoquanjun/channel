@@ -449,6 +449,12 @@ export default {
               message: '请选择模块',
               type: 'warning'
             })
+          } else if ((this.ruleForm.RoleId === 18 || this.ruleForm.RoleId === 19 || this.ruleForm.RoleId === 26 || this.ruleForm.RoleId === 27) && !this.mainData) {
+            console.log('aaaa')
+            this.$message({
+              message: '请选择主数据权限',
+              type: 'warning'
+            })
           } else {
             this.ruleForm.FunctionList = JSON.stringify(this.curList)
             // 提交的时候把主数据权限赋值给后台需要的
@@ -465,38 +471,31 @@ export default {
               this.ruleForm.AttCitys = this.attData.cities instanceof Array ? this.attData.cities.join(',') : ''
               this.ruleForm.AttChannels = this.attData.agents instanceof Array ? this.attData.agents.join(',') : ''
             }
-            if ((this.ruleForm.RoleId === 18 || this.ruleForm.RoleId === 19 || this.ruleForm.RoleId === 26 || this.ruleForm.RoleId === 27) && !this.ruleForm.MainChannelPartitions && !this.ruleForm.MainProvinces && !this.ruleForm.MainCitys && !this.ruleForm.MainChannels) {
-              this.$message({
-                message: '请选择主数据权限',
-                type: 'warning'
+            // console.log(this.ruleForm)
+            if (this.item.UserId) { // 修改用户
+              this.ruleForm.DepartmentId = this.treeSelectedId // 把最终被选择的组织传递给后台 不选择默认就是之前的组织
+              // console.log(accountChange)
+              accountChange(this.item.UserId, this.ruleForm).then((res) => {
+                if (res.status) {
+                  this.$emit('done')
+                  this.dialogFormVisible = false
+                }
               })
-            } else {
-              // console.log(this.ruleForm)
-              if (this.item.UserId) { // 修改用户
-                this.ruleForm.DepartmentId = this.treeSelectedId // 把最终被选择的组织传递给后台 不选择默认就是之前的组织
-                // console.log(accountChange)
-                accountChange(this.item.UserId, this.ruleForm).then((res) => {
+            } else { // 新增用户
+              if (!this.ruleForm.Password) {
+                this.$message({
+                  message: '请填写密码',
+                  type: 'warning'
+                })
+              } else {
+                this.ruleForm.DepartmentId = this.DepartmentId
+                // console.log(account)
+                account(this.ruleForm).then((res) => {
                   if (res.status) {
                     this.$emit('done')
                     this.dialogFormVisible = false
                   }
                 })
-              } else { // 新增用户
-                if (!this.ruleForm.Password) {
-                  this.$message({
-                    message: '请填写密码',
-                    type: 'warning'
-                  })
-                } else {
-                  this.ruleForm.DepartmentId = this.DepartmentId
-                  // console.log(account)
-                  account(this.ruleForm).then((res) => {
-                    if (res.status) {
-                      this.$emit('done')
-                      this.dialogFormVisible = false
-                    }
-                  })
-                }
               }
             }
           }
