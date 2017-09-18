@@ -688,3 +688,9 @@ export const agentaccountcustomer = params => {
     params: params
   }).then(res => res.data)
 }
+// 业绩管理-订单统计
+export const getStatisOrders = params => {
+  return axios.get(`${base}/report/getorderstotalnum`, {
+    params: params
+  }).then(res => res.data)
+}

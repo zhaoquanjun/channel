@@ -278,7 +278,8 @@ export default {
     guaqi(row) {
       var item = {
         CompanyId: row.CustomerId,
-        ChannelId: row.ChannelId
+        ChannelId: row.ChannelId,
+        isHang: 1
       }
       Dialog(Refuse, {
         item: item,
@@ -293,7 +294,8 @@ export default {
     stopguaqi(row) {
       var item = {
         CompanyId: row.CustomerId,
-        ChannelId: row.ChannelId
+        ChannelId: row.ChannelId,
+        isHang: 0
       }
       Dialog(Refuse, {
         item: item,

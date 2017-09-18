@@ -80,6 +80,9 @@ export default {
     if (this.sign === 'GUAQI') {
       this.ruleForm.desc = '退单'
     }
+    if (this.sign === 'STOPGUAQI') {
+      this.ruleForm.desc = '解挂'
+    }
   },
   methods: {
     submitForm(formName) {
