@@ -75,6 +75,7 @@
         <el-button v-if="scope.row.Status != 2"  @click="deleteOrder(scope.row)" type="text" size="small">删除</el-button>
         <el-button v-if="scope.row.Status === 2" @click="reback(scope.row)" type="text" size="small">审核回退</el-button>
         <el-button v-if="scope.row.Status === 2" @click="guaqi(scope.row)" type="text" size="small">挂起</el-button>
+        <el-button v-if="scope.row.Status === 2" @click="stopguaqi(scope.row)" type="text" size="small">解挂</el-button>
       </template>
     </el-table-column>
     <el-table-column v-else label="操作" width="140">
@@ -286,6 +287,21 @@ export default {
         label: '挂起原因'
       })
       bus.$on('gq-success', () => {
+        this.fetchData()
+      })
+    },
+    stopguaqi(row) {
+      var item = {
+        CompanyId: row.CustomerId,
+        ChannelId: row.ChannelId
+      }
+      Dialog(Refuse, {
+        item: item,
+        sign: 'STOPGUAQI',
+        title: '订单解挂',
+        label: '解挂原因'
+      })
+      bus.$on('gq-stop', () => {
         this.fetchData()
       })
     },

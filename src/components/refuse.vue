@@ -126,7 +126,20 @@ export default {
                   bus.$emit('gq-success')
                   this.dialogFormVisible = false
                 }
-              }) // 订单查询挂载
+              }) // 订单查询挂起
+              break
+            case 'STOPGUAQI':
+              this.item.Description = this.ruleForm.desc
+              guaqiSearch(this.item).then((res) => {
+                if (res.status) {
+                  this.$message({
+                    type: 'success',
+                    message: '解挂成功!'
+                  })
+                  bus.$emit('gq-stop')
+                  this.dialogFormVisible = false
+                }
+              }) // 订单查询解除挂起
               break
             case 'INVOICE':
               var invoiceId = this.Id
