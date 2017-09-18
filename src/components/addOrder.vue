@@ -187,7 +187,7 @@
                 </el-date-picker>
                 <span v-else>{{postData.ContractDate | formateDate}}</span>
               </td>
-              <td class="required">开始时间</td>
+              <td class="required">开始账期</td>
               <td>
                 <el-date-picker v-if="modify" v-model="postData.ServiceStart" type="month">
                 </el-date-picker>
@@ -196,7 +196,7 @@
               </td>
             </tr>
             <tr>
-              <td class="required">结束时间</td>
+              <td class="required">结束账期</td>
               <td>
                 <el-input v-if="modify" type="text" v-model='postData.ServiceEnd'></el-input>
                 <span v-else>{{postData.ServiceEnd | formateMonth}}</span>
