@@ -177,27 +177,30 @@ export default {
       this.$emit('search', params, this.cities)
     },
     onDownload() {
-      let {
-        starttime,
-        endtime,
-        ccodes,
-        channelname
-      } = this.params
-      let params = {
-        starttime,
-        endtime,
-        ccodes,
-        channelname
-      }
-      if (this.params.partitions.length > 0 || this.params.provinces.length > 0 && ccodes.length === 0) {
-        ccodes = this.cities.map(item => item.CityCode)
-      }
-      if (this.showDateRange) {
-        params.laststarttime = this.params.laststarttime
-        params.lastendtime = this.params.lastendtime
-      }
-      params.ccodes = ccodes.join(',')
-      this.$emit('download', params, this.cities)
+      this.$emit('download')
+      // let {
+      //   starttime,
+      //   endtime,
+      //   ccodes,
+      //   channelname,
+      //   status
+      // } = this.params
+      // let params = {
+      //   starttime,
+      //   endtime,
+      //   ccodes,
+      //   channelname,
+      //   status
+      // }
+      // if (this.params.partitions.length > 0 || this.params.provinces.length > 0 && ccodes.length === 0) {
+      //   ccodes = this.cities.map(item => item.CityCode)
+      // }
+      // // if (this.showDateRange) {
+      // //   params.laststarttime = this.params.laststarttime
+      // //   params.lastendtime = this.params.lastendtime
+      // // }
+      // params.ccodes = ccodes.join(',')
+      // this.$emit('download', params, this.cities)
     },
     Agents() {
       agents().then((res) => {

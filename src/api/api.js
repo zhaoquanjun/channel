@@ -694,3 +694,33 @@ export const getStatisOrders = params => {
     params: params
   }).then(res => res.data)
 }
+// 业绩管理-续费管理
+export const getStatisRenew = params => {
+  return axios.get(`${base}/report/getreordersnum`, {
+    params: params
+  }).then(res => res.data)
+}
+// 流转数据管理--预提单转正式订单统计
+export const getStatisYtOdersTozsOders = params => {
+  return axios.get(`${base}/dataanalysis/beforetoformalsearch`, {
+    params: params
+  }).then(res => res.data)
+}
+// 流转数据管理--零申报转非零申报统计
+export const getStatisZeroTonoZero = params => {
+  return axios.get(`${base}/dataanalysis/Iszerostatistics`, {
+    params: params
+  }).then(res => res.data)
+}
+// 流转数据管理--小规模转一般纳税人统计
+export const getStatisCompany1to2 = params => {
+  return axios.get(`${base}/dataanalysis/littletoformal`, {
+    params: params
+  }).then(res => res.data)
+}
+// 外勤数据管理
+export const getStatisOutwork = params => {
+  return axios.get(`${base}/dataanalysis/gettasknum`, {
+    params: params
+  }).then(res => res.data)
+}

@@ -134,20 +134,11 @@ export default {
     },
     handleStatus(row) {
       // console.log(row)
-      var status = row.Status
-      switch (+status) {
-        case 0:
-          status = '解约'
-          break
-        case 1:
-          status = '正常'
-          break
-        case 2:
-          status = '未审核'
-          break
-        case 3:
-          status = '驳回'
-          break
+      var status = +row.Status
+      if (status === 0) {
+        status = '是'
+      } else if (status > 0) {
+        status = '否'
       }
       return status
     }
