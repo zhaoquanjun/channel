@@ -11,10 +11,14 @@ export default () => {
   }
   return {
     tableToExcel: function(tableId, worksheetName) {
+      var el = document.createElement('a')
       var table = document.getElementById(tableId)
       var ctx = { worksheet: worksheetName, table: table.innerHTML }
       var href = uri + base64(format(template, ctx))
-      return href
+      el.href = href
+      el.download = worksheetName + '.xls'
+      el.click()
+      // return href
     }
   }
 }

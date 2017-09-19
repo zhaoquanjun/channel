@@ -92,8 +92,9 @@ export default {
       this.fetchData()
     },
     onDownload() {
-      var exportHref = ExcelDown().tableToExcel('dataTable', 'sheet name')
-      setTimeout(function() { location.href = exportHref }, 100) // trigger download
+      ExcelDown().tableToExcel('dataTable', '业绩统计')
+      // var exportHref = ExcelDown().tableToExcel('dataTable', 'sheet name')
+      // setTimeout(function() { location.href = exportHref }, 100) // trigger download
     },
     getSummaries(param) {
       const {

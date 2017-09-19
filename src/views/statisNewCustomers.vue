@@ -90,8 +90,9 @@ export default {
     //   })
     // },
     onDownload() {
-      var exportHref = ExcelDown().tableToExcel('dataTable', 'sheet name')
-      setTimeout(function() { location.href = exportHref }, 100) // trigger download
+      ExcelDown().tableToExcel('dataTable', '新增客户统计')
+      // var exportHref = ExcelDown().tableToExcel('dataTable', 'sheet name')
+      // setTimeout(function() { location.href = exportHref }, 100) // trigger download
     },
     // handleSizeChange(val) {
     //   this.pagination.pageSize = val

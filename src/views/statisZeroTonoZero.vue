@@ -63,8 +63,9 @@ export default {
       this.fetchData()
     },
     onDownload() {
-      var exportHref = ExcelDown().tableToExcel('dataTable', 'sheet name')
-      setTimeout(function() { location.href = exportHref }, 100) // trigger download
+      ExcelDown().tableToExcel('dataTable', '零申报转非零申报统计')
+      // var exportHref = ExcelDown().tableToExcel('dataTable', '零申报转非零申报统计')
+      // setTimeout(function() { location.href = exportHref }, 100) // trigger download
     },
     getSummaries(param) {
       const {
