@@ -13,6 +13,8 @@
     </el-table-column>
     <el-table-column prop="ChannelName2" label="二级代理商" width="200">
     </el-table-column>
+    <el-table-column prop="Status" label="代理商是否解约" :formatter="handleStatus" min-width="150">
+    </el-table-column>
     <el-table-column label="套餐类型" header-align="center">
       <el-table-column prop="ZeroYearNum" label="零税半年报" width="130">
       </el-table-column>
@@ -105,7 +107,7 @@ export default {
           return
         }
         const values = data.map(item => Number(item[column.property]))
-        if (index > 4) {
+        if (index > 5) {
           sums[index] = values.reduce((prev, curr) => {
             const value = Number(curr)
             if (!isNaN(value)) {
@@ -131,12 +133,33 @@ export default {
       var enddate = this.params.enddate
       var url = ''
       var Param = `?channelid=${channelid || ''}&startdate=${startdate || ''}&enddate=${enddate || ''}`
-      if (cell.cellIndex === 9) {
+      if (cell.cellIndex === 10) {
         url = '/api/download/getreserveorders' + Param
-      } else if (cell.cellIndex === 13) {
+      } else if (cell.cellIndex === 14) {
         url = '/api/download/getzeroorders' + Param
+      } else {
+        return
       }
       window.open(url)
+    },
+    handleStatus(row) {
+      // console.log(row)
+      var status = row.Status
+      switch (+status) {
+        case 0:
+          status = '解约'
+          break
+        case 1:
+          status = '正常'
+          break
+        case 2:
+          status = '未审核'
+          break
+        case 3:
+          status = '驳回'
+          break
+      }
+      return status
     }
   },
   components: {
@@ -145,12 +168,12 @@ export default {
 }
 </script>
 <style>
-.statis-orders .el-table__body tr td:nth-child(10) .cell{
+.statis-orders .el-table__body tr td:nth-child(11) .cell{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;
 }
-.statis-orders .el-table__body tr td:nth-child(14) .cell{
+.statis-orders .el-table__body tr td:nth-child(15) .cell{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;

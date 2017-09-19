@@ -30,6 +30,7 @@ import WaitSetAccount from '@/views/waitSetAccount' // 做账数据管理--待�
 import Receipt from '@/views/receipt' // 做账数据管理--传票数据统计
 import MakeAccount from '@/views/makeAccount' // 做账数据管理--做账与报税数据统计
 import StatisOrders from '@/views/statisOrders' // 业绩数据管理--订单统计
+import StatisNewCustomers from '@/views/statisNewCustomers' // 业绩数据管理--新增客户统计
 
 Vue.use(Router)
 const router = new Router({
@@ -150,6 +151,10 @@ const router = new Router({
       name: 'main.statis_achieve',
       path: 'statis_achieve',
       component: StatisAchieve
+    }, {
+      name: 'main.statis_newCustomers',
+      path: 'statis_newCustomers',
+      component: StatisNewCustomers
     }]
   }, {
     path: '/login',

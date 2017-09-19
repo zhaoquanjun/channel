@@ -13,6 +13,8 @@
     </el-table-column>
     <el-table-column prop="ChannelName2" label="二级代理商" width="200">
     </el-table-column>
+    <el-table-column prop="Status" label="代理商是否解约" :formatter="handleStatus" min-width="150">
+    </el-table-column>
     <el-table-column label="应收" header-align="center">
       <el-table-column prop="OrderNumZero" label="零申报" width="130">
       </el-table-column>
@@ -105,7 +107,7 @@ export default {
           return
         }
         const values = data.map(item => Number(item[column.property]))
-        if (index > 4 && index <= 12) {
+        if (index > 5 && index <= 13) {
           sums[index] = values.reduce((prev, curr) => {
             const value = Number(curr)
             if (!isNaN(value)) {
@@ -114,7 +116,7 @@ export default {
               return parseFloat(prev).toFixed(2)
             }
           }, 0)
-        } else if (index > 12) {
+        } else if (index > 13) {
           sums[index] = values.reduce((prev, curr) => {
             const value = Number(curr)
             if (!isNaN(value)) {
@@ -129,6 +131,25 @@ export default {
       })
 
       return sums
+    },
+    handleStatus(row) {
+      // console.log(row)
+      var status = row.Status
+      switch (+status) {
+        case 0:
+          status = '解约'
+          break
+        case 1:
+          status = '正常'
+          break
+        case 2:
+          status = '未审核'
+          break
+        case 3:
+          status = '驳回'
+          break
+      }
+      return status
     }
   },
   components: {
