@@ -6,12 +6,6 @@
       </el-option>
     </el-select>
   </el-form-item>
-  <!-- <el-form-item label="结束账期">
-    <el-select v-model="params.months" placeholder="全部">
-      <el-option v-for="item in months" :key="item" :label="item" :value="item">
-      </el-option>
-    </el-select>
-  </el-form-item> -->
   <el-form-item label="结束账期">
     <el-select v-model="params.months" placeholder="全部">
       <el-option v-for="item in months" :key="item" :label="item" :value="item">
@@ -47,7 +41,6 @@
   </el-form-item>
   <el-form-item>
     <el-button type="primary" @click="onSearch">查询</el-button>
-    <!-- <el-button v-if="onlyOneMonth" type="primary" @click="onSearch">查询</el-button> -->
     <el-button type="primary" @click="onDownload" :disabled="canClick">导出</el-button>
   </el-form-item>
 </el-form>
@@ -86,7 +79,7 @@ export default {
     }
   },
   created() {
-    console.log(this.length)
+    this.params.months = this.getCurMonth() + '月'
     this.getPartitions()
     this.getParamsProvince()
     this.getParamsCities()
@@ -101,6 +94,12 @@ export default {
     }
   },
   methods: {
+    getCurMonth() {
+      var date = new Date()
+      var month = date.getMonth()
+      // console.log(month)
+      return month
+    },
     getPartitions() {
       getPartitions().then((res) => {
         this.partitions = res.data
@@ -153,27 +152,6 @@ export default {
       // console.log(params.ccodes, 'ccodes之后')
       params.months = parseInt(params.months) < 10 ? ('0' + parseInt(params.months)) : parseInt(params.months)
       this.$emit('search', params)
-      // console.log(params.months, '所选月份')
-
-      // if (!this.onlyOneMonth) {
-      //   params.months = months.map(str => {
-      //     return parseInt(str) < 10 ? ('0' + parseInt(str)) : parseInt(str)
-      //   })
-      //   params.months = params.months.join(',')
-      //   this.$emit('search', params)
-      // } else {
-      //   console.log(params.months, 'params.months')
-      //   if (!params.months) {
-      //     this.$message({
-      //       message: '请选择到期月份',
-      //       type: 'warning'
-      //     })
-      //   } else {
-      //     params.months = parseInt(params.months) < 10 ? ('0' + parseInt(params.months)) : parseInt(params.months)
-      //     this.$emit('search', params)
-      //     console.log(params.months, '所选月份')
-      //   }
-      // }
     },
     onDownload() {
       this.$emit('download')

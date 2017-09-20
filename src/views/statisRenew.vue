@@ -44,8 +44,16 @@ export default {
   },
   created() {
     this.fetchData()
+    this.params.months = this.getCurMonth()
   },
   methods: {
+    getCurMonth() {
+      var date = new Date()
+      var month = date.getMonth()
+      month = month < 10 ? ('0' + month) : month
+      // console.log(month)
+      return month
+    },
     fetchData() {
       getStatisRenew(this.params).then((res) => {
         // console.log(res)

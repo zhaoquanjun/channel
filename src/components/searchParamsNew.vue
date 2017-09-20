@@ -7,22 +7,6 @@
     <el-date-picker v-model="params.endtime" type="date" placeholder="结束日期" :clearable="clearable">
     </el-date-picker>
   </el-form-item>
-  <!-- <el-form-item label="环比" v-show="showDateRange">
-    <el-date-picker v-model="params.laststarttime" type="date" placeholder="开始日期" :clearable="clearable">
-    </el-date-picker>
-    <span>-</span>
-    <el-date-picker v-model="params.lastendtime" type="date" placeholder="结束日期" :clearable="clearable">
-    </el-date-picker>
-  </el-form-item> -->
-  <!-- 做账数据管理需要显示单个截止日期 -->
-  <!-- <el-form-item v-if="makeAccount" label="截止时间" v-show="!hideDate">
-    <el-date-picker v-model="params.cuttime" type="date" placeholder="截止时间" :clearable="clearable">
-    </el-date-picker>
-  </el-form-item> -->
-  <!-- <el-form-item label="统计日" v-show="reduceSearchItem">
-    <el-date-picker v-model="params.endtime" type="date">
-    </el-date-picker>
-  </el-form-item> -->
   <el-form-item label="大区">
     <el-select v-model="params.partitions" multiple placeholder="全部" @change="getParamsProvince(),getParamsCities()">
       <el-option v-for="item in partitions" :key="item.Id" :label="item.PartitionName" :value="item.Id">
@@ -66,7 +50,6 @@ import {
 import ElSelect from '@/components/select.vue'
 export default {
   name: 'searchParams',
-  // props: ['hideChannel', 'hideDate', 'showDateRange', 'length', 'show', 'reduceSearchItem', 'makeAccount'],
   props: ['length', 'show', 'reduceSearchItem'],
   data() {
     return {
@@ -78,9 +61,6 @@ export default {
       params: {
         starttime: '',
         endtime: '',
-        // laststarttime: '',
-        // lastendtime: '',
-        // cuttime: '',
         partitions: [],
         provinces: [],
         ccodes: [],
@@ -95,11 +75,15 @@ export default {
     }
   },
   created() {
-    // this.params.cuttime = new Date()
     this.getPartitions()
     this.getParamsProvince()
     this.getParamsCities()
     this.Agents()
+    var start = this.getNowMonthStartDate()
+    var end = this.getNowMonthLastDate()
+    this.params.starttime = new Date(new Date(start))
+    this.params.endtime = new Date(new Date(end))
+    // console.log(this.params.starttime, this.params.endtime)
   },
   computed: {
     canClick: function () {
@@ -111,6 +95,17 @@ export default {
     }
   },
   methods: {
+    getNowMonthStartDate() {
+      var date = new Date()
+      return date.toLocaleString().match(/\d{0,4}\/\d{1,2}\/(\d{1,2})/)[0].replace(/(\d{0,4}\/\d{1,2}\/)\d{1,2}/, '$11')
+    },
+    getNowMonthLastDate() {
+      var date = new Date()
+      var nextMonthStartDate = date.toLocaleString().match(/\d{0,4}\/\d{1,2}\/(\d{1,2})/)[0].replace(/(\d{0,4})\/(\d{1,2})\/(\d{1,2})/, function() {
+        return parseInt(arguments[2]) === 12 ? (parseInt(arguments[1]) + 1) + '/1/1' : arguments[1] + '/' + (parseInt(arguments[2]) + 1) + '/1'
+      })
+      return new Date(new Date(nextMonthStartDate).getTime() - 1).toLocaleString().match(/\d{0,4}\/\d{1,2}\/(\d{1,2})/)[0]
+    },
     getPartitions() {
       getPartitions().then((res) => {
         this.partitions = res.data
@@ -161,15 +156,6 @@ export default {
       if (this.cities.length === 0) {
         params.ccodes = ccodes = 0
       }
-      // console.log(ccodes, 'params.ccodes')
-      // if (this.showDateRange) {
-      //   params.laststarttime = this.params.laststarttime
-      //   params.lastendtime = this.params.lastendtime
-      // }
-      // c处理大区没有城市时候需要给后台传递codes 值为0
-      // if (!this.reduceSearchItem && ccodes.length !== 0 && this.cities.length > 0) {
-      //   params.ccodes = ccodes.join(',')
-      // }
       if (ccodes.length !== 0 && this.cities.length > 0) {
         params.ccodes = ccodes.join(',')
       }
@@ -178,29 +164,6 @@ export default {
     },
     onDownload() {
       this.$emit('download')
-      // let {
-      //   starttime,
-      //   endtime,
-      //   ccodes,
-      //   channelname,
-      //   status
-      // } = this.params
-      // let params = {
-      //   starttime,
-      //   endtime,
-      //   ccodes,
-      //   channelname,
-      //   status
-      // }
-      // if (this.params.partitions.length > 0 || this.params.provinces.length > 0 && ccodes.length === 0) {
-      //   ccodes = this.cities.map(item => item.CityCode)
-      // }
-      // // if (this.showDateRange) {
-      // //   params.laststarttime = this.params.laststarttime
-      // //   params.lastendtime = this.params.lastendtime
-      // // }
-      // params.ccodes = ccodes.join(',')
-      // this.$emit('download', params, this.cities)
     },
     Agents() {
       agents().then((res) => {

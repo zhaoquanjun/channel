@@ -30,9 +30,6 @@
     <el-table-column prop="ZeroAmount" label="新增零申报金额" width="150">
     </el-table-column>
   </el-table>
-  <!-- <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 30]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
-    style="text-align:center; margin:20px;">
-  </el-pagination> -->
 </div>
 </template>
 <script>
@@ -58,8 +55,23 @@ export default {
   },
   mounted() {
     this.tableHeight = document.querySelector('.content-right').offsetHeight - 105
+    var start = this.getNowMonthStartDate()
+    var end = this.getNowMonthLastDate()
+    this.params.startdate = new Date(new Date(start))
+    this.params.enddate = new Date(new Date(end))
   },
   methods: {
+    getNowMonthStartDate() {
+      var date = new Date()
+      return date.toLocaleString().match(/\d{0,4}\/\d{1,2}\/(\d{1,2})/)[0].replace(/(\d{0,4}\/\d{1,2}\/)\d{1,2}/, '$11')
+    },
+    getNowMonthLastDate() {
+      var date = new Date()
+      var nextMonthStartDate = date.toLocaleString().match(/\d{0,4}\/\d{1,2}\/(\d{1,2})/)[0].replace(/(\d{0,4})\/(\d{1,2})\/(\d{1,2})/, function() {
+        return parseInt(arguments[2]) === 12 ? (parseInt(arguments[1]) + 1) + '/1/1' : arguments[1] + '/' + (parseInt(arguments[2]) + 1) + '/1'
+      })
+      return new Date(new Date(nextMonthStartDate).getTime() - 1).toLocaleString().match(/\d{0,4}\/\d{1,2}\/(\d{1,2})/)[0]
+    },
     fetchData() {
       getNewCustomer(this.params).then((res) => {
         // console.log(res)
