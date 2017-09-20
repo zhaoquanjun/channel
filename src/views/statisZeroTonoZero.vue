@@ -17,7 +17,7 @@
       </el-table-column>
       <el-table-column prop="zeronum" label="零申报数量" width="150">
       </el-table-column>
-      <el-table-column prop="zeronum" label="转小规模数量" width="150">
+      <el-table-column prop="littlenum" label="转小规模数量" width="150">
       </el-table-column>
       <el-table-column prop="formalnum" label="转一般纳税人数量" width="150">
       </el-table-column>
