@@ -16,7 +16,7 @@
     <el-table-column prop="Status" label="代理商是否解约" :formatter="handleStatus" min-width="150">
     </el-table-column>
     <el-table-column label="应收" header-align="center">
-      <el-table-column prop="OrderNumZero" label="零申报" width="130">
+      <el-table-column prop="YSZero" label="零申报" width="130">
       </el-table-column>
       <el-table-column prop="YSSmall" label="小规模" width="130">
       </el-table-column>
@@ -26,7 +26,7 @@
       </el-table-column>
     </el-table-column>
     <el-table-column label="实收" header-align="center">
-      <el-table-column prop="YSZero" label="零申报" width="130">
+      <el-table-column prop="SSZero" label="零申报" width="130">
       </el-table-column>
       <el-table-column prop="SSSmall" label="小规模" width="150">
       </el-table-column>
@@ -36,7 +36,7 @@
       </el-table-column>
     </el-table-column>
     <el-table-column label="订单数量" header-align="center">
-      <el-table-column prop="SSZero" label="零申报" width="130">
+      <el-table-column prop="OrderNumZero" label="零申报" width="130">
       </el-table-column>
       <el-table-column prop="OrderNumSmall" label="小规模" width="110">
       </el-table-column>

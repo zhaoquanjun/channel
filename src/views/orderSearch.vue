@@ -74,15 +74,15 @@
         <el-button @click="modify(scope.row)" type="text" size="small">修改</el-button>
         <el-button v-if="scope.row.Status != 2"  @click="deleteOrder(scope.row)" type="text" size="small">删除</el-button>
         <el-button v-if="scope.row.Status === 2" @click="reback(scope.row)" type="text" size="small">审核回退</el-button>
-        <el-button v-if="scope.row.Status === 2 && scope.row.IsHang == 1" @click="guaqi(scope.row)" type="text" size="small">挂起</el-button>
-        <el-button v-if="scope.row.Status === 2 && scope.row.IsHang == 2" @click="stopguaqi(scope.row)" type="text" size="small">解挂</el-button>
+        <el-button v-if="scope.row.Status === 2" @click="guaqi(scope.row)" type="text" size="small">挂起</el-button>
+        <el-button v-if="scope.row.Status === 2" @click="stopguaqi(scope.row)" type="text" size="small">解挂</el-button>
       </template>
     </el-table-column>
     <el-table-column v-if="category == 14" label="操作" width="140">
       <template scope="scope">
         <el-button @click="viewOrder(scope.row)" type="text" size="small">查看</el-button>
-        <el-button v-if="scope.row.Status === 2 && scope.row.IsHang == 1" @click="guaqi(scope.row)" type="text" size="small">挂起</el-button>
-        <el-button v-if="scope.row.Status === 2 && scope.row.IsHang == 2" @click="stopguaqi(scope.row)" type="text" size="small">解挂</el-button>
+        <el-button v-if="scope.row.Status === 2" @click="guaqi(scope.row)" type="text" size="small">挂起</el-button>
+        <el-button v-if="scope.row.Status === 2" @click="stopguaqi(scope.row)" type="text" size="small">解挂</el-button>
       </template>
     </el-table-column>
     <el-table-column v-if="category == 7 && category == 13" label="操作" width="140">
