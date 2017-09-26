@@ -22,7 +22,7 @@ export default {
   },
   mounted() {
     let that = this
-    console.log(this.$el)
+    // console.log(this.$el)
     this.viewer = new Viewer(this.$el.querySelector('img'), {
       navbar: false,
       title: false,

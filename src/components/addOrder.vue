@@ -187,7 +187,7 @@
                 </el-date-picker>
                 <span v-else>{{postData.ContractDate | formateDate}}</span>
               </td>
-              <td class="required">开始时间</td>
+              <td class="required">开始账期</td>
               <td>
                 <el-date-picker v-if="modify" v-model="postData.ServiceStart" type="month">
                 </el-date-picker>
@@ -196,7 +196,7 @@
               </td>
             </tr>
             <tr>
-              <td class="required">结束时间</td>
+              <td class="required">结束账期</td>
               <td>
                 <el-input v-if="modify" type="text" v-model='postData.ServiceEnd'></el-input>
                 <span v-else>{{postData.ServiceEnd | formateMonth}}</span>
@@ -204,7 +204,7 @@
               </td>
               <td class="required">合同金额</td>
               <td>
-                <el-input v-if="modify" type="text" v-model='postData.ContractAmount'></el-input>
+                <el-input v-if="modify" type="text" v-model='postData.ContractAmount' readonly></el-input>
                 <span v-else v-text="postData.ContractAmount"></span>
                 <span class="explain">注:合同金额根据所属城市、公司性质和付款方式自动计算，不包含礼包价格。</span>
               </td>
@@ -297,11 +297,20 @@ const promotionMap = {
       return 3
     },
     validPayType: [12]
+  },
+  5: {
+    priceFn: function (price, payType) {
+      return price
+    },
+    serviceFn: function (payType) {
+      return 3
+    },
+    validPayType: [12]
   }
 
 }
 export default {
-  props: ['postData', 'modify'],
+  props: ['postData', 'modify', 'channelid'],
   data() {
     return {
       dialogFormVisible: true,
@@ -339,6 +348,8 @@ export default {
       }
       this.postData.ServiceEnd = this.postData.ServiceEnd.substring(0, 7)
     }
+    this.channelid = this.channelid
+    console.log(this.channelid)
     this.promotionId = this.postData.IsPromotion
     this.postData.PayType = +this.postData.PayType
     this.orgAddedValue = this.postData.Customer.AddedValue
@@ -415,6 +426,7 @@ export default {
     getCityPrice() {
       const _ = window._
       var cityCode = this.postData.Customer.CityCode
+      var channelid = this.channelid
       // let addedvalue
       // if (this.postData.FreChangeOrderId) {
       //   addedvalue = 1
@@ -422,7 +434,8 @@ export default {
       //   addedvalue = this.postData.Customer.AddedValue
       // }
 
-      cityprice(cityCode).then(res => {
+      cityprice(cityCode, channelid).then(res => {
+        console.log(res, 'res')
         this.allprices = res.data
         if (this.postData.FreChangeOrderId) return
         const price = _.find(res.data, { Id: this.postData.PayType })

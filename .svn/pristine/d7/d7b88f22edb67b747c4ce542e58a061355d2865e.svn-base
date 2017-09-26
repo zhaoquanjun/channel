@@ -1,0 +1,134 @@
+<template>
+<div>
+  <h3 class="vheader">业绩统计</h3>
+  <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload"></SearchParams>
+  <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum>
+    <el-table-column prop="PartitionName" label="大区" width="120">
+    </el-table-column>
+    <el-table-column prop="ProvinceName" label="省" width="120">
+    </el-table-column>
+    <el-table-column prop="CityName" label="市" width="120">
+    </el-table-column>
+    <el-table-column prop="ChannelName1" label="一级代理商" width="200">
+    </el-table-column>
+    <el-table-column prop="ChannelName2" label="二级代理商" width="200">
+    </el-table-column>
+    <el-table-column label="应收" header-align="center">
+      <el-table-column prop="YSSmall" label="小规模" width="130">
+      </el-table-column>
+      <el-table-column prop="YSGeneral" label="一般纳税人" width="130">
+      </el-table-column>
+      <el-table-column prop="YSHJ" label="合计" width="150">
+      </el-table-column>
+    </el-table-column>
+    <el-table-column label="实收" header-align="center">
+      <el-table-column prop="SSSmall" label="小规模" width="150">
+      </el-table-column>
+      <el-table-column prop="SSGeneral" label="一般纳税人" width="150">
+      </el-table-column>
+      <el-table-column prop="SSHJ" label="合计" width="150">
+      </el-table-column>
+    </el-table-column>
+    <el-table-column label="订单数量" header-align="center">
+      <el-table-column prop="OrderNumSmall" label="小规模" width="110">
+      </el-table-column>
+      <el-table-column prop="OrderNumGeneral" label="一般纳税人" width="110">
+      </el-table-column>
+      <el-table-column prop="OrderNumHJ" label="合计" width="100">
+      </el-table-column>
+    </el-table-column>
+  </el-table>
+</div>
+</template>
+<script>
+import SearchParams from '@/components/searchParams.vue'
+import {
+  getAgentsReports
+} from '../api/api'
+import ExcelDown from '../service/excelDown'
+
+export default {
+  name: 'statisA',
+  data: function () {
+    return {
+      tableData: [],
+      allData: [],
+      params: {
+        startdate: '',
+        enddate: ''
+      },
+      cities: '',
+      tableHeight: 300
+    }
+  },
+  created() {
+    this.fetchData()
+  },
+  mounted() {
+    this.tableHeight = document.querySelector('.content-right').offsetHeight - 105
+  },
+  methods: {
+    fetchData() {
+      getAgentsReports(this.params).then((res) => {
+        this.tableData = res.data
+      })
+    },
+    onSearch(params) {
+      console.log(params)
+      this.params.startdate = params.starttime
+      this.params.enddate = params.endtime
+      // 当大区选择没有对应的城市时候 需要传递城市值默认是0
+
+      this.params.cityCodes = params.ccodes
+      this.params.channelname = params.channelname
+      this.fetchData()
+    },
+    onDownload() {
+      var exportHref = ExcelDown().tableToExcel('dataTable', 'sheet name')
+      setTimeout(function() { location.href = exportHref }, 100) // trigger download
+    },
+    getSummaries(param) {
+      const {
+        columns,
+        data
+      } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '合计'
+          return
+        }
+        const values = data.map(item => Number(item[column.property]))
+        if (index > 4 && index <= 10) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr)
+            if (!isNaN(value)) {
+              return (parseFloat(prev) + parseFloat(curr)).toFixed(3)
+            } else {
+              return parseFloat(prev).toFixed(3)
+            }
+          }, 0)
+        } else if (index > 10) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr)
+            if (!isNaN(value)) {
+              return (parseFloat(prev) + parseFloat(curr))
+            } else {
+              return parseFloat(prev)
+            }
+          }, 0)
+        } else {
+          sums[index] = '-'
+        }
+      })
+
+      return sums
+    }
+  },
+  components: {
+    SearchParams
+  }
+}
+</script>
+<style scoped>
+</style>

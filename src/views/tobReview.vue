@@ -10,10 +10,10 @@
         </el-select>
       </el-form-item>
       <el-form-item label="">
-        <el-date-picker v-model="params.starttime" type="date" placeholder="开始日期">
+        <el-date-picker v-model="params.starttime" type="date" placeholder="开始日期" :clearable="clearable">
         </el-date-picker>
         <span>-</span>
-        <el-date-picker v-model="params.endtime" type="date" placeholder="结束日期">
+        <el-date-picker v-model="params.endtime" type="date" placeholder="结束日期" :clearable="clearable">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -91,7 +91,8 @@ export default {
         endtime: null,
         agents: '',
         status: 1
-      }
+      },
+      clearable: false
     }
   },
   created() {
@@ -163,7 +164,8 @@ export default {
       orderTitle(row.OrderId).then(res => {
         postData = res.data
         Dialog(AddOrder, {
-          postData: postData
+          postData: postData,
+          channelid: row.ChannelId
         }).then(res => this.fetchData())
       })
     },

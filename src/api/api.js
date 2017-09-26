@@ -405,8 +405,8 @@ export const citybychannel = () => {
   return axios.get(`${base}/citybychannel`).then(res => res.data)
 }
 // 订单查询--公司性质
-export const cityprice = (cityCode) => {
-  return axios.get(`${base}/cityprice?cityCode=${cityCode}`).then(res => res.data)
+export const cityprice = (cityCode, channelid) => {
+  return axios.get(`${base}/cityprice?cityCode=${cityCode}&channelid=${channelid}`).then(res => res.data)
 }
 // 图片上传
 export const urlsignkey = () => {
@@ -663,4 +663,64 @@ export const getChannelGift = (params) => {
 // 获取数据权限相关表
 export const dataauthorityinfos = () => {
   return axios.get(`${base}/dataauthorityinfos`).then(res => res.data)
+}
+// 做账数据管理--运营会计数据总览
+export const agenttotalcustomer = params => {
+  return axios.get(`${base}/dataanalysis/agenttotalcustomer`, {
+    params: params
+  }).then(res => res.data)
+}
+// 做账数据管理--待建账数据统计
+export const agentrecallcustomer = params => {
+  return axios.get(`${base}/dataanalysis/agentrecallcustomer`, {
+    params: params
+  }).then(res => res.data)
+}
+// 做账数据管理--传票数据统计
+export const agentreceiptcustomer = params => {
+  return axios.get(`${base}/dataanalysis/agentreceiptcustomer`, {
+    params: params
+  }).then(res => res.data)
+}
+// 做账数据管理--做账与报税数据统计
+export const agentaccountcustomer = params => {
+  return axios.get(`${base}/dataanalysis/agentaccountcustomer`, {
+    params: params
+  }).then(res => res.data)
+}
+// 业绩管理-订单统计
+export const getStatisOrders = params => {
+  return axios.get(`${base}/report/getorderstotalnum`, {
+    params: params
+  }).then(res => res.data)
+}
+// 业绩管理-续费管理
+export const getStatisRenew = params => {
+  return axios.get(`${base}/report/getreordersnum`, {
+    params: params
+  }).then(res => res.data)
+}
+// 流转数据管理--预提单转正式订单统计
+export const getStatisYtOdersTozsOders = params => {
+  return axios.get(`${base}/dataanalysis/beforetoformalsearch`, {
+    params: params
+  }).then(res => res.data)
+}
+// 流转数据管理--零申报转非零申报统计
+export const getStatisZeroTonoZero = params => {
+  return axios.get(`${base}/dataanalysis/Iszerostatistics`, {
+    params: params
+  }).then(res => res.data)
+}
+// 流转数据管理--小规模转一般纳税人统计
+export const getStatisCompany1to2 = params => {
+  return axios.get(`${base}/dataanalysis/littletoformal`, {
+    params: params
+  }).then(res => res.data)
+}
+// 外勤数据管理
+export const getStatisOutwork = params => {
+  return axios.get(`${base}/dataanalysis/gettasknum`, {
+    params: params
+  }).then(res => res.data)
 }

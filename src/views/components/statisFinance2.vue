@@ -4,14 +4,20 @@
   <div class="vsearch">
     <el-form ref="params" :inline="true" :model="params">
       <el-form-item label="订单日期">
-        <el-date-picker class="dataWidth" v-model="params.starttime" type="date">
+        <el-date-picker class="dataWidth" v-model="params.starttime" type="date" :clearable="clearable">
         </el-date-picker>
         <span>-</span>
-        <el-date-picker class="dataWidth" v-model="params.endtime" type="date">
+        <el-date-picker class="dataWidth" v-model="params.endtime" type="date" :clearable="clearable">
         </el-date-picker>
       </el-form-item>
       <el-form-item class="form-width" label="代理商">
         <el-autocomplete class="inline-input" v-model="params.channelname" :trigger-on-focus="false" :fetch-suggestions="querySearch"></el-autocomplete>
+      </el-form-item>
+      <el-form-item class="form-width" label="代理商是否解约">
+        <el-select v-model="params.status">
+          <el-option v-for="item in Status" :key="item.status" :label="item.statusName" :value="item.status">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSearch">查询</el-button>
@@ -23,6 +29,8 @@
     <el-table-column prop="ChannelName1" label="一级代理" min-width="200">
     </el-table-column>
     <el-table-column prop="ChannelName2" label="二级代理" min-width="200">
+    </el-table-column>
+    <el-table-column prop="Status" label="代理商是否解约" :formatter="handleStatus">
     </el-table-column>
     <el-table-column prop="CreateDate" label="订单日期" :formatter="StatusDate" width="120">
     </el-table-column>
@@ -61,6 +69,11 @@ export default {
   props: ['agents'],
   data: function() {
     return {
+      Status: [
+        {status: '', statusName: '全部'},
+        {status: 0, statusName: '是'},
+        {status: 1, statusName: '否'}
+      ],
       pagination: {
         total: 0,
         pageSize: 10,
@@ -70,8 +83,10 @@ export default {
       params: {
         starttime: '',
         endtime: '',
-        channelname: ''
-      }
+        channelname: '',
+        status: ''
+      },
+      clearable: false
     }
   },
   created() {
@@ -84,12 +99,14 @@ export default {
       let channelname = this.params.channelname
       let starttime = this.params.starttime
       let endtime = this.params.endtime
+      let status = this.params.status
       getpaymentdetails({
         limit: limit,
         offset: offset,
         starttime: starttime,
         endtime: endtime,
-        channelname: channelname
+        channelname: channelname,
+        status: status
       }).then((res) => {
         // console.log(res.data)
         this.tableData = res.data
@@ -100,15 +117,16 @@ export default {
       const {
         starttime,
         endtime,
-        channelname
+        channelname,
+        status
       } = this.params
-      if (this.pagination.total > 4000) {
+      if (this.pagination.total > 1000) {
         this.$message({
           type: 'warning',
           message: '总条数过多，请缩小查询范围'
         })
       } else {
-        const url = `/api/download/getpaymentdetails?starttime=${starttime || ''}&endtime=${endtime || ''}&channelname=${channelname || ''}`
+        const url = `/api/download/getpaymentdetails?starttime=${starttime || ''}&endtime=${endtime || ''}&channelname=${channelname || ''}&status=${status || ''}`
         console.log(url)
         window.open(url)
       }
@@ -126,6 +144,16 @@ export default {
       return (channel) => {
         return (channel.value.indexOf(queryString) >= 0)
       }
+    },
+    handleStatus(row) {
+      // console.log(row)
+      var status = +row.Status
+      if (status === 0) {
+        status = '是'
+      } else if (status > 0) {
+        status = '否'
+      }
+      return status
     },
     handleSizeChange(val) {
       this.pagination.pageSize = val

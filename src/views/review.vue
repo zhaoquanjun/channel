@@ -10,10 +10,10 @@
         </el-select>
       </el-form-item>
       <el-form-item label="">
-        <el-date-picker v-model="params.starttime" type="date" placeholder="开始日期">
+        <el-date-picker v-model="params.starttime" type="date" placeholder="开始日期" :clearable="clearable">
         </el-date-picker>
         <span>-</span>
-        <el-date-picker v-model="params.endtime" type="date" placeholder="结束日期">
+        <el-date-picker v-model="params.endtime" type="date" placeholder="结束日期" :clearable="clearable">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -88,7 +88,8 @@ export default {
         status: 1,
         Category: 1
       },
-      citys: ''
+      citys: '',
+      clearable: false
     }
   },
   created() {
@@ -155,7 +156,8 @@ export default {
     viewOrder(row) { // 查看订单传递订单id
       orderTitle(row.OrderId).then(res => {
         Dialog(AddOrder, {
-          postData: res.data
+          postData: res.data,
+          channelid: row.ChannelId
         })
       })
     },

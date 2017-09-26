@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="order-search">
   <h3 class="vheader">订单查询</h3>
   <div class="vsearch">
     <el-form ref="params" :inline="true" :model="params">
@@ -10,10 +10,10 @@
         <el-input class="inputWid" placeholder="法人" v-model="params.legalPerson"></el-input>
       </el-form-item>
       <el-form-item label="">
-        <el-date-picker class="inputWid" v-model="params.starttime" type="date" placeholder="开始日期">
+        <el-date-picker class="inputWid" v-model="params.starttime" type="date" placeholder="开始日期" :clearable="clearable">
         </el-date-picker>
         <span>-</span>
-        <el-date-picker class="inputWid" v-model="params.endtime" type="date" placeholder="结束日期">
+        <el-date-picker class="inputWid" v-model="params.endtime" type="date" placeholder="结束日期" :clearable="clearable">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="审核状态">
@@ -68,14 +68,27 @@
     </el-table-column>
     <el-table-column prop="CreateDate" label="订单日期" width="120">
     </el-table-column>
-    <el-table-column v-if="category != 7" label="操作" width="140">
+    <el-table-column v-if="category != 7 && category != 13 && category != 14" label="操作" width="250">
       <template scope="scope">
-          <el-button @click="viewOrder(scope.row)" type="text" size="small">查看</el-button>
-          <el-button @click="modify(scope.row)" type="text" size="small">修改</el-button>
-          <el-button v-if="scope.row.Status != 2"  @click="deleteOrder(scope.row)" type="text" size="small">删除</el-button>
-          <el-button v-if="scope.row.Status === 2" @click="reback(scope.row)" type="text" size="small">审核回退</el-button>
-          <el-button v-if="scope.row.Status === 2" @click="guaqi(scope.row)" type="text" size="small">挂起</el-button>
-        </template>
+        <el-button @click="viewOrder(scope.row)" type="text" size="small">查看</el-button>
+        <el-button @click="modify(scope.row)" type="text" size="small">修改</el-button>
+        <el-button v-if="scope.row.Status != 2"  @click="deleteOrder(scope.row)" type="text" size="small">删除</el-button>
+        <el-button v-if="scope.row.Status === 2" @click="reback(scope.row)" type="text" size="small">审核回退</el-button>
+        <el-button v-if="scope.row.Status === 2" @click="guaqi(scope.row)" type="text" size="small">挂起</el-button>
+        <el-button v-if="scope.row.Status === 2" @click="stopguaqi(scope.row)" type="text" size="small">解挂</el-button>
+      </template>
+    </el-table-column>
+    <el-table-column v-if="category == 14" label="操作" width="140">
+      <template scope="scope">
+        <el-button @click="viewOrder(scope.row)" type="text" size="small">查看</el-button>
+        <el-button v-if="scope.row.Status === 2" @click="guaqi(scope.row)" type="text" size="small">挂起</el-button>
+        <el-button v-if="scope.row.Status === 2" @click="stopguaqi(scope.row)" type="text" size="small">解挂</el-button>
+      </template>
+    </el-table-column>
+    <el-table-column v-if="category == 7 && category == 13" label="操作" width="140">
+      <template scope="scope">
+        <el-button @click="viewOrder(scope.row)" type="text" size="small">查看</el-button>
+      </template>
     </el-table-column>
   </el-table>
   <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 30]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
@@ -143,7 +156,8 @@ export default {
         status: 0,
         Category: 0
       },
-      category: ''
+      category: '',
+      clearable: false
     }
   },
   created() {
@@ -203,10 +217,12 @@ export default {
     },
     viewOrder(row) {
       var postData = ''
+      // console.log(row.ChannelId)
       orderTitle(row.OrderId).then(res => {
         postData = res.data
         Dialog(AddOrder, {
-          postData: postData
+          postData: postData,
+          channelid: row.ChannelId
         })
       })
     },
@@ -271,7 +287,8 @@ export default {
     guaqi(row) {
       var item = {
         CompanyId: row.CustomerId,
-        ChannelId: row.ChannelId
+        ChannelId: row.ChannelId,
+        isHang: 1
       }
       Dialog(Refuse, {
         item: item,
@@ -280,6 +297,22 @@ export default {
         label: '挂起原因'
       })
       bus.$on('gq-success', () => {
+        this.fetchData()
+      })
+    },
+    stopguaqi(row) {
+      var item = {
+        CompanyId: row.CustomerId,
+        ChannelId: row.ChannelId,
+        isHang: 0
+      }
+      Dialog(Refuse, {
+        item: item,
+        sign: 'STOPGUAQI',
+        title: '订单解挂',
+        label: '解挂原因'
+      })
+      bus.$on('gq-stop', () => {
         this.fetchData()
       })
     },
@@ -304,8 +337,11 @@ export default {
 }
 </script>
 
-<style scoped>
-.inputWid {
+<style>
+.order-search .inputWid {
   width: 100px;
+}
+.order-search .el-form--inline .el-form-item{
+  margin-right: 5px;
 }
 </style>
