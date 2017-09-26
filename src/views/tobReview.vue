@@ -164,7 +164,8 @@ export default {
       orderTitle(row.OrderId).then(res => {
         postData = res.data
         Dialog(AddOrder, {
-          postData: postData
+          postData: postData,
+          channelid: row.ChannelId
         }).then(res => this.fetchData())
       })
     },

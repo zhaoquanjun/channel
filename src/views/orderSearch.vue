@@ -68,7 +68,7 @@
     </el-table-column>
     <el-table-column prop="CreateDate" label="订单日期" width="120">
     </el-table-column>
-    <el-table-column v-if="category != 7 && category != 13 && category != 14" label="操作" width="140">
+    <el-table-column v-if="category != 7 && category != 13 && category != 14" label="操作" width="250">
       <template scope="scope">
         <el-button @click="viewOrder(scope.row)" type="text" size="small">查看</el-button>
         <el-button @click="modify(scope.row)" type="text" size="small">修改</el-button>
@@ -217,10 +217,12 @@ export default {
     },
     viewOrder(row) {
       var postData = ''
+      // console.log(row.ChannelId)
       orderTitle(row.OrderId).then(res => {
         postData = res.data
         Dialog(AddOrder, {
-          postData: postData
+          postData: postData,
+          channelid: row.ChannelId
         })
       })
     },

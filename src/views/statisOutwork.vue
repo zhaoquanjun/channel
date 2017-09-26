@@ -1,6 +1,6 @@
 <template>
   <div class="statis-ytOdersTozsOders">
-    <h3 class="vheader">外勤状况统计</h3>
+    <h3 class="vheader">外勤情况统计</h3>
     <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload"></SearchParams>
     <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" v-table-sum @cell-click="downloadColumn">
       <el-table-column prop="PartitionName" label="大区" width="120">
@@ -17,29 +17,29 @@
       </el-table-column>
       <el-table-column prop="ordernum" label="预提单数" width="150">
       </el-table-column>
-      <el-table-column prop="allmainnum" label="外勤总任务数量" width="170">
+      <el-table-column prop="allmainnum" label="外勤总任务数量" width="140">
       </el-table-column>
-      <el-table-column prop="mainnum1" label="总任务待分配" width="150">
+      <el-table-column prop="mainnum1" label="总任务待分配" width="130">
       </el-table-column>
-      <el-table-column prop="mainnum2" label="总任务待处理" width="170">
+      <el-table-column prop="mainnum2" label="总任务待处理" width="130">
       </el-table-column>
-      <el-table-column prop="mainnum3" label="总任务进行中" width="150">
+      <el-table-column prop="mainnum3" label="总任务进行中" width="130">
       </el-table-column>
-      <el-table-column prop="mainnum4" label="总任务已完成" width="170">
+      <el-table-column prop="mainnum4" label="总任务已完成" width="130">
       </el-table-column>
-      <el-table-column prop="mainnum5" label="总任务已取消" width="150">
+      <el-table-column prop="mainnum5" label="总任务已取消" width="130">
       </el-table-column>
-      <el-table-column prop="allchildnum" label="子任务总数量" width="170">
+      <el-table-column prop="allchildnum" label="子任务总数量" width="130">
       </el-table-column>
-      <el-table-column prop="childnum1" label="子任务待分配" width="150">
+      <el-table-column prop="childnum1" label="子任务待分配" width="130">
       </el-table-column>
-      <el-table-column prop="childnum2" label="子任务待处理" width="170">
+      <el-table-column prop="childnum2" label="子任务待处理" width="130">
       </el-table-column>
-      <el-table-column prop="childnum3" label="子任务进行中" width="150">
+      <el-table-column prop="childnum3" label="子任务进行中" width="130">
       </el-table-column>
-      <el-table-column prop="childnum4" label="子任务已完成" width="170">
+      <el-table-column prop="childnum4" label="子任务已完成" width="130">
       </el-table-column>
-      <el-table-column prop="childnum5" label="子任务已取消" width="150">
+      <el-table-column prop="childnum5" label="子任务已取消" width="130">
       </el-table-column>
     </el-table>
   </div>

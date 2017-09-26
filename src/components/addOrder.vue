@@ -310,7 +310,7 @@ const promotionMap = {
 
 }
 export default {
-  props: ['postData', 'modify'],
+  props: ['postData', 'modify', 'channelid'],
   data() {
     return {
       dialogFormVisible: true,
@@ -348,6 +348,8 @@ export default {
       }
       this.postData.ServiceEnd = this.postData.ServiceEnd.substring(0, 7)
     }
+    this.channelid = this.channelid
+    console.log(this.channelid)
     this.promotionId = this.postData.IsPromotion
     this.postData.PayType = +this.postData.PayType
     this.orgAddedValue = this.postData.Customer.AddedValue
@@ -424,6 +426,7 @@ export default {
     getCityPrice() {
       const _ = window._
       var cityCode = this.postData.Customer.CityCode
+      var channelid = this.channelid
       // let addedvalue
       // if (this.postData.FreChangeOrderId) {
       //   addedvalue = 1
@@ -431,7 +434,8 @@ export default {
       //   addedvalue = this.postData.Customer.AddedValue
       // }
 
-      cityprice(cityCode).then(res => {
+      cityprice(cityCode, channelid).then(res => {
+        console.log(res, 'res')
         this.allprices = res.data
         if (this.postData.FreChangeOrderId) return
         const price = _.find(res.data, { Id: this.postData.PayType })

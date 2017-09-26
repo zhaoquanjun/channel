@@ -405,8 +405,8 @@ export const citybychannel = () => {
   return axios.get(`${base}/citybychannel`).then(res => res.data)
 }
 // 订单查询--公司性质
-export const cityprice = (cityCode) => {
-  return axios.get(`${base}/cityprice?cityCode=${cityCode}`).then(res => res.data)
+export const cityprice = (cityCode, channelid) => {
+  return axios.get(`${base}/cityprice?cityCode=${cityCode}&channelid=${channelid}`).then(res => res.data)
 }
 // 图片上传
 export const urlsignkey = () => {

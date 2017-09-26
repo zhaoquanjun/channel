@@ -2,7 +2,7 @@
 <div class="statis-orders">
   <h3 class="vheader">订单统计</h3>
   <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload"></SearchParams>
-  <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum @cell-click="downloadColumn">
+  <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="400" v-table-sum @cell-click="downloadColumn">
     <el-table-column prop="PartitionName" label="大区" width="120">
     </el-table-column>
     <el-table-column prop="ProvinceName" label="省" width="120">
@@ -13,36 +13,36 @@
     </el-table-column>
     <el-table-column prop="ChannelName2" label="二级代理商" width="200">
     </el-table-column>
-    <el-table-column prop="Status" label="代理商是否解约" :formatter="handleStatus" min-width="150">
+    <el-table-column prop="Status" label="代理商是否解约" :formatter="handleStatus" width="100">
     </el-table-column>
     <el-table-column label="套餐类型" header-align="center">
-      <el-table-column prop="ZeroYearNum" label="零税半年报" width="130">
+      <el-table-column prop="ZeroYearNum" label="零税半年版" width="110">
       </el-table-column>
-      <el-table-column prop="QuarterNum" label="季度报" width="130">
+      <el-table-column prop="QuarterNum" label="季度版" width="80">
       </el-table-column>
-      <el-table-column prop="HalfYearNum" label="半年报" width="150">
+      <el-table-column prop="HalfYearNum" label="半年版" width="80">
       </el-table-column>
-      <el-table-column prop="YearNum" label="一年报" width="150">
+      <el-table-column prop="YearNum" label="一年版" width="80">
       </el-table-column>
     </el-table-column>
     <el-table-column label="订单类型" header-align="center">
-      <el-table-column prop="ReserveNum" label="预提单" width="130">
+      <el-table-column prop="ReserveNum" label="预提单" width="80">
       </el-table-column>
-      <el-table-column prop="FormalNum" label="正式订单" width="130">
+      <el-table-column prop="FormalNum" label="正式订单" width="100">
       </el-table-column>
     </el-table-column>
     <el-table-column label="订单性质" header-align="center">
-      <el-table-column prop="NewNum" label="新签订单数" width="150">
+      <el-table-column prop="NewNum" label="新签订单数" width="110">
       </el-table-column>
-      <el-table-column prop="ReNum" label="续费订单数" width="150">
+      <el-table-column prop="ReNum" label="续费订单数" width="110">
       </el-table-column>
     </el-table-column>
     <el-table-column label="客户类型" header-align="center">
-      <el-table-column prop="ZeroNum" label="零申报" width="110">
+      <el-table-column prop="ZeroNum" label="零申报" width="80">
       </el-table-column>
-      <el-table-column prop="SmallNum" label="小规模" width="110">
+      <el-table-column prop="SmallNum" label="小规模" width="80">
       </el-table-column>
-      <el-table-column prop="NormalNum" label="一般纳税人" width="120">
+      <el-table-column prop="NormalNum" label="一般纳税人" width="110">
       </el-table-column>
       <el-table-column prop="TotalNum" label="小计" width="100">
       </el-table-column>
@@ -107,6 +107,7 @@ export default {
       this.fetchData()
     },
     onDownload() {
+      console.log('ss')
       ExcelDown().tableToExcel('dataTable', '订单统计')
       // var exportHref = ExcelDown().tableToExcel('dataTable', 'sheet name')
       // setTimeout(function() { location.href = exportHref }, 100) // trigger download
@@ -127,9 +128,9 @@ export default {
           sums[index] = values.reduce((prev, curr) => {
             const value = Number(curr)
             if (!isNaN(value)) {
-              return (parseFloat(prev) + parseFloat(curr)).toFixed(2)
+              return prev + curr
             } else {
-              return parseFloat(prev).toFixed(2)
+              return prev
             }
           }, 0)
         } else {

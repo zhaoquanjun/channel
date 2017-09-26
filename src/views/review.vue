@@ -156,7 +156,8 @@ export default {
     viewOrder(row) { // 查看订单传递订单id
       orderTitle(row.OrderId).then(res => {
         Dialog(AddOrder, {
-          postData: res.data
+          postData: res.data,
+          channelid: row.ChannelId
         })
       })
     },

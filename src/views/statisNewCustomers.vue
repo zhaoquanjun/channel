@@ -2,7 +2,7 @@
 <div class="statis-new-customers">
   <h3 class="vheader">新增客户统计</h3>
   <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload"></SearchParams>
-  <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum @cell-click="downloadColumn">
+  <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="400" v-table-sum @cell-click="downloadColumn">
     <el-table-column prop="PartitionName" label="大区" width="120">
     </el-table-column>
     <el-table-column prop="ProvinceName" label="省份" width="120">
@@ -13,21 +13,21 @@
     </el-table-column>
     <el-table-column prop="ChannelName2" label="二级代理商" min-width="200">
     </el-table-column>
-    <el-table-column prop="Status" label="代理商是否解约" :formatter="handleStatus" min-width="150">
+    <el-table-column prop="Status" label="代理商是否解约" :formatter="handleStatus" min-width="100">
     </el-table-column>
     <el-table-column label="新增客户数" header-align="center">
-      <el-table-column prop="ZeroNum" label="零申报" width="130">
+      <el-table-column prop="ZeroNum" label="零申报" width="80">
       </el-table-column>
-      <el-table-column prop="SmallNum" label="小规模" width="130">
+      <el-table-column prop="SmallNum" label="小规模" width="80">
       </el-table-column>
-      <el-table-column prop="NormalNum" label="一般纳税人" width="150">
+      <el-table-column prop="NormalNum" label="一般纳税人" width="110">
       </el-table-column>
-      <el-table-column prop="CustomerNum" label="小计" width="150">
+      <el-table-column prop="CustomerNum" label="小计" width="100">
       </el-table-column>
     </el-table-column>
-    <el-table-column prop="ContractAmount" label="新增客户金额" width="150">
+    <el-table-column prop="ContractAmount" label="新增客户金额" width="130">
     </el-table-column>
-    <el-table-column prop="ZeroAmount" label="新增零申报金额" width="150">
+    <el-table-column prop="ZeroAmount" label="新增零申报金额" width="140">
     </el-table-column>
   </el-table>
 </div>
@@ -147,7 +147,7 @@ export default {
       var startdate = this.params.startdate
       var enddate = this.params.enddate
       var url = ''
-      var Param = `?channelid=${channelid || ''}&startdate=${startdate || ''}&enddate=${enddate || ''}`
+      var Param = `?iscustomers=1&channelid=${channelid || ''}&startdate=${startdate || ''}&enddate=${enddate || ''}`
       if (cell.cellIndex === 6) {
         url = '/api/download/getzeroorders' + Param
       } else {
