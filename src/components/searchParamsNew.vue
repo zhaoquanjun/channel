@@ -28,7 +28,7 @@
   <el-form-item label="代理商">
     <el-autocomplete class="inline-input" v-model="params.channelname" :trigger-on-focus="false" :fetch-suggestions="querySearch" placeholder="代理商名称"></el-autocomplete>
   </el-form-item>
-  <el-form-item label="代理商是否解约">
+  <el-form-item v-if="!showStatus" label="代理商是否解约">
     <el-select v-model="params.status">
       <el-option v-for="item in Status" :key="item.status" :label="item.statusName" :value="item.status">
       </el-option>
@@ -50,7 +50,7 @@ import {
 import ElSelect from '@/components/select.vue'
 export default {
   name: 'searchParams',
-  props: ['length', 'show', 'reduceSearchItem'],
+  props: ['length', 'show', 'reduceSearchItem', 'showStatus'],
   data() {
     return {
       Status: [

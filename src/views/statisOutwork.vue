@@ -1,7 +1,7 @@
 <template>
   <div class="statis-ytOdersTozsOders">
     <h3 class="vheader">外勤情况统计</h3>
-    <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload"></SearchParams>
+    <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload" :showStatus="true"></SearchParams>
     <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" v-table-sum @cell-click="downloadColumn">
       <el-table-column prop="PartitionName" label="大区" width="120">
       </el-table-column>
@@ -13,8 +13,8 @@
       </el-table-column>
       <el-table-column prop="ChannelName2" label="二级代理商" min-width="200">
       </el-table-column>
-      <el-table-column prop="Status" label="代理商是否解约" :formatter="handleStatus" min-width="150">
-      </el-table-column>
+      <!-- <el-table-column prop="Status" label="代理商是否解约" :formatter="handleStatus" min-width="150">
+      </el-table-column> -->
       <el-table-column prop="ordernum" label="预提单数" width="150">
       </el-table-column>
       <el-table-column prop="allmainnum" label="外勤总任务数量" width="140">
