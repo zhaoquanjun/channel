@@ -2,7 +2,7 @@
   <div class="statis-renew">
     <h3 class="vheader">续费情况统计</h3>
     <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload"></SearchParams>
-    <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" v-table-sum @cell-click="downloadColumn">
+    <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" v-table-sum:[1,2,3]="downloadSum" @cell-click="downloadColumn">
       <el-table-column prop="PartitionName" label="大区" width="120">
       </el-table-column>
       <el-table-column prop="ProvinceName" label="省份" width="120">
@@ -36,7 +36,7 @@ export default {
     return {
       tableData: [],
       params: {
-        year: '',
+        year: '2017',
         months: '',
         status: ''
       }
@@ -71,8 +71,6 @@ export default {
     },
     onDownload() {
       ExcelDown().tableToExcel('dataTable', '续费情况统计')
-      // var exportHref = ExcelDown().tableToExcel('dataTable', 'sheet name')
-      // setTimeout(function() { location.href = exportHref }, 100) // trigger download
     },
     getSummaries(param) {
       const {
@@ -101,6 +99,27 @@ export default {
       })
 
       return sums
+    },
+    downloadSum(index) {
+      console.log(this.params, 'this.params')
+      var {
+        status,
+        year,
+        months,
+        ccodes,
+        channelname
+      } = this.params
+      var url = ''
+      var Param = `?status=${status || ''}&year=${year || ''}&months=${months || ''}&ccodes=${ccodes || ''}&channelname=${channelname || ''}`
+      if (index === 1) {
+        url = '/api/download/getexpireorderdetails' + Param
+      } else if (index === 2) {
+        url = '/api/download/getnoreorderdetails' + Param
+      } else if (index === 3) {
+        url = '/api/download/getreorderdetails' + Param
+      }
+      window.open(url)
+      // alert(index)
     },
     downloadColumn(row, column, cell) {
       var channelid = row.ChannelId

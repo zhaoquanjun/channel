@@ -2,7 +2,7 @@
 <div class="statis-orders">
   <h3 class="vheader">订单统计</h3>
   <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload"></SearchParams>
-  <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="400" v-table-sum:[1,2,3]="downloadSum" @cell-click="downloadColumn">
+  <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="400" v-table-sum:[5,9]="downloadSum" @cell-click="downloadColumn">
     <el-table-column prop="PartitionName" label="大区" width="120">
     </el-table-column>
     <el-table-column prop="ProvinceName" label="省" width="120">
@@ -107,10 +107,7 @@ export default {
       this.fetchData()
     },
     onDownload() {
-      console.log('ss')
       ExcelDown().tableToExcel('dataTable', '订单统计')
-      // var exportHref = ExcelDown().tableToExcel('dataTable', 'sheet name')
-      // setTimeout(function() { location.href = exportHref }, 100) // trigger download
     },
     getSummaries(param) {
       const {
@@ -142,7 +139,23 @@ export default {
       return sums
     },
     downloadSum(index) {
-      alert(index)
+      console.log(this.params, 'this.params')
+      var {
+        status,
+        startdate,
+        enddate,
+        ccodes,
+        channelname
+      } = this.params
+      var url = ''
+      var Param = `?status=${status || ''}&startdate=${startdate || ''}&enddate=${enddate || ''}&ccodes=${ccodes || ''}&channelname=${channelname || ''}`
+      if (index === 5) {
+        url = '/api/download/getreserveorders' + Param
+      } else if (index === 9) {
+        url = '/api/download/getzeroorders' + Param
+      }
+      window.open(url)
+      // alert(index)
     },
     downloadColumn(row, column, cell) {
       // console.log(arguments, 'arguments')

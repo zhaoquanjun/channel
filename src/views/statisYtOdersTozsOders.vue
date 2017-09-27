@@ -2,7 +2,7 @@
   <div class="statis-ytOdersTozsOders">
     <h3 class="vheader">预提单转正式订单统计</h3>
     <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload"></SearchParams>
-    <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" v-table-sum @cell-click="downloadColumn">
+    <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" v-table-sum:[1,2]="downloadSum" @cell-click="downloadColumn">
       <el-table-column prop="PartitionName" label="大区" width="120">
       </el-table-column>
       <el-table-column prop="ProvinceName" label="省份" width="120">
@@ -107,6 +107,25 @@ export default {
       })
 
       return sums
+    },
+    downloadSum(index) {
+      console.log(this.params, 'this.params')
+      var {
+        status,
+        startdate,
+        enddate,
+        ccodes,
+        channelname
+      } = this.params
+      var url = ''
+      var Param = `?status=${status || ''}&startdate=${startdate || ''}&enddate=${enddate || ''}&ccodes=${ccodes || ''}&channelname=${channelname || ''}`
+      if (index === 1) {
+        url = '/api/dataanalysis/exportbeforehandlist' + Param
+      } else if (index === 2) {
+        url = '/api/dataanalysis/exporttoformallist' + Param
+      }
+      window.open(url)
+      // alert(index)
     },
     downloadColumn(row, column, cell) {
       var channelid = row.ChannelId
