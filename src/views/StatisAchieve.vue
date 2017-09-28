@@ -2,7 +2,7 @@
 <div>
   <h3 class="vheader">业绩统计</h3>
   <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload"></SearchParams>
-  <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="400" v-table-sum>
+  <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="410" v-table-sum>
     <el-table-column prop="PartitionName" label="大区" width="120">
     </el-table-column>
     <el-table-column prop="ProvinceName" label="省" width="120">
@@ -14,6 +14,16 @@
     <el-table-column prop="ChannelName2" label="二级代理商" width="200">
     </el-table-column>
     <el-table-column prop="Status" label="代理商是否解约" :formatter="handleStatus" min-width="100">
+    </el-table-column>
+    <el-table-column label="订单数量" header-align="center">
+      <el-table-column prop="OrderNumZero" label="零申报" width="80">
+      </el-table-column>
+      <el-table-column prop="OrderNumSmall" label="小规模" width="100">
+      </el-table-column>
+      <el-table-column prop="OrderNumGeneral" label="一般纳税人" width="110">
+      </el-table-column>
+      <el-table-column prop="OrderNumHJ" label="小计" width="120">
+      </el-table-column>
     </el-table-column>
     <el-table-column label="应收" header-align="center">
       <el-table-column prop="YSZero" label="零申报" width="100">
@@ -33,16 +43,6 @@
       <el-table-column prop="SSGeneral" label="一般纳税人" width="110">
       </el-table-column>
       <el-table-column prop="SSHJ" label="小计" width="120">
-      </el-table-column>
-    </el-table-column>
-    <el-table-column label="订单数量" header-align="center">
-      <el-table-column prop="OrderNumZero" label="零申报" width="80">
-      </el-table-column>
-      <el-table-column prop="OrderNumSmall" label="小规模" width="100">
-      </el-table-column>
-      <el-table-column prop="OrderNumGeneral" label="一般纳税人" width="110">
-      </el-table-column>
-      <el-table-column prop="OrderNumHJ" label="小计" width="120">
       </el-table-column>
     </el-table-column>
   </el-table>
@@ -122,23 +122,23 @@ export default {
           sums[index] = '合计'
           return
         }
-        const values = data.map(item => Number(item[column.property]))
-        if (index > 5 && index <= 13) {
+        const values = data.map(item => parseFloat(item[column.property]))
+        if (index > 5 && index < 10) {
           sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr)
+            const value = parseFloat(curr)
+            if (!isNaN(value)) {
+              return prev + curr
+            } else {
+              return prev
+            }
+          }, 0)
+        } else if (index >= 10) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = parseFloat(curr)
             if (!isNaN(value)) {
               return (parseFloat(prev) + parseFloat(curr)).toFixed(2)
             } else {
-              return parseFloat(prev).toFixed(2)
-            }
-          }, 0)
-        } else if (index > 13) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr)
-            if (!isNaN(value)) {
-              return (parseFloat(prev) + parseFloat(curr))
-            } else {
-              return parseFloat(prev)
+              return prev.toFixed(2)
             }
           }, 0)
         } else {

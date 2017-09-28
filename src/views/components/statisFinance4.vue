@@ -112,16 +112,16 @@ export default {
         channelname,
         status
       } = this.params
-      if (this.pagination.total > 1000) {
-        this.$message({
-          type: 'warning',
-          message: '总条数过多，请缩小查询范围'
-        })
-      } else {
-        const url = `/api/download/getrebatedetails?year=${year || ''}&month=${paramsmonths || ''}&channelname=${channelname || ''}&status=${status || ''}`
-        console.log(url)
-        window.open(url)
-      }
+      // if (this.pagination.total > 1000) {
+      //   this.$message({
+      //     type: 'warning',
+      //     message: '总条数过多，请缩小查询范围'
+      //   })
+      // } else {
+      const url = `/api/download/getrebatedetails?year=${year || ''}&month=${paramsmonths || ''}&channelname=${channelname || ''}&status=${status || ''}`
+      // console.log(url)
+      window.open(url)
+      // }
     },
     querySearch(queryString, cb) {
       var channels = this.agents

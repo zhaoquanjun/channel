@@ -2,7 +2,7 @@
 <div class="statis-orders">
   <h3 class="vheader">订单统计</h3>
   <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload"></SearchParams>
-  <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="400" v-table-sum:[5,9]="downloadSum" @cell-click="downloadColumn">
+  <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="410" v-table-sum:[5,9]="downloadSum" @cell-click="downloadColumn">
     <el-table-column prop="PartitionName" label="大区" width="120">
     </el-table-column>
     <el-table-column prop="ProvinceName" label="省" width="120">

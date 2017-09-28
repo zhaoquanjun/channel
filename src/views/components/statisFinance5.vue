@@ -191,16 +191,16 @@ export default {
         invoicesId,
         status
       } = this.params
-      if (this.pagination.total > 1000) {
-        this.$message({
-          type: 'warning',
-          message: '总条数过多，请缩小查询范围'
-        })
-      } else {
-        const url = `/api/download/getinvoicesdetails?startorder=${startorder || ''}&endorder=${endorder || ''}&startapply=${startapply || ''}&endapply=${endapply || ''}&startaudit=${startaudit || ''}&endaudit=${endaudit || ''}&channelname=${channelname || ''}&type=${type || 0}&invoicesId=${invoicesId || ''}&status=${status || ''}`
-        // console.log(url)
-        window.open(url)
-      }
+      // if (this.pagination.total > 1000) {
+      //   this.$message({
+      //     type: 'warning',
+      //     message: '总条数过多，请缩小查询范围'
+      //   })
+      // } else {
+      const url = `/api/download/getinvoicesdetails?startorder=${startorder || ''}&endorder=${endorder || ''}&startapply=${startapply || ''}&endapply=${endapply || ''}&startaudit=${startaudit || ''}&endaudit=${endaudit || ''}&channelname=${channelname || ''}&type=${type || 0}&invoicesId=${invoicesId || ''}&status=${status || ''}`
+      // console.log(url)
+      window.open(url)
+      // }
     },
     StatusDate(row, column) {
       var date = row[column.property]

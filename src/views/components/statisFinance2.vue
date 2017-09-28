@@ -120,16 +120,16 @@ export default {
         channelname,
         status
       } = this.params
-      if (this.pagination.total > 1000) {
-        this.$message({
-          type: 'warning',
-          message: '总条数过多，请缩小查询范围'
-        })
-      } else {
-        const url = `/api/download/getpaymentdetails?starttime=${starttime || ''}&endtime=${endtime || ''}&channelname=${channelname || ''}&status=${status || ''}`
-        console.log(url)
-        window.open(url)
-      }
+      // if (this.pagination.total > 1000) {
+      //   this.$message({
+      //     type: 'warning',
+      //     message: '总条数过多，请缩小查询范围'
+      //   })
+      // } else {
+      const url = `/api/download/getpaymentdetails?starttime=${starttime || ''}&endtime=${endtime || ''}&channelname=${channelname || ''}&status=${status || ''}`
+      console.log(url)
+      window.open(url)
+      // }
     },
     StatusDate(row, column) {
       var date = row[column.property]
