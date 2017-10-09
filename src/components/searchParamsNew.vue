@@ -25,8 +25,8 @@
       </el-option>
     </el-select>
   </el-form-item>
-  <el-form-item label="代理商">
-    <el-autocomplete class="inline-input" v-model="params.channelname" :trigger-on-focus="false" :fetch-suggestions="querySearch" placeholder="代理商名称"></el-autocomplete>
+  <el-form-item label="代理商" class="inline-input">
+    <el-autocomplete v-model="params.channelname" :trigger-on-focus="false" :fetch-suggestions="querySearch" placeholder="代理商名称"></el-autocomplete>
   </el-form-item>
   <el-form-item label="代理商是否解约">
     <el-select v-model="params.status">
@@ -232,4 +232,8 @@ export default {
 .searchForm .el-select>.el-input {
   height: 36px;
 }
+
+/*.searchForm .inline-input .el-form-item__content .el-select .el-input {
+  width: 75px;
+}*/
 </style>

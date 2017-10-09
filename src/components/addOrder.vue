@@ -433,8 +433,13 @@ export default {
       // } else {
       //   addedvalue = this.postData.Customer.AddedValue
       // }
+      if (!this.modify) {
+        var ischeck = 1
+      } else {
+        ischeck = 0
+      }
 
-      cityprice(cityCode, channelid).then(res => {
+      cityprice(cityCode, channelid, ischeck).then(res => {
         console.log(res, 'res')
         this.allprices = res.data
         if (this.postData.FreChangeOrderId) return

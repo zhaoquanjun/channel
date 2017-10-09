@@ -2,7 +2,7 @@
   <div class="statis-ytOdersTozsOders">
     <h3 class="vheader">零申报转非零申报统计</h3>
     <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload"></SearchParams>
-    <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="410" v-table-sum:[1,2,3]="downloadSum" @cell-click="downloadColumn">
+    <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum:[1,2,3]="downloadSum" @cell-click="downloadColumn">
       <el-table-column prop="PartitionName" label="大区" width="120">
       </el-table-column>
       <el-table-column prop="ProvinceName" label="省份" width="120">
@@ -40,7 +40,8 @@ export default {
         enddate: '',
         status: ''
       },
-      cities: ''
+      cities: '',
+      tableHeight: 300
     }
   },
   created() {
@@ -49,6 +50,9 @@ export default {
     var end = this.getNowMonthLastDate()
     this.params.startdate = new Date(new Date(start))
     this.params.enddate = new Date(new Date(end))
+  },
+  mounted() {
+    this.tableHeight = document.querySelector('.content-right').offsetHeight - 163
   },
   methods: {
     getNowMonthStartDate() {

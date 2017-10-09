@@ -2,7 +2,7 @@
 <div>
   <h3 class="vheader">业绩统计</h3>
   <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload"></SearchParams>
-  <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="410" v-table-sum>
+  <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum>
     <el-table-column prop="PartitionName" label="大区" width="120">
     </el-table-column>
     <el-table-column prop="ProvinceName" label="省" width="120">
@@ -74,7 +74,7 @@ export default {
     this.fetchData()
   },
   mounted() {
-    this.tableHeight = document.querySelector('.content-right').offsetHeight - 105
+    this.tableHeight = document.querySelector('.content-right').offsetHeight - 163
     var start = this.getNowMonthStartDate()
     var end = this.getNowMonthLastDate()
     this.params.startdate = new Date(new Date(start))

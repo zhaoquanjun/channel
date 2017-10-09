@@ -2,7 +2,7 @@
   <div class="statis-renew">
     <h3 class="vheader">续费情况统计</h3>
     <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload"></SearchParams>
-    <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="410" v-table-sum:[1,2,3]="downloadSum" @cell-click="downloadColumn">
+    <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum:[1,2,3]="downloadSum" @cell-click="downloadColumn">
       <el-table-column prop="PartitionName" label="大区" width="120">
       </el-table-column>
       <el-table-column prop="ProvinceName" label="省份" width="120">
@@ -39,12 +39,16 @@ export default {
         year: '2017',
         months: '',
         status: ''
-      }
+      },
+      tableHeight: 300
     }
   },
   created() {
     this.fetchData()
     this.params.months = this.getCurMonth()
+  },
+  mounted() {
+    this.tableHeight = document.querySelector('.content-right').offsetHeight - 163
   },
   methods: {
     getCurMonth() {
