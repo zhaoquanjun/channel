@@ -118,7 +118,7 @@ export default {
       //     message: '总条数过多，请缩小查询范围'
       //   })
       // } else {
-      const url = `/api/download/getrebatedetails?year=${year || ''}&month=${paramsmonths || ''}&channelname=${channelname || ''}&status=${status || ''}`
+      const url = `/api/download/getrebatedetails?year=${year || ''}&month=${paramsmonths || ''}&channelname=${channelname || ''}&status=${status}`
       // console.log(url)
       window.open(url)
       // }

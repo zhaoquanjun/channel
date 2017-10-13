@@ -28,9 +28,9 @@ export default {
     const epkeys = expandedNode ? [expandedNode.FunctionId] : []
 
     let funlist = JSON.parse(this.$store.state.userInfo.FunctionList)
-    funlist = funlist.sort(sortFn)
+    // funlist = funlist.sort(sortFn)
     // console.log(funlist, '菜单')
-    // funlist = window._.sortBy(funlist, 'Rank')
+    funlist = window._.sortBy(funlist, 'Rank')
     // console.log(funlist, '排序后')
     funlist.forEach(function(item) {
       item.children = item.children.sort(sortFn)

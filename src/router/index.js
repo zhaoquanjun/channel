@@ -36,6 +36,9 @@ import StatisYtOdersTozsOders from '@/views/statisYtOdersTozsOders' // 流转数
 import StatisZeroTonoZero from '@/views/statisZeroTonoZero' // 流转数据管理--预提单转正式订单统一
 import StatisCompanyType1To2 from '@/views/statisCompanyType1To2' // 流转数据管理--小规模转一般纳税人统计
 import StatisOutwork from '@/views/statisOutwork' // 外勤数据管理
+import ChargeType from '@/views/chargeType' // 充值类型设置
+import PromotionType from '@/views/promotionType' // 活动类型设置
+import Chargeback from '@/views/chargeback' // 退单记录
 
 Vue.use(Router)
 const router = new Router({
@@ -75,6 +78,10 @@ const router = new Router({
       name: 'main.invoiceSearch',
       path: 'invoiceSearch',
       component: InvoiceSearch
+    }, {
+      name: 'main.chargebackRecord',
+      path: 'chargebackRecord',
+      component: Chargeback
     }, {
       name: 'main.recharge',
       path: 'recharge',
@@ -124,6 +131,15 @@ const router = new Router({
       path: 'users_fq',
       // component: UserFq
       component: PartitionManage
+    }, {
+      name: 'main.setPromotionType',
+      path: 'setPromotionType',
+      // component: UserFq
+      component: PromotionType
+    }, {
+      name: 'main.setChargeType',
+      path: 'setChargeType',
+      component: ChargeType
     }, {
       name: 'main.custotaltoc',
       path: 'custotaltoc',

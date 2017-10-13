@@ -433,12 +433,12 @@ export default {
       // } else {
       //   addedvalue = this.postData.Customer.AddedValue
       // }
-      if (!this.modify) {
-        var ischeck = 1
-      } else {
-        ischeck = 0
-      }
-
+      // if (!this.modify) {
+      //   var ischeck = 1
+      // } else {
+      //   ischeck = 0
+      // }
+      var ischeck = 1
       cityprice(cityCode, channelid, ischeck).then(res => {
         console.log(res, 'res')
         this.allprices = res.data

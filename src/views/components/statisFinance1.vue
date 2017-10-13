@@ -107,6 +107,7 @@ export default {
       let endtime = this.params.endtime
       let type = this.params.type
       let status = this.params.status
+      console.log(status)
       getrechargedetails({
         limit: limit,
         offset: offset,
@@ -129,7 +130,7 @@ export default {
         type,
         status
       } = this.params
-      const url = `/api/download/getrechargedetails?starttime=${starttime || ''}&endtime=${endtime || ''}&channelname=${channelname || ''}&type=${type || 0}&status=${status || ''}`
+      const url = `/api/download/getrechargedetails?starttime=${starttime || ''}&endtime=${endtime || ''}&channelname=${channelname || ''}&type=${type || 0}&status=${status}`
       // console.log(url)
       window.open(url)
       // if (this.pagination.total > 1000) {

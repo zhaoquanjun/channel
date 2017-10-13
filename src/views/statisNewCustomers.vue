@@ -115,8 +115,9 @@ export default {
         ccodes,
         channelname
       } = this.params
+      var iscustomers = 1
       var url = ''
-      var Param = `?status=${status || ''}&startdate=${startdate || ''}&enddate=${enddate || ''}&ccodes=${ccodes || ''}&channelname=${channelname || ''}`
+      var Param = `?status=${status || ''}&startdate=${startdate || ''}&enddate=${enddate || ''}&ccodes=${ccodes || ''}&channelname=${channelname || ''}&iscustomers=${iscustomers || ''}`
       if (index === 1) {
         url = '/api/download/getzeroorders' + Param
       }
@@ -155,8 +156,9 @@ export default {
       var channelid = row.ChannelId
       var startdate = this.params.startdate
       var enddate = this.params.enddate
+      var iscustomers = 1
       var url = ''
-      var Param = `?iscustomers=1&channelid=${channelid || ''}&startdate=${startdate || ''}&enddate=${enddate || ''}`
+      var Param = `?iscustomers=1&channelid=${channelid || ''}&startdate=${startdate || ''}&enddate=${enddate || ''}&iscustomers=${iscustomers}`
       if (cell.cellIndex === 6) {
         url = '/api/download/getzeroorders' + Param
       } else {

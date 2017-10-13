@@ -26,7 +26,7 @@
       </el-table-column>
     </el-table-column>
     <el-table-column label="应收" header-align="center">
-      <el-table-column prop="YSZero" label="零申报" width="100">
+      <el-table-column prop="YSZero" label="零申报" width="120">
       </el-table-column>
       <el-table-column prop="YSSmall" label="小规模" width="120">
       </el-table-column>
@@ -36,7 +36,7 @@
       </el-table-column>
     </el-table-column>
     <el-table-column label="实收" header-align="center">
-      <el-table-column prop="SSZero" label="零申报" width="100">
+      <el-table-column prop="SSZero" label="零申报" width="120">
       </el-table-column>
       <el-table-column prop="SSSmall" label="小规模" width="120">
       </el-table-column>
