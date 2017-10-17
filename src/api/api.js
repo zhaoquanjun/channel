@@ -446,7 +446,11 @@ export const financeDetail = params => {
 }
 // 财务管理--充值
 export const finance = params => {
-  return axios.post(`${base}/finance`, params).then(res => res.data)
+  return axios.post(`${base}/finance/AddFinancePrepaidRecord`, params).then(res => res.data)
+}
+// 财务管理--财务信息--充值类型下拉列表 && 管理平台--充值类型设置列表
+export const allRechargeType = () => {
+  return axios.get(`${base}/finance/GetAllRechargeType`).then(res => res.data)
 }
 // 财务管理--充值明细 && 财务管理--财务明细列表
 export const rechargeDetail = params => {

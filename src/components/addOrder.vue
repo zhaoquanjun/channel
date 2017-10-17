@@ -307,7 +307,6 @@ const promotionMap = {
     },
     validPayType: [12]
   }
-
 }
 export default {
   props: ['postData', 'modify', 'channelid'],
