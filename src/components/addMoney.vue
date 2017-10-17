@@ -1,31 +1,47 @@
 <template>
-<div>
-  <el-dialog title="充值金额" :visible.sync="dialogFormVisible" size="tiny">
-    <div class="content">
-      <div class="con">
-        <span v-text="data.ChannelName1"ss></span>
-        <span v-if="data.ChannelName2"> > {{data.ChannelName2}}</span>
-      </div>
-      <div class="con bottom">余额：{{data.Balance}}</div>
-      <el-form :model="ruleForm" :rules="rules" class="demo-ruleForm" ref="ruleForm" label-width="100px">
-        <el-form-item label="充值金额" prop="Amount">
-          <el-input v-model="ruleForm.Amount" auto-complete="off" class="moneyWid"></el-input>
-        </el-form-item>
-      </el-form>
+<el-dialog title="充值金额" :visible.sync="dialogFormVisible" size="tiny">
+  <div class="content">
+    <div class="con">
+      <span v-text="data.ChannelName1"ss></span>
+      <span v-if="data.ChannelName2"> > {{data.ChannelName2}}</span>
     </div>
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogFormVisible = false">关 闭</el-button>
-      <el-button type="primary" @click="submitForm('ruleForm')">充 值</el-button>
-    </div>
-  </el-dialog>
-</div>
+    <div class="con bottom">余额：{{data.Balance}}</div>
+    <el-form :model="ruleForm" :rules="rules" class="demo-ruleForm" ref="ruleForm" label-width="100px">
+      <el-form-item label="充值类型" prop="Type">
+        <el-select v-model="ruleForm.type" placeholder="请选择">
+          <el-option v-for="type in chargeType" :key="type.id" :label="type.name" :value="type.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="充值金额" prop="Amount">
+        <el-input v-model="ruleForm.Amount" auto-complete="off" class="moneyWid"></el-input>
+      </el-form-item>
+      <el-form-item label="上传附件" required>
+        <div class="file-upload-area">
+          <div v-for="(img, index) in ruleForm.imgs" :class="index == ruleForm.imgs.length - 1 ? 'file-upload-area-button' : 'file-upload-area-img-item'">
+            <img-upl type="5" v-model='ruleForm.imgs[index]' :sign-key="signkey" :isClose="true" :sign-list="index == ruleForm.imgs.length - 1" @input="ruleForm.imgs.push({})" @delete="ruleForm.imgs.splice(index,1)"></img-upl>
+          </div>
+        </div>
+        <!-- <img-upl type="5" v-model='ruleForm.imgs' :sign-key="signkey" :sign-list="true"></img-upl> -->
+      </el-form-item>
+      <el-form-item label="备注">
+        <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+      </el-form-item>
+    </el-form>
+  </div>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="dialogFormVisible = false">关 闭</el-button>
+    <el-button type="primary" @click="submitForm('ruleForm')">充 值</el-button>
+  </div>
+</el-dialog>
 </template>
 
 <script>
 import {
-  finance
+  finance,
+  urlsignkey
 } from '../api/api'
-import bus from '../bus'
+import ImageUploader from '@/components/imageUploader.vue'
 export default {
   props: {
     row: {
@@ -36,13 +52,22 @@ export default {
   data() {
     return {
       dialogFormVisible: true,
+      signkey: {},
       ruleForm: {
-        Amount: ''
+        Amount: '',
+        type: '',
+        desc: '',
+        imgs: [{}]
       },
       rules: {
         Amount: [{
           required: true,
           message: '请输入充值金额',
+          trigger: 'blur'
+        }],
+        Type: [{
+          required: true,
+          message: '请选择充值类型',
           trigger: 'blur'
         }]
       },
@@ -50,14 +75,36 @@ export default {
         ChannelName1: '',
         ChannelName2: '',
         Balance: ''
-      }
+      },
+      chargeType: [{
+        id: 1,
+        name: '广告费'
+      }, {
+        id: 2,
+        name: '服务费'
+      }, {
+        id: 3,
+        name: '卫生费'
+      }]
     }
   },
-  created() {
+  mounted() {
     this.data = this.row
+    this.getsignkey()
   },
   methods: {
+    getsignkey() {
+      urlsignkey().then((res) => {
+        delete res.data.Filename
+        delete res.data.key
+        delete res.data.callback
+        delete res.data.expire
+        delete res.data.Host
+        this.signkey = res.data
+      })
+    },
     submitForm(formName) {
+      console.log(this.ruleForm)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           let amount = this.ruleForm.Amount
@@ -80,7 +127,7 @@ export default {
                   type: 'success',
                   message: '充值成功!'
                 })
-                bus.$emit('finance-success')
+                this.$emit('done')
                 this.dialogFormVisible = false
               }
             })
@@ -90,6 +137,9 @@ export default {
         }
       })
     }
+  },
+  components: {
+    imgUpl: ImageUploader
   }
 }
 </script>
@@ -101,11 +151,21 @@ export default {
   line-height: 30px;
 }
 
-.bottom {
-  padding-bottom: 80px;
+.moneyWid {
+  width: 217px;
 }
 
-.moneyWid {
-  width: 200px;
+.file-upload-area {
+  overflow: hidden;
+}
+.file-upload-area-img-item {
+  float: left;
+  width: 120px;
+  height: 70px;
+  padding: 10px;
+}
+
+.file-upload-area-button {
+  clear: both;
 }
 </style>

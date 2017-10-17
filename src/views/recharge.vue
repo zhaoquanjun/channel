@@ -32,7 +32,7 @@
     </el-table-column>
     <el-table-column label="操作" width="200">
       <template scope="scope">
-          <!-- <el-button @click="addMoney(scope.row)" type="text" size="small">充值</el-button> -->
+          <el-button @click="addMoney(scope.row)" type="text" size="small">充值</el-button>
           <el-button @click="addMoneyDetail(scope.row)" type="text" size="small">充值明细</el-button>
           <el-button @click="payDetail(scope.row)" type="text" size="small">支付明细</el-button>
         </template>
@@ -50,7 +50,7 @@ import {
   agents
 } from '../api/api'
 import Dialog from '../service/dialog.js'
-// import AddMoney from '../components/addMoney.vue'
+import AddMoney from '../components/addMoney.vue'
 import AddMoneyDetail from '../components/addMoneyDetail.vue'
 // import bus from '../bus'
 export default {
@@ -101,14 +101,16 @@ export default {
         // console.log(this.agents)
       })
     },
-    // addMoney(row) {
-    //   Dialog(AddMoney, {
-    //     row: row
-    //   })
-    //   bus.$on('finance-success', () => {
-    //     this.fetchData()
-    //   })
-    // },
+    addMoney(row) {
+      Dialog(AddMoney, {
+        row: row
+      }).then(() => {
+        this.fetchData()
+      })
+      // bus.$on('finance-success', () => {
+      //   this.fetchData()
+      // })
+    },
     addMoneyDetail(row) {
       let channelId = row.ChannelId
       Dialog(AddMoneyDetail, {
