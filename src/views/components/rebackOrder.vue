@@ -28,7 +28,7 @@
       <span>退款信息</span>
       <i></i>
     </div>
-    <el-form :model="ruleForm" ref="ruleForm" label-width="110px" class="demo-ruleForm">
+    <el-form :model="ruleForm" ref="ruleForm" label-width="110px" class="demo-ruleForm reback-form">
       <el-form-item label="退款详情：" required>
         <div class="serve-month">
           已服务<input class="input-serveMonth" v-bind:class="isView ? 'readonly-class' : ''" type="number" v-model="ruleForm.ServedMonths" :disabled="isView">个月，可退款
@@ -219,13 +219,13 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none !important;
     margin: 0;
 }
-.demo-ruleForm .el-form-item__label {
+.reback-form .el-form-item__label {
   color: #ccc;
 }
-.demo-ruleForm .el-input {
+.reback-form .el-input {
   width: 100px;
 }
-.demo-ruleForm .reason-select .el-input {
+.reback-form .reason-select .el-input {
   width: 260px;
 }
 </style>

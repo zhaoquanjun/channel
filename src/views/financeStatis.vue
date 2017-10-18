@@ -17,6 +17,9 @@
     <el-tab-pane label="发票明细清单" name="tab5">
       <Tab5 :agents="agents"></Tab5>
     </el-tab-pane>
+    <el-tab-pane label="扣减一代提成表" name="tab6">
+      <Tab6 :agents="agents"></Tab6>
+    </el-tab-pane>
   </el-tabs>
 </div>
 </template>
@@ -28,6 +31,7 @@ import StatisFinance2 from '@/views/components/statisFinance2'
 import StatisFinance3 from '@/views/components/statisFinance3'
 import StatisFinance4 from '@/views/components/statisFinance4'
 import StatisFinance5 from '@/views/components/statisFinance5'
+import StatisFinance6 from '@/views/components/statisFinance6'
 export default {
   data: function() {
     return {
@@ -40,7 +44,8 @@ export default {
     Tab2: StatisFinance2,
     Tab3: StatisFinance3,
     Tab4: StatisFinance4,
-    Tab5: StatisFinance5
+    Tab5: StatisFinance5,
+    Tab6: StatisFinance6
   },
   created() {
     this.Agents()

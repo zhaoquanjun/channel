@@ -1,9 +1,9 @@
 <template>
 <div class="finance1">
-  <h2 class="text-center">充值明细表</h2>
+  <h2 class="text-center">扣减一代提成表</h2>
   <div class="vsearch">
     <el-form ref="params" :inline="true" :model="params">
-      <el-form-item label="账单日期">
+      <el-form-item label="日期">
         <el-date-picker class="dataWidth" v-model="params.starttime" type="date" :clearable="clearable">
         </el-date-picker>
         <span>-</span>
@@ -13,16 +13,14 @@
       <el-form-item class="form-width" label="代理商">
         <el-autocomplete class="inline-input" v-model="params.channelname" :trigger-on-focus="false" :fetch-suggestions="querySearch"></el-autocomplete>
       </el-form-item>
-      <el-form-item class="form-width2" label="充值类型">
-        <el-select v-model="params.type">
-          <el-option v-for="item in financeType" :key="item.type" :label="item.name" :value="item.type"></el-option>
-        </el-select>
-      </el-form-item>
       <el-form-item class="form-width" label="代理商是否解约">
         <el-select v-model="params.status">
           <el-option v-for="item in Status" :key="item.status" :label="item.statusName" :value="item.status">
           </el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item class="form-width" label="二代退单编号">
+        <el-input v-model="params.rebackId"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSearch">查询</el-button>
@@ -37,13 +35,11 @@
     </el-table-column>
     <el-table-column prop="Status" label="代理商是否解约" :formatter="handleStatus">
     </el-table-column>
-    <el-table-column prop="BillTime" label="账单日期" align="center" :formatter="StatusDate">
+    <el-table-column prop="BackAmount" label="扣减金额" align="center">
     </el-table-column>
-    <el-table-column prop="Category" label="充值类型" align="center" :formatter="TypeFormat">
+    <el-table-column prop="RebackId" label="二代退单编号" align="center">
     </el-table-column>
-    <el-table-column prop="Category" label="充值子类型" align="center" :formatter="TypeFormat">
-    </el-table-column>
-    <el-table-column prop="Amount" label="充值金额" align="center">
+    <el-table-column prop="Applydate" label="操作日期" align="center">
     </el-table-column>
   </el-table>
   <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 30]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
@@ -76,25 +72,9 @@ export default {
         starttime: '',
         endtime: '',
         channelname: '',
-        type: 0,
+        rebackId: '',
         status: ''
       },
-      financeType: [{
-        name: '全部',
-        type: 0
-      }, {
-        name: '正常充值',
-        type: 2
-      }, {
-        name: '退单回充',
-        type: 3
-      }, {
-        name: '返点',
-        type: 4
-      }, {
-        name: '一代提成',
-        type: 5
-      }],
       clearable: false
     }
   },
@@ -107,16 +87,15 @@ export default {
       let channelname = this.params.channelname
       let starttime = this.params.starttime
       let endtime = this.params.endtime
-      let type = this.params.type
+      let rebackId = this.params.rebackId
       let status = this.params.status
-      console.log(status)
       getrechargedetails({
         limit: limit,
         offset: offset,
         starttime: starttime,
         endtime: endtime,
         channelname: channelname,
-        type: type,
+        rebackId: rebackId,
         status: status
       }).then((res) => {
         // console.log(res.data)
@@ -129,43 +108,14 @@ export default {
         starttime,
         endtime,
         channelname,
-        type,
+        rebackId,
         status
       } = this.params
-      const url = `/api/download/getrechargedetails?starttime=${starttime || ''}&endtime=${endtime || ''}&channelname=${channelname || ''}&type=${type || 0}&status=${status}`
-      // console.log(url)
+      const url = `/api/download/getrechargedetails?starttime=${starttime || ''}&endtime=${endtime || ''}&channelname=${channelname || ''}&rebackId=${rebackId}&status=${status}`
       window.open(url)
-      // if (this.pagination.total > 1000) {
-      //   this.$message({
-      //     type: 'warning',
-      //     message: '总条数过多，请缩小查询范围'
-      //   })
-      // } else {
-      //   const url = `/api/download/getrechargedetails?starttime=${starttime || ''}&endtime=${endtime || ''}&channelname=${channelname || ''}&type=${type || 0}&status=${status || ''}`
-      //   // console.log(url)
-      //   window.open(url)
-      // }
-    },
-    TypeFormat: function(row) {
-      var type = row.Category
-      switch (type) {
-        case 2:
-          type = '正常充值'
-          break
-        case 3:
-          type = '退单回充'
-          break
-        case 4:
-          type = '返点'
-          break
-        case 5:
-          type = '一代提成'
-          break
-      }
-      return type
     },
     StatusDate(row) {
-      var date = row.BillTime
+      var date = row.Applydate
       return date.substring(0, 10)
     },
     querySearch(queryString, cb) {
@@ -179,7 +129,6 @@ export default {
       }
     },
     handleStatus(row) {
-      // console.log(row)
       var status = +row.Status
       if (status === 0) {
         status = '是'

@@ -11,7 +11,7 @@
       </el-form-item>
     </el-form>
     <div class="con-item" v-for="record in records">
-      <el-input v-model="record.recordName" :disabled="record.isModify"></el-input>
+      <el-input v-model="record.RechargeName" :disabled="record.isModify"></el-input>
       <el-button v-if="!record.showSave" @click="modify(record)" type="text" size="small">修改</el-button>
       <el-button v-else @click="save(record)" type="text" size="small">保存</el-button>
       <el-button @click="deleteItem(record)" type="text" size="small">删除</el-button>
@@ -21,38 +21,28 @@
 </template>
 
 <script>
+import { allRechargeType, addNewRechargeType, updateRechargeType, deleteRechargeType } from '@/api/api'
 export default {
   data() {
     return {
       record: '',
-      records: [{
-        id: '1',
-        recordName: '广告补贴',
-        isModify: true,
-        showSave: false
-      }, {
-        id: '2',
-        recordName: '广告补贴',
-        isModify: true,
-        showSave: false
-      }, {
-        id: '3',
-        recordName: '广告补贴',
-        isModify: true,
-        showSave: false
-      }]
+      records: []
     }
   },
   created() {
-    // this.fetchData()
+    this.fetchData()
   },
   methods: {
     fetchData() {
-      // getRecordList().then(res => {
-      //   if (res.status) {
-      //     this.records = res.data
-      //   }
-      // })
+      allRechargeType().then(res => {
+        if (res.status) {
+          for (let i in res.data) {
+            res.data[i].isModify = true
+            res.data[i].showSave = false
+          }
+          this.records = res.data
+        }
+      })
     },
     addRecord() {
       if (!this.record) {
@@ -61,50 +51,55 @@ export default {
           type: 'warning'
         })
       } else {
-        // addChargeType(this.record).then(res => {
-        //   if (res.status) {
-        //     this.$message({
-        //       type: 'success',
-        //       message: '添加成功!'
-        //     })
-        //     this.fetchData()
-        //   }
-        // })
+        addNewRechargeType(this.record).then(res => {
+          if (res.status) {
+            this.$message({
+              type: 'success',
+              message: '添加成功!'
+            })
+            this.fetchData()
+          }
+        })
       }
-      // alert('新增')
     },
     modify(record) {
       record.isModify = false
       record.showSave = true
     },
     save(record) {
-      // modifyChargeType(this.record).then(res => {
-      //   if (res.status) {
-      //     this.$message({
-      //       type: 'success',
-      //       message: '修改成功!'
-      //     })
-      //     this.fetchData()
-      //   }
-      // })
+      if (!record.RechargeName) {
+        this.$message({
+          message: '请输入充值类型',
+          type: 'warning'
+        })
+      } else {
+        updateRechargeType(record.RechargeName, record.Id).then(res => {
+          if (res.status) {
+            this.$message({
+              type: 'success',
+              message: '修改成功!'
+            })
+            this.fetchData()
+          }
+        })
+      }
     },
     deleteItem(record) {
-      var str = '确认删除"' + record.recordName + '"吗？'
+      var str = '确认删除"' + record.RechargeName + '"吗？'
       this.$confirm(str, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        // deleteChargeType(this.record.id).then(res => {
-        //   if (res.status) {
-        //     this.$message({
-        //       type: 'success',
-        //       message: '删除成功!'
-        //     })
-        //     this.fetchData()
-        //   }
-        // })
-        console.log('aa')
+        deleteRechargeType(record.Id).then(res => {
+          if (res.status) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.fetchData()
+          }
+        })
       }).catch(() => {})
     }
   }
@@ -113,7 +108,7 @@ export default {
 
 <style scoped>
 .charge-type .charge-con {
-  width: 400px;
+  wIdth: 400px;
   margin: 10px 30px;
 }
 .charge-type .charge-con .con-item {
@@ -123,6 +118,6 @@ export default {
   margin-right: 10px;
 }
 .charge-type .el-input {
-  width: 200px;
+  wIdth: 200px;
 }
 </style>

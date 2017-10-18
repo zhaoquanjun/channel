@@ -467,6 +467,18 @@ export const finance = params => {
 export const allRechargeType = () => {
   return axios.get(`${base}/finance/GetAllRechargeType`).then(res => res.data)
 }
+// 充值类型设置--添加
+export const addNewRechargeType = (record) => {
+  return axios.post(`${base}/finance/AddNewRechargeType?name=${record}`).then(res => res.data)
+}
+// 充值类型设置--添加
+export const updateRechargeType = (record, id) => {
+  return axios.put(`${base}/finance/UpdateRechargeType?name=${record}&id=${id}`).then(res => res.data)
+}
+// 充值类型设置--添加
+export const deleteRechargeType = (id) => {
+  return axios.delete(`${base}/finance/DeleteRechargeType?id=${id}`).then(res => res.data)
+}
 // 财务管理--充值明细 && 财务管理--财务明细列表
 export const rechargeDetail = params => {
   return axios.get(`${base}/finance/detail`, {

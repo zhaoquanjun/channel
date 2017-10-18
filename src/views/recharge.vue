@@ -107,9 +107,6 @@ export default {
       }).then(() => {
         this.fetchData()
       })
-      // bus.$on('finance-success', () => {
-      //   this.fetchData()
-      // })
     },
     addMoneyDetail(row) {
       let channelId = row.ChannelId

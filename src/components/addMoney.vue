@@ -6,10 +6,10 @@
       <span v-if="data.ChannelName2"> > {{data.ChannelName2}}</span>
     </div>
     <div class="con bottom">余额：{{data.Balance}}</div>
-    <el-form :model="ruleForm" :rules="rules" class="demo-ruleForm" ref="ruleForm" label-width="100px">
+    <el-form :model="ruleForm" :rules="rules" class="demo-ruleForm form" ref="ruleForm" label-width="100px">
       <el-form-item label="充值类型" required>
         <el-select v-model="ruleForm.rechargetypeid" placeholder="请选择">
-          <el-option v-for="type in chargeType" :key="type.id" :label="type.name" :value="type.id">
+          <el-option v-for="type in chargeType" :key="type.Id" :label="type.RechargeName" :value="type.Id">
           </el-option>
         </el-select>
       </el-form-item>
@@ -72,28 +72,19 @@ export default {
         ChannelName2: '',
         Balance: ''
       },
-      chargeType: [{
-        id: 1,
-        name: '广告费'
-      }, {
-        id: 2,
-        name: '服务费'
-      }, {
-        id: 3,
-        name: '卫生费'
-      }]
+      chargeType: []
     }
   },
   mounted() {
     this.data = this.row
     this.getsignkey()
-    // this.getchargeTypelist()
+    this.getchargeTypelist()
   },
   methods: {
     getchargeTypelist() {
       allRechargeType().then((res) => {
         console.log(res)
-        // this.chargeType = res.data
+        this.chargeType = res.data
       })
     },
     getsignkey() {
@@ -131,13 +122,14 @@ export default {
             channelname1 = `${channelname1} > ${channelname2}`
           }
           var str = `您确认为 ${channelname1} 充值 ${amount}元？`
-          let ChannelId = this.row.ChannelId
-          this.ruleForm.channelid = ChannelId
+          this.ruleForm.channelid = this.row.ChannelId
+          this.ruleForm.photopath = this.ruleForm.photopath.join(',')
           this.$confirm(str, '充值提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
+            console.log(this.ruleForm)
             finance(this.ruleForm).then(res => {
               if (res.status) {
                 this.$message({

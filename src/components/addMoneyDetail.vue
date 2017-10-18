@@ -3,9 +3,9 @@
   <el-dialog :title="title" :visible.sync="dialogTableVisible" size="large">
     <el-table :data="gridData">
       <el-table-column type="index" label="序号"></el-table-column>
-      <el-table-column v-if="type == 1" property="OrderId" label="订单编号" width="200"></el-table-column>
-      <el-table-column v-if="type == 2" property="BillId" label="账单编号" width="150"></el-table-column>
-      <el-table-column v-if="type == 1" property="Amount" label="订单金额"></el-table-column>
+      <!-- <el-table-column v-if="type == 1" property="OrderId" label="订单编号" width="200"></el-table-column> -->
+      <el-table-column property="BillId" label="账单编号" width="150"></el-table-column>
+      <el-table-column v-if="type == 1" property="Amount" label="支出"></el-table-column>
       <el-table-column v-if="type == 2" property="Amount" label="充值金额" width="120"></el-table-column>
       <el-table-column property="Balance" label="余额" width="120"></el-table-column>
       <el-table-column property="Description" label="备注" min-width="300"></el-table-column>
