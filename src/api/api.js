@@ -364,6 +364,15 @@ export const deleteSearch = (OrderId) => {
 export const rebackSearch = (OrderId) => {
   return axios.put(`${base}/orderauditback?orderid=${OrderId}`).then(res => res.data)
 }
+// 订单查询--退单信息
+export const chargebackorderList = params => {
+  return axios.get(`${base}/order/getchargebackorder`, {
+    params: params
+  }).then(res => res.data)
+}
+export const chargebackorder = params => {
+  return axios.post(`${base}/order/chargebackorder`, params).then(res => res.data)
+}
 // 订单审核--挂起
 export const guaqiSearch = params => {
   return axios.put(`${base}/toagent/hangupcustomer`, params).then(res => res.data)
@@ -411,6 +420,12 @@ export const cityprice = (cityCode, channelid, ischeck) => {
 // 图片上传
 export const urlsignkey = () => {
   return axios.get(`${base}/signkey`).then(res => res.data)
+}
+// 订单管理--退单记录
+export const getchargebackorderlist = params => {
+  return axios.get(`${base}/order/getchargebackorderlist`, {
+    params: params
+  }).then(res => res.data)
 }
 
 // 发票管理

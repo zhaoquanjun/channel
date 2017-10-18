@@ -73,9 +73,10 @@
         <el-button @click="viewOrder(scope.row)" type="text" size="small">查看</el-button>
         <el-button @click="modify(scope.row)" type="text" size="small">修改</el-button>
         <el-button v-if="scope.row.Status != 2"  @click="deleteOrder(scope.row)" type="text" size="small">删除</el-button>
-        <el-button v-if="scope.row.Status === 2" @click="reback(scope.row)" type="text" size="small">审核回退</el-button>
+        <!-- <el-button v-if="scope.row.Status === 2" @click="reback(scope.row)" type="text" size="small">审核回退</el-button> -->
         <el-button v-if="scope.row.Status === 2" @click="guaqi(scope.row)" type="text" size="small">挂起</el-button>
         <el-button v-if="scope.row.Status === 2 && category == 1" @click="stopguaqi(scope.row)" type="text" size="small">解挂</el-button>
+        <el-button v-if="scope.row.Status === 2" @click="rebackOrder(scope.row)" type="text" size="small">退单</el-button>
       </template>
     </el-table-column>
     <el-table-column v-if="category == 14" label="操作" width="140">
@@ -104,10 +105,11 @@ import {
   deleteSearch,
   rebackSearch,
   orderTitle
-} from '../api/api'
+} from '@/api/api'
 import Dialog from '../service/dialog.js'
 import AddOrder from '../components/addOrder.vue'
 import Refuse from '../components/refuse.vue'
+import RebackOrder from '@/views/components/rebackOrder'
 import bus from '../bus'
 export default {
   name: 'orderSearch',
@@ -316,6 +318,18 @@ export default {
       bus.$on('gq-stop', () => {
         this.fetchData()
       })
+    },
+    rebackOrder(row) {
+      if (row.ChannelName2) {
+        var showCommissionAmount = true
+      } else {
+        showCommissionAmount = false
+      }
+      Dialog(RebackOrder, {
+        isView: false,
+        orderid: row.OrderId,
+        showCommissionAmount: showCommissionAmount
+      }).then(res => this.fetchData())
     },
     handleSizeChange(val) {
       this.pagination.pageSize = val

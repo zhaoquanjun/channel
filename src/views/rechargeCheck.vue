@@ -18,6 +18,12 @@
           <el-option v-for="item in checkStatus" :key="item.status" :label="item.name" :value="item.status"></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="代理商是否解约">
+        <el-select v-model="params.channelstatus">
+          <el-option v-for="item in Status" :key="item.status" :label="item.statusName" :value="item.status">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="fetchData">查询</el-button>
       </el-form-item>
@@ -32,6 +38,8 @@
     </el-table-column>
     <el-table-column prop="ChannelName2" label="二级代理商" min-width="200">
     </el-table-column>
+    <el-table-column prop="channelstatus" label="代理商是否解约" :formatter="handleStatus" width="100">
+    </el-table-column>
     <el-table-column prop="Amount" label="充值金额" width="120">
     </el-table-column>
     <el-table-column prop="Balance" label="余额" width="120">
@@ -42,11 +50,16 @@
     </el-table-column>
     <el-table-column prop="AuditOpinion" label="审核意见" width="100">
     </el-table-column>
-    <el-table-column label="操作" width="200">
+    <el-table-column v-if="category != 7 && category != 13" label="操作" width="200">
       <template scope="scope">
         <el-button @click="view(scope.row)" type="text" size="small">查看</el-button>
         <el-button v-if="scope.row.Status === 1" @click="pass(scope.row)" type="text" size="small">通过</el-button>
         <el-button v-if="scope.row.Status === 1" @click="refuse(scope.row)" type="text" size="small">驳回</el-button>
+      </template>
+    </el-table-column>
+    <el-table-column v-else label="操作" width="200">
+      <template scope="scope">
+        <el-button @click="view(scope.row)" type="text" size="small">查看</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -79,7 +92,8 @@ export default {
         starttime: '',
         endtime: '',
         channelname: '',
-        status: 1
+        status: 1,
+        channelstatus: ''
       },
       checkStatus: [{
         name: '未审核',
@@ -91,10 +105,18 @@ export default {
         name: '拒审',
         status: 3
       }],
-      clearable: false
+      Status: [
+        {status: '', statusName: '全部'},
+        {status: 0, statusName: '是'},
+        {status: 1, statusName: '否'}
+      ],
+      clearable: false,
+      category: ''
     }
   },
   created() {
+    this.category = JSON.parse(sessionStorage.getItem('userInfo')).Category
+    console.log(this.category, 'category')
     this.fetchData()
     this.Agents()
   },
@@ -106,13 +128,15 @@ export default {
       let endtime = this.params.endtime
       let channelname = this.params.channelname
       let status = this.params.status
+      let channelstatus = this.params.channelstatus
       rechargeList({
         limit: limit,
         offset: offset,
         start: starttime,
         end: endtime,
         channelname: channelname,
-        type: status
+        type: status,
+        channelstatus: channelstatus
       }).then((res) => {
         console.log(res.data)
         this.tableData = res.data
@@ -176,6 +200,16 @@ export default {
       return (channel) => {
         return (channel.value.indexOf(queryString) >= 0)
       }
+    },
+    handleStatus(row) {
+      // console.log(row)
+      var status = +row.channelstatus
+      if (status === 0) {
+        status = '是'
+      } else if (status > 0) {
+        status = '否'
+      }
+      return status
     },
     handleSizeChange(val) {
       this.pagination.pageSize = val

@@ -31,7 +31,7 @@
     </el-select>
   </el-form-item>
   <el-form-item label="代理商">
-    <el-input placeholder="代理商名称" v-model="params.channelname"></el-input>
+    <el-autocomplete v-model="params.channelname" :trigger-on-focus="false" :fetch-suggestions="querySearch" placeholder="代理商名称"></el-autocomplete>
   </el-form-item>
   <el-form-item label="代理商是否解约">
     <el-select v-model="params.status">
@@ -49,7 +49,8 @@
 import {
   getPartitions,
   getParamsProvince,
-  getParamsCities
+  getParamsCities,
+  agents
 } from '../api/api'
 import ElSelect from '@/components/select.vue'
 export default {
@@ -75,7 +76,8 @@ export default {
       provinces: [],
       cities: [],
       years: [2018, 2017, 2016],
-      months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+      months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+      agents: []
     }
   },
   created() {
@@ -83,6 +85,7 @@ export default {
     this.getPartitions()
     this.getParamsProvince()
     this.getParamsCities()
+    this.Agents()
   },
   computed: {
     canClick: function () {
@@ -155,6 +158,25 @@ export default {
     },
     onDownload() {
       this.$emit('download')
+    },
+    Agents() {
+      agents().then((res) => {
+        this.agents = res.data
+        for (let i in this.agents) {
+          this.agents[i].value = this.agents[i].ChannelName
+        }
+        // console.log(this.agents)
+      })
+    },
+    querySearch(queryString, cb) {
+      var channels = this.agents
+      var results = queryString ? channels.filter(this.createFilter(queryString)) : channels
+      cb(results)
+    },
+    createFilter(queryString) {
+      return (channel) => {
+        return (channel.value.indexOf(queryString) >= 0)
+      }
     }
   },
   components: {
