@@ -755,3 +755,41 @@ export const getStatisOutwork = params => {
     params: params
   }).then(res => res.data)
 }
+// 活动类型设置--通用活动列表
+export const getgloblepromotionlist = params => {
+  return axios.get(`${base}/newpromotion/getgloblepromotionlist`, {
+    params: params
+  }).then(res => res.data)
+}
+// 活动类型设置--代理商活动列表
+export const getchannelpromotionlist = params => {
+  return axios.get(`${base}/newpromotion/getchannelpromotionlist`, {
+    params: params
+  }).then(res => res.data)
+}
+// 活动类型设置--添加活动类型
+export const addpromotion = (params) => {
+  return axios.post(`${base}/newpromotion/addpromotion`, params).then(res => res.data)
+}
+// 活动类型设置--get修改活动类型
+export const globlepromotionDetail = params => {
+  return axios.get(`${base}/newpromotion/getgloblepromotion`, {
+    params: params
+  }).then(res => res.data)
+}
+// 活动类型设置--修改活动类型
+export const Updatepromotion = (params) => {
+  return axios.put(`${base}/newpromotion/updatepromotion`, params).then(res => res.data)
+}
+// 活动类型设置--代理商修改通用活动类型
+export const updategloblepromotionbychannel = (params) => {
+  return axios.put(`${base}/newpromotion/updategloblepromotionbychannel`, params).then(res => res.data)
+}
+// 活动类型设置--删除活动类型通用和代理商自己
+export const deletepromotion = (id) => {
+  return axios.delete(`${base}/newpromotion/deletepromotion/${id}`).then(res => res.data)
+}
+// 活动类型设置--删除活动类型代理商删除通用
+export const deletechannelpromotion = (id) => {
+  return axios.delete(`${base}/newpromotion/deletechannelpromotion/${id}`).then(res => res.data)
+}

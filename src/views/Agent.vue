@@ -59,11 +59,11 @@
 </template>
 <script>
 import GiftSetting from '@/views/components/AgentGiftSettingDialog.vue'
-import PromotionSetting from '@/views/components/AgentPromotionSetting.vue'
+// import PromotionSetting from '@/views/components/AgentPromotionSetting.vue'
 import AgentCustomerSetting from '@/views/components/AgentCustomerSetting.vue'
 import AgentDialog from '@/views/components/AgentViewDialog.vue'
+import PromotionSetting from '@/views/components/promotionSetting'
 import Dialog from '../service/dialog.js'
-// import bus from '../bus'
 import {
   getAgents,
   setDiscount,
@@ -177,7 +177,13 @@ export default {
         channelId: agent.ChannelId
       })
     },
+    // setPromotion(agent) {
+    //   Dialog(PromotionSetting, {
+    //     channelId: agent.ChannelId
+    //   })
+    // },
     setPromotion(agent) {
+      // console.log(agent.ChannelId)
       Dialog(PromotionSetting, {
         channelId: agent.ChannelId
       })
