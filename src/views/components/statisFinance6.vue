@@ -35,11 +35,11 @@
     </el-table-column>
     <el-table-column prop="Status" label="代理商是否解约" :formatter="handleStatus">
     </el-table-column>
-    <el-table-column prop="BackAmount" label="扣减金额" align="center">
+    <el-table-column prop="Amount" label="扣减金额" align="center">
     </el-table-column>
-    <el-table-column prop="RebackId" label="二代退单编号" align="center">
+    <el-table-column prop="OrderId" label="二代退单编号" align="center">
     </el-table-column>
-    <el-table-column prop="Applydate" label="操作日期" align="center">
+    <el-table-column prop="CreateDate" label="操作日期" :formatter="StatusDate" align="center">
     </el-table-column>
   </el-table>
   <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 30]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
@@ -50,7 +50,7 @@
 
 <script>
 import {
-  getrechargedetails
+  getDeduteTab
 } from '../../api/api'
 
 export default {
@@ -89,34 +89,32 @@ export default {
       let endtime = this.params.endtime
       let rebackId = this.params.rebackId
       let status = this.params.status
-      getrechargedetails({
+      getDeduteTab({
         limit: limit,
         offset: offset,
-        starttime: starttime,
-        endtime: endtime,
+        startdate: starttime,
+        enddate: endtime,
         channelname: channelname,
-        rebackId: rebackId,
+        billid: rebackId,
         status: status
       }).then((res) => {
         // console.log(res.data)
-        this.tableData = res.data
-        this.pagination.total = res.Count
+        if (res.status) {
+          this.tableData = res.data
+          this.pagination.total = res.Count
+        }
       })
     },
     onDownload() {
       const {
-        starttime,
-        endtime,
+        startdate,
+        enddate,
         channelname,
-        rebackId,
+        billid,
         status
       } = this.params
-      const url = `/api/download/getrechargedetails?starttime=${starttime || ''}&endtime=${endtime || ''}&channelname=${channelname || ''}&rebackId=${rebackId}&status=${status}`
+      const url = `/api/download/GetDeduteTab?startdate=${startdate || ''}&enddate=${enddate || ''}&channelname=${channelname || ''}&billid=${billid}&status=${status}`
       window.open(url)
-    },
-    StatusDate(row) {
-      var date = row.Applydate
-      return date.substring(0, 10)
     },
     querySearch(queryString, cb) {
       var channels = this.agents
@@ -136,6 +134,14 @@ export default {
         status = '否'
       }
       return status
+    },
+    StatusDate(row, column) {
+      var date = row[column.property]
+      // console.log(date)
+      if (!date) {
+        return ''
+      }
+      return date.substring(0, 10)
     },
     handleSizeChange(val) {
       this.pagination.pageSize = val

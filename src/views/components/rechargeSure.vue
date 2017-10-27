@@ -9,7 +9,7 @@
       <div class="con bottom">余额：{{rowMsg.Balance}}</div>
       <el-form :model="ruleForm" ref="ruleForm" :rules="rules" class="demo-ruleForm" label-width="100px">
         <el-form-item label="充值金额" required>
-          <el-input v-model="ruleForm.Amount" auto-complete="off" class="moneyWid" :disabled="true"></el-input>
+          <el-input v-model="ruleForm.Amount" auto-complete="off" class="moneyWid" :disabled="true"></el-input> 元
         </el-form-item>
         <el-form-item label="收款编号" prop="collectionnumber">
           <el-input v-model="ruleForm.collectionnumber" auto-complete="off" class="moneyWid" :maxlength="50"></el-input>

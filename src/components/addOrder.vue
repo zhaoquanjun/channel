@@ -171,13 +171,13 @@
                 <span v-else>
                   产品变更
                 </span>
-                <el-select v-model="postData.GiftTypeId" placeholder="请选择" :disabled="postData.Status===2||!modify">
+                <el-select v-model="postData.GiftTypeId" placeholder="请选择" :disabled="true">
                   <el-option label="不使用礼包" :value="0">
                   </el-option>
                   <el-option v-for="item in gifts" :key="item.Id" :label="item.GiftTypeName" :value="item.GiftTypeId" :disabled="!!item.Num">
                   </el-option>
                 </el-select>
-                <span v-if="promotionId" class="fontColor"><el-checkbox v-model="promotionChecked" :disabled="postData.Status===2 && !promVaild">{{postData.Promotion.PromotionName}}:{{postData.Promotion.Description}}</el-checkbox> </span>
+                <span v-if="postData.IsPromotion" class="fontColor"><el-checkbox v-model="promotionChecked" :disabled="true">{{postData.Promotion.PromotionName}}</el-checkbox> </span>
               </td>
             </tr>
             <tr>
@@ -189,23 +189,30 @@
               </td>
               <td class="required">开始账期</td>
               <td>
-                <el-date-picker v-if="modify" v-model="postData.ServiceStart" type="month">
-                </el-date-picker>
-                <span v-else>{{postData.ServiceStart | formateMonth}}</span>
+                <el-date-picker v-if="modify && !postData.FreChangeOrderId && postData.IsChange === 0 && postData.IsChanging === '0'" v-model="postData.ServiceStart" type="month" @change="setServiceEnd" :clearable="false"></el-date-picker>
+                <!-- <span v-if="modify && !postData.FreChangeOrderId && postData.IsChange === 0 && postData.IsChanging === '0'">正常订单</span> -->
+                <!-- 正常订单 -->
+                <el-date-picker v-if="modify && postData.FreChangeOrderId && postData.IsChange === 0 && postData.IsChanging === '0'" v-model="postData.ServiceStart" type="month" @change="setServiceEnd" :disabled="postData.Status === 2" :picker-options="pickerOptions" :clearable="false"></el-date-picker>
+                <!-- <span v-if="modify && postData.FreChangeOrderId && postData.IsChange === 0 && postData.IsChanging === '0'">新老订单同时存在时 新订单 正常 新订单状态是13的时候 可以改新订单开始账期</span> -->
+                <el-date-picker v-if="modify && (postData.IsChange === 1 || postData.IsChanging === '1')" v-model="postData.ServiceStart" type="month" @change="setServiceEnd" readonly></el-date-picker>
+                <!-- <span v-if="modify && (postData.IsChange === 1 || postData.IsChanging === '1')">新老订单同时存在时 老订单 不能改老订单账期</span> -->
+                <!-- 企业性质变更新老订单同时存在的时候 -->
+                <span v-if="!modify">{{postData.ServiceStart | formateMonth}}</span>
                 <span class="explain">注:以实际账期为准。</span>
               </td>
             </tr>
             <tr>
               <td class="required">结束账期</td>
               <td>
-                <el-input v-if="modify" type="text" v-model='postData.ServiceEnd'></el-input>
+                <el-input v-if="modify" type="text" v-model='postData.ServiceEnd' readonly></el-input>
                 <span v-else>{{postData.ServiceEnd | formateMonth}}</span>
                 <span class="explain">注:以实际账期为准。</span>
               </td>
               <td class="required">合同金额</td>
               <td>
-                <el-input v-if="modify" type="text" v-model='postData.ContractAmount' readonly></el-input>
-                <span v-else v-text="postData.ContractAmount"></span>
+                <el-input v-if="modify && postData.FreChangeOrderId" type="text" v-model='postData.ContractAmount' readonly></el-input>
+                <el-input v-if="modify && !postData.FreChangeOrderId" type="text" v-model='postData.ContractAmount' readonly></el-input>
+                <span v-if="!modify" v-text="postData.ContractAmount"></span>
                 <span class="explain">注:合同金额根据所属城市、公司性质和付款方式自动计算，不包含礼包价格。</span>
               </td>
             </tr>
@@ -257,57 +264,57 @@ import {
 } from '../api/api'
 import ImageUploader from '@/components/imageUploader.vue'
 
-const promotionMap = {
-  1: {
-    priceFn: function (price) {
-      return price
-    },
-    serviceFn: function (payType) {
-      var map = {
-        6: 1,
-        12: 2
-      }
-      return map[payType] || 0
-    },
-    validPayType: [6, 12]
-  },
-  2: {
-    priceFn: function (price) {
-      return 0
-    },
-    serviceFn: function (payType) {
-      return 0
-    },
-    validPayType: [3]
-  },
-  3: {
-    priceFn: function (price, payType) {
-      return price + -(price / 6)
-    },
-    serviceFn: function (payType) {
-      return 0
-    },
-    validPayType: [6, 12]
-  },
-  4: {
-    priceFn: function (price, payType) {
-      return price
-    },
-    serviceFn: function (payType) {
-      return 3
-    },
-    validPayType: [12]
-  },
-  5: {
-    priceFn: function (price, payType) {
-      return price
-    },
-    serviceFn: function (payType) {
-      return 3
-    },
-    validPayType: [12]
-  }
-}
+// const promotionMap = {
+//   1: {
+//     priceFn: function (price) {
+//       return price
+//     },
+//     serviceFn: function (payType) {
+//       var map = {
+//         6: 1,
+//         12: 2
+//       }
+//       return map[payType] || 0
+//     },
+//     validPayType: [6, 12]
+//   },
+//   2: {
+//     priceFn: function (price) {
+//       return 0
+//     },
+//     serviceFn: function (payType) {
+//       return 0
+//     },
+//     validPayType: [3]
+//   },
+//   3: {
+//     priceFn: function (price, payType) {
+//       return price + -(price / 6)
+//     },
+//     serviceFn: function (payType) {
+//       return 0
+//     },
+//     validPayType: [6, 12]
+//   },
+//   4: {
+//     priceFn: function (price, payType) {
+//       return price
+//     },
+//     serviceFn: function (payType) {
+//       return 3
+//     },
+//     validPayType: [12]
+//   },
+//   5: {
+//     priceFn: function (price, payType) {
+//       return price
+//     },
+//     serviceFn: function (payType) {
+//       return 3
+//     },
+//     validPayType: [12]
+//   }
+// }
 export default {
   props: ['postData', 'modify', 'channelid'],
   data() {
@@ -333,7 +340,12 @@ export default {
       gifts: [],
       promVaild: true,
       orgAddedValue: 0,
-      signkey: {}
+      signkey: {},
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now() - 8.64e7
+        }
+      }
     }
   },
   created() {
@@ -364,15 +376,15 @@ export default {
     //   this.postData.ContractAmount = ''
     //   this.postData.ServiceEnd = ''
     // },
-    'promotionChecked': function (val) {
-      if (val) {
-        this.postData.IsPromotion = this.promotionId
-      } else {
-        this.postData.IsPromotion = 0
-      }
-      this.setContractAmount()
-      this.setServiceEnd()
-    },
+    // 'promotionChecked': function (val) {
+    //   if (val) {
+    //     this.postData.IsPromotion = this.promotionId
+    //   } else {
+    //     this.postData.IsPromotion = 0
+    //   }
+    //   // this.setContractAmount()
+    //   this.setServiceEnd()
+    // },
     // 'postData.PayType': function () {
     //   const addedvalue = this.postData.Customer.AddedValue
     //   this.gifts = window._.filter(this.allgifts, item => item.AddedValue === addedvalue)
@@ -380,9 +392,9 @@ export default {
     //   this.setServiceEnd()
     //   this.promotionValid()
     // },
-    'postData.ServiceStart': function () {
-      this.setServiceEnd()
-    }
+    // 'postData.ServiceStart': function () {
+    //   this.setServiceEnd()
+    // }
   },
   methods: {
     getsignkey() {
@@ -491,18 +503,32 @@ export default {
       }
     },
     setContractAmount() {
-      const _ = window._
-      const price = _.find(this.allprices, item => {
-        return item.Id === this.postData.PayType
-      })
-      if (!price) return
-      if (!this.postData.IsPromotion) {
-        this.postData.ContractAmount = price.Price
-      } else {
-        this.postData.ContractAmount = promotionMap[this.postData.IsPromotion].priceFn(price.Price)
+      // const _ = window._
+      // const price = _.find(this.allprices, item => {
+      //   return item.Id === this.postData.PayType
+      // })
+      // if (!price) return
+      // if (!this.postData.IsPromotion) {
+      //   this.postData.ContractAmount = price.Price
+      // } else {
+      //   this.postData.ContractAmount = promotionMap[this.postData.IsPromotion].priceFn(price.Price)
+      // }
+      if (this.postData.FreChangeOrderId) { // 企业性质变更时候重新根据开始账期结算合同金额差额
+        console.log('bb')
+        var datestart = new Date(this.postData.ServiceStart)
+        var dateend = new Date(this.postData.ServiceEnd)
+        console.log(dateend, datestart, 'month')
+        var startMonth = (dateend.getMonth() - datestart.getMonth()) + 1
+        console.log(startMonth, 'startMonth')
+        this.postData.ContractAmount = (400 - 200) * startMonth
+        console.log(this.postData.ContractAmount)
       }
     },
     setServiceEnd() {
+      console.log('aaa')
+      if (this.postData.FreChangeOrderId) {
+        this.setContractAmount()
+      }
       const _ = window._
       if (!this.postData.ServiceStart) return
       if (!this.postData.PayType) return
@@ -512,32 +538,39 @@ export default {
         return item.Id === +this.postData.PayType
       })
       if (!payType) return
+      console.log(payType, 'payType')
       let addMonth = payType.ServiceMonths
       const gift = _.find(this.gifts, item => {
         return item.GiftTypeId === +this.postData.GiftTypeId
       })
       if (gift) addMonth = addMonth + gift.MonthNum
       if (this.postData.IsPromotion) {
-        addMonth += promotionMap[this.postData.IsPromotion].serviceFn()
+        // addMonth += promotionMap[this.postData.IsPromotion].serviceFn()
+        var p = this.postData.Promotion.PromotionDetailsEntityList
+        for (let i in p) {
+          if (p[i].ServiceMonths === addMonth) {
+            addMonth += p[i].PromotionMonths
+            break
+          }
+        }
       }
-
       const date = new Date(this.postData.ServiceStart)
       const enddate = new Date(date.setMonth(date.getMonth() + addMonth - 1))
 
       this.postData.ServiceEnd = enddate.format('yyyy-MM')
-    },
-    promotionValid() {
-      var payType = window._.find(this.allprices, item => {
-        return item.Id === +this.postData.PayType
-      })
-      if (this.promotionId > 0 && promotionMap[this.promotionId].validPayType.indexOf(payType.ServiceMonths) > -1) {
-        this.promVaild = true
-      } else {
-        this.promotionChecked = false
-        this.postData.IsPromotion = 0
-        this.promVaild = false
-      }
     }
+    // promotionValid() {
+    //   var payType = window._.find(this.allprices, item => {
+    //     return item.Id === +this.postData.PayType
+    //   })
+    //   if (this.promotionId > 0 && promotionMap[this.promotionId].validPayType.indexOf(payType.ServiceMonths) > -1) {
+    //     this.promVaild = true
+    //   } else {
+    //     this.promotionChecked = false
+    //     this.postData.IsPromotion = 0
+    //     this.promVaild = false
+    //   }
+    // }
   },
   computed: {
     filterCityCode() {

@@ -12,7 +12,7 @@
       <el-table-column property="BillTime" label="操作时间" width="200"></el-table-column>
       <el-table-column v-if="type == 1" label="操作">
         <template scope="scope">
-          <el-button @click="scanView(scope.row)" type="text" size="small">查看</el-button>
+          <el-button @click="scanView(scope.row)" type="text" size="small" v-if="scope.row.Category != 3 && scope.row.Category != 6">查看</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -74,10 +74,12 @@ export default {
     scanView(row) {
       var postData = ''
       orderTitle(row.OrderId).then(res => {
-        postData = res.data
-        Dialog(AddOrder, {
-          postData: postData
-        })
+        if (res.status) {
+          postData = res.data
+          Dialog(AddOrder, {
+            postData: postData
+          })
+        }
       })
     },
     handleSizeChange(val) {

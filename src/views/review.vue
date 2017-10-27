@@ -164,7 +164,8 @@ export default {
     viewOrg(row) {
       orderTitle(row.FreChangeOrderId).then(res => {
         Dialog(AddOrder, {
-          postData: res.data
+          postData: res.data,
+          channelid: row.ChannelId
         })
       })
     },

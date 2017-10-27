@@ -6,7 +6,8 @@
   </div>
   <el-upload v-if="!isClose || isClose && signList" :on-success="handleSuccess" :before-upload="beforeUpload" :action="action" :file-list="fileList" :show-file-list="false" v-show="!readonly" :data="signKey">
     <el-button size="small" type="primary">点击上传</el-button>
-    <div slot="tip" class="el-upload__tip">上传的图片大小请不要超过1M</div>
+    <div v-if="isClose" slot="tip" class="el-upload__tip">上传的图片大小请不要超过1M,支持多次上传</div>
+    <div v-else slot="tip" class="el-upload__tip">上传的图片大小请不要超过1M</div>
   </el-upload>
 </div>
 </template>

@@ -533,6 +533,12 @@ export const getinvoicesdetails = params => {
     params: params
   }).then(res => res.data)
 }
+// 财务管理--财务统计--扣减一代提成
+export const getDeduteTab = params => {
+  return axios.get(`${base}/finance/GetDeduteTab`, {
+    params: params
+  }).then(res => res.data)
+}
 
 // 渠道返点--代理商任务设置获取列表 $$ 提交新增任务
 export const setTask = params => {

@@ -1,5 +1,5 @@
 <template>
-<el-dialog title="充值" :visible.sync="dialogFormVisible" size="tiny">
+<el-dialog title="充值" :visible.sync="dialogFormVisible" size="small">
   <div class="content">
     <div class="con">
       <span v-text="data.ChannelName1"ss></span>

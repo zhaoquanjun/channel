@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="确认退单" :visible.sync="dialogFormVisible" size="tiny">
+  <el-dialog title="确认退单" :visible.sync="dialogFormVisible" size="small">
     <div class="reback-order reback-order-one">
       <div class="title">
         <span class="lable-title">订单编号：</span>

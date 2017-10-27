@@ -2,6 +2,13 @@
 <div class="charge-type">
   <h3 class="vheader">充值类型设置</h3>
   <div class="charge-con">
+    <div class="con-item" v-for="record in records">
+      <el-input :class="{active : record.isModify}" v-model="record.RechargeName" :disabled="record.isModify"></el-input>
+      <el-button v-if="!record.showSave" @click="modify(record)" type="text" size="small">修改</el-button>
+      <el-button v-else @click="save(record)" type="text" size="small">保存</el-button>
+      <el-button @click="deleteItem(record)" type="text" size="small">删除</el-button>
+    </div>
+    <div class="charge-border"></div>
     <el-form :inline="true">
       <el-form-item label="">
         <el-input v-model="record"></el-input>
@@ -10,12 +17,6 @@
         <el-button @click="addRecord" type="primary">添加</el-button>
       </el-form-item>
     </el-form>
-    <div class="con-item" v-for="record in records">
-      <el-input v-model="record.RechargeName" :disabled="record.isModify"></el-input>
-      <el-button v-if="!record.showSave" @click="modify(record)" type="text" size="small">修改</el-button>
-      <el-button v-else @click="save(record)" type="text" size="small">保存</el-button>
-      <el-button @click="deleteItem(record)" type="text" size="small">删除</el-button>
-    </div>
   </div>
 </div>
 </template>
@@ -106,7 +107,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .charge-type .charge-con {
   wIdth: 400px;
   margin: 10px 30px;
@@ -119,5 +120,16 @@ export default {
 }
 .charge-type .el-input {
   wIdth: 200px;
+}
+.charge-type .charge-con .con-item .active .el-input__inner{
+  border: none;
+  background: #fff;
+  color: #1f2d3d;
+}
+.charge-type .charge-con .charge-border {
+  width: 100%;
+  height: 1px;
+  background: #1f2d3d;
+  margin-bottom: 20px;
 }
 </style>

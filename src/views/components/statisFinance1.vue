@@ -13,16 +13,24 @@
       <el-form-item class="form-width" label="代理商">
         <el-autocomplete class="inline-input" v-model="params.channelname" :trigger-on-focus="false" :fetch-suggestions="querySearch"></el-autocomplete>
       </el-form-item>
-      <el-form-item class="form-width2" label="充值类型">
-        <el-select v-model="params.type">
-          <el-option v-for="item in financeType" :key="item.type" :label="item.name" :value="item.type"></el-option>
-        </el-select>
-      </el-form-item>
       <el-form-item class="form-width" label="代理商是否解约">
         <el-select v-model="params.status">
           <el-option v-for="item in Status" :key="item.status" :label="item.statusName" :value="item.status">
           </el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item class="form-width2" label="充值类型">
+        <el-select v-model="params.type" @change="ShowFinanceType">
+          <el-option v-for="item in financeType" :key="item.type" :label="item.name" :value="item.type"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item class="form-width2" label="">
+        <el-select v-model="params.subtype" :disabled="isShowAllChildFinanceType">
+          <el-option v-for="item in financeTypeChild" :key="item.Id" :label="item.RechargeName" :value="item.Id"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item class="form-width" label="收款编号">
+        <el-input v-model="params.collectionNumber"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSearch">查询</el-button>
@@ -41,9 +49,11 @@
     </el-table-column>
     <el-table-column prop="Category" label="充值类型" align="center" :formatter="TypeFormat">
     </el-table-column>
-    <el-table-column prop="Category" label="充值子类型" align="center" :formatter="TypeFormat">
+    <el-table-column prop="subtype" label="充值子类型" align="center" width="110">
     </el-table-column>
     <el-table-column prop="Amount" label="充值金额" align="center">
+    </el-table-column>
+    <el-table-column prop="CollectionNumber" label="收款编号" align="center" width="200">
     </el-table-column>
   </el-table>
   <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 30]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
@@ -54,7 +64,8 @@
 
 <script>
 import {
-  getrechargedetails
+  getrechargedetails,
+  allRechargeType
 } from '../../api/api'
 
 export default {
@@ -77,7 +88,9 @@ export default {
         endtime: '',
         channelname: '',
         type: 0,
-        status: ''
+        status: '',
+        subtype: '',
+        collectionNumber: ''
       },
       financeType: [{
         name: '全部',
@@ -94,13 +107,32 @@ export default {
       }, {
         name: '一代提成',
         type: 5
+      }, {
+        name: '中心充值',
+        type: 7
       }],
-      clearable: false
+      clearable: false,
+      financeTypeChild: [],
+      isShowAllChildFinanceType: true
     }
   },
-  created() {
+  mounted() {
+    this.getChildFinanceType()
   },
   methods: {
+    getChildFinanceType() {
+      allRechargeType().then(res => {
+        if (res.status) {
+          this.financeTypeChild = res.data
+          var obj = {
+            Id: '',
+            RechargeName: '全部细类'
+          }
+          this.financeTypeChild.unshift(obj)
+          console.log(this.financeTypeChild)
+        }
+      })
+    },
     onSearch() {
       let limit = this.pagination.pageSize
       let offset = (this.pagination.currentPage - 1) * limit
@@ -109,6 +141,8 @@ export default {
       let endtime = this.params.endtime
       let type = this.params.type
       let status = this.params.status
+      let subtype = this.params.subtype
+      let collectionNumber = this.params.collectionNumber
       console.log(status)
       getrechargedetails({
         limit: limit,
@@ -117,7 +151,9 @@ export default {
         endtime: endtime,
         channelname: channelname,
         type: type,
-        status: status
+        status: status,
+        subtype: subtype,
+        collectionNumber: collectionNumber
       }).then((res) => {
         // console.log(res.data)
         this.tableData = res.data
@@ -130,9 +166,11 @@ export default {
         endtime,
         channelname,
         type,
-        status
+        status,
+        subtype,
+        collectionNumber
       } = this.params
-      const url = `/api/download/getrechargedetails?starttime=${starttime || ''}&endtime=${endtime || ''}&channelname=${channelname || ''}&type=${type || 0}&status=${status}`
+      const url = `/api/download/getrechargedetails?starttime=${starttime || ''}&endtime=${endtime || ''}&channelname=${channelname || ''}&type=${type || 0}&status=${status}&subtype=${subtype}&collectionNumber=${collectionNumber || ''}`
       // console.log(url)
       window.open(url)
       // if (this.pagination.total > 1000) {
@@ -145,6 +183,15 @@ export default {
       //   // console.log(url)
       //   window.open(url)
       // }
+    },
+    ShowFinanceType(val) {
+      // console.log(val)
+      if (val === 7) {
+        this.isShowAllChildFinanceType = false
+      } else {
+        this.isShowAllChildFinanceType = true
+        this.params.subtype = ''
+      }
     },
     TypeFormat: function(row) {
       var type = row.Category
@@ -161,11 +208,17 @@ export default {
         case 5:
           type = '一代提成'
           break
+        case 7:
+          type = '中心充值'
+          break
       }
       return type
     },
     StatusDate(row) {
       var date = row.BillTime
+      if (!date) {
+        return ''
+      }
       return date.substring(0, 10)
     },
     querySearch(queryString, cb) {

@@ -41,7 +41,7 @@
     </el-table-column>
     <el-table-column label="操作">
       <template scope="scope">
-          <el-button @click="financeView(scope.row)" type="text" size="small" v-if="scope.row.OrderId">查看订单</el-button>
+          <el-button @click="financeView(scope.row)" type="text" size="small" v-if="scope.row.OrderId && scope.row.Category != 3 && scope.row.Category != 6">查看订单</el-button>
         </template>
     </el-table-column>
   </el-table>

@@ -1,14 +1,14 @@
 <template>
-  <el-dialog :title="title" :visible.sync="dialogFormVisible" size="tiny">
+  <el-dialog :title="title" :visible.sync="dialogFormVisible" size="small">
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="80px" class="demo-ruleForm add-promotion-model">
       <el-form-item label="活动分类" prop="PromotionType">
         <el-radio-group v-model="ruleForm.PromotionType">
-          <el-radio label="1">延长服务时长</el-radio>
-          <el-radio label="2">价格优惠</el-radio>
+          <el-radio label="1" :disabled="isChange">延长服务时长</el-radio>
+          <el-radio label="2" :disabled="isChange">价格优惠</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item class="add-promotion" label="活动名称" prop="PromotionName">
-        <el-input class="promotion-input-width" v-model="ruleForm.PromotionName"></el-input>
+        <el-input class="promotion-input-width" v-model="ruleForm.PromotionName" :disabled="isChange"></el-input>
       </el-form-item>
       <el-form-item class="add-promotion" label="数量" prop="Num">
         <el-input class="promotion-input-width" v-model="ruleForm.Num"></el-input>
@@ -26,7 +26,7 @@
         <div class="promotion-condition-con">
           <div class="promotion-condition-item" v-for="(list, index) in ruleForm.PromotionDetailsEntityList">
             套餐为：
-            <el-select class="condition-item-select-width" v-model="list.ServiceMonths">
+            <el-select class="condition-item-select-width" v-model="list.ServiceMonths" :disabled="isChange">
               <el-option label="季度" :value="3"></el-option>
               <el-option label="半年" :value="6"></el-option>
               <el-option label="一年" :value="12"></el-option>
@@ -35,7 +35,7 @@
               <el-option label="零税半年" :value="0"></el-option>
             </el-select>
             时，<span v-if="ruleForm.PromotionType == 1">赠送</span><span v-if="ruleForm.PromotionType == 2">优惠</span>
-            <el-input class="condition-item-input-width" v-model="list.PromotionMonths"></el-input>
+            <el-input class="condition-item-input-width" v-model="list.PromotionMonths" :disabled="isChange"></el-input>
             <span v-if="ruleForm.PromotionType == 1">个月服务时长。</span><span v-if="ruleForm.PromotionType == 2">个月价钱。</span>
             <el-button v-if="ruleForm.PromotionDetailsEntityList.length > 1" @click="deletePromotionDetail(list)" type="text" size="small">删除</el-button>
           </div>
@@ -97,7 +97,8 @@ export default {
           message: '请选择结束日期',
           trigger: 'change'
         }]
-      }
+      },
+      isChange: false
     }
   },
   mounted() {
@@ -111,6 +112,9 @@ export default {
       this.getgloblepromotion()
       console.log(this.channelid)
       this.ruleForm.ChannelId = this.channelid
+      if (this.IsGloble === 1 && this.channelid) {
+        this.isChange = true
+      }
     }
   },
   methods: {
@@ -236,7 +240,7 @@ export default {
   padding-left: 10px;
 }
 .promotion-condition .promotion-condition-item .condition-item-select-width .el-input {
-  width: 90px;
+  width: 106px;
 }
 .promotion-condition .promotion-condition-item .condition-item-input-width {
   width: 50px;

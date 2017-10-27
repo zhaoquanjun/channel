@@ -14,7 +14,7 @@
   <el-table :data="tableData" border style="width: 100%">
     <el-table-column prop="PromotionName" label="活动名称" min-width="120"></el-table-column>
     <el-table-column prop="Num" label="数量"></el-table-column>
-    <el-table-column prop="StartDate" label="开始日期" :formatter="StatusDate"></el-table-column>
+    <el-table-column prop="StartDate" label="开始日期" :formatter="StatusStartDate"></el-table-column>
     <el-table-column prop="EndDate" label="结束日期" :formatter="StatusDate"></el-table-column>
     <el-table-column label="操作" >
       <template scope="scope">
@@ -121,8 +121,12 @@ export default {
         }
       }).catch(() => {})
     },
+    StatusStartDate(row) {
+      var date = row.StartDate
+      return date.substring(0, 10)
+    },
     StatusDate(row) {
-      var date = row.EndDate || row.StartDate
+      var date = row.EndDate
       return date.substring(0, 10)
     },
     querySearch(queryString, cb) {

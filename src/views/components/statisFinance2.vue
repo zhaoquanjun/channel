@@ -19,6 +19,22 @@
           </el-option>
         </el-select>
       </el-form-item>
+      <el-form-item class="form-width" label="订单编号">
+        <el-input v-model="params.orderid"></el-input>
+      </el-form-item>
+      <el-form-item class="form-width" label="是否退单">
+        <el-select v-model="params.isback">
+          <el-option v-for="item in isBackStatus" :key="item.status" :label="item.statusName" :value="item.status">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="退单日期">
+        <el-date-picker class="dataWidth" v-model="params.tstart" type="date" :clearable="clearable">
+        </el-date-picker>
+        <span>-</span>
+        <el-date-picker class="dataWidth" v-model="params.tend" type="date" :clearable="clearable">
+        </el-date-picker>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSearch">查询</el-button>
         <el-button type="primary" @click="onDownload" :disabled="!tableData.length">导出</el-button>
@@ -36,6 +52,12 @@
     </el-table-column>
     <el-table-column prop="OrderId" label="订单编号" width="210">
     </el-table-column>
+    <el-table-column prop="IsChargeBack" label="是否退单" width="110">
+    </el-table-column>
+    <el-table-column prop="ChargeBackDate" label="退单日期" :formatter="StatusDate" width="120">
+    </el-table-column>
+    <el-table-column prop="BackAmount" label="退单金额" width="110">
+    </el-table-column>
     <el-table-column prop="Name" label="公司名称" width="200">
     </el-table-column>
     <el-table-column prop="AddedValueText" label="公司性质" width="110">
@@ -52,9 +74,9 @@
     </el-table-column>
     <el-table-column prop="ContractAmount" label="合同金额" width="100">
     </el-table-column>
-    <el-table-column prop="BLAmount" label="提单金额" width="100">
+    <el-table-column prop="BLAmount" label="订单总金额" width="110">
     </el-table-column>
-    <el-table-column prop="PurchaseAmount" label="折后金额" width="100">
+    <el-table-column prop="PurchaseAmount" label="实收金额" width="100">
     </el-table-column>
   </el-table>
   <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 30]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
@@ -74,6 +96,11 @@ export default {
         {status: 0, statusName: '是'},
         {status: 1, statusName: '否'}
       ],
+      isBackStatus: [
+        {status: '', statusName: '全部'},
+        {status: 1, statusName: '是'},
+        {status: 0, statusName: '否'}
+      ],
       pagination: {
         total: 0,
         pageSize: 10,
@@ -84,7 +111,11 @@ export default {
         starttime: '',
         endtime: '',
         channelname: '',
-        status: ''
+        status: '',
+        orderid: '',
+        isback: '',
+        tstart: '',
+        tend: ''
       },
       clearable: false
     }
@@ -100,13 +131,21 @@ export default {
       let starttime = this.params.starttime
       let endtime = this.params.endtime
       let status = this.params.status
+      let orderid = this.params.orderid
+      let isback = this.params.isback
+      let tstart = this.params.tstart
+      let tend = this.params.tend
       getpaymentdetails({
         limit: limit,
         offset: offset,
         starttime: starttime,
         endtime: endtime,
         channelname: channelname,
-        status: status
+        status: status,
+        orderid: orderid,
+        isback: isback,
+        tstart: tstart,
+        tend: tend
       }).then((res) => {
         // console.log(res.data)
         this.tableData = res.data
@@ -118,7 +157,11 @@ export default {
         starttime,
         endtime,
         channelname,
-        status
+        status,
+        orderid,
+        isback,
+        tstart,
+        tend
       } = this.params
       // if (this.pagination.total > 1000) {
       //   this.$message({
@@ -126,13 +169,16 @@ export default {
       //     message: '总条数过多，请缩小查询范围'
       //   })
       // } else {
-      const url = `/api/download/getpaymentdetails?starttime=${starttime || ''}&endtime=${endtime || ''}&channelname=${channelname || ''}&status=${status}`
-      console.log(url)
+      const url = `/api/download/getpaymentdetails?starttime=${starttime || ''}&endtime=${endtime || ''}&channelname=${channelname || ''}&status=${status}&orderid=${orderid}&isback=${isback}&tstart=${tstart}&tend=${tend}`
+      // console.log(url)
       window.open(url)
       // }
     },
     StatusDate(row, column) {
       var date = row[column.property]
+      if (!date) {
+        return ''
+      }
       return date.substring(0, 10)
     },
     querySearch(queryString, cb) {
