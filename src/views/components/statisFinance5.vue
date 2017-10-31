@@ -78,7 +78,7 @@
     </el-table-column>
     <el-table-column prop="IsInvoice" label="是否申请发票" width="130">
     </el-table-column>
-    <el-table-column prop="auditstatus" label="发票审核状态" width="130">
+    <el-table-column prop="AuditStatus" label="发票审核状态" width="130">
     </el-table-column>
     <el-table-column prop="ApplyDate" label="发票申请日期" :formatter="StatusDate" width="130">
     </el-table-column>

@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="recharge-check">
   <h3 class="vheader">充值审核</h3>
   <div class="vsearch">
     <el-form ref="params" :inline="true" :model="params">
@@ -11,14 +11,14 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="代理商">
-        <el-autocomplete class="inline-input" v-model="params.channelname" :trigger-on-focus="false" :fetch-suggestions="querySearch"></el-autocomplete>
+        <el-autocomplete class="form-width2" v-model="params.channelname" :trigger-on-focus="false" :fetch-suggestions="querySearch"></el-autocomplete>
       </el-form-item>
-      <el-form-item label="审核状态">
+      <el-form-item class="form-width" label="审核状态">
         <el-select v-model="params.status">
           <el-option v-for="item in checkStatus" :key="item.status" :label="item.name" :value="item.status"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="代理商是否解约">
+      <el-form-item class="form-width1" label="代理商是否解约">
         <el-select v-model="params.channelstatus">
           <el-option v-for="item in Status" :key="item.status" :label="item.statusName" :value="item.status">
           </el-option>
@@ -223,5 +223,14 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+.recharge-check .vsearch .form-width2 .el-input {
+  width: 120px;
+}
+.recharge-check .vsearch .form-width .el-form-item__content {
+  width: 90px;
+}
+.recharge-check .vsearch .form-width1 .el-form-item__content {
+  width: 75px;
+}
 </style>

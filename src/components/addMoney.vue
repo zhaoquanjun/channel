@@ -14,12 +14,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="充值金额" prop="amount">
-        <el-input v-model="ruleForm.amount" auto-complete="off" class="moneyWid"></el-input>
+        <el-input v-model="ruleForm.amount" auto-complete="off" class="moneyWid" ref="add-money-amount"></el-input>
       </el-form-item>
       <el-form-item label="上传附件" required>
         <div class="file-upload-area">
-          <div v-for="(img, index) in ruleForm.photopath" :class="index == ruleForm.photopath.length - 1 ? 'file-upload-area-button' : 'file-upload-area-img-item'">
-            <img-upl type="5" v-model='ruleForm.photopath[index]' :sign-key="signkey" :isClose="true" :sign-list="index == ruleForm.photopath.length - 1" @input="ruleForm.photopath.push({})" @delete="ruleForm.photopath.splice(index,1)"></img-upl>
+          <div v-for="(img, index) in ruleForm.photopaths" :class="index == ruleForm.photopaths.length - 1 ? 'file-upload-area-button' : 'file-upload-area-img-item'">
+            <img-upl type="5" v-model='ruleForm.photopaths[index]' :sign-key="signkey" :isClose="true" :sign-list="index == ruleForm.photopaths.length - 1" @input="ruleForm.photopaths.push({})" @delete="ruleForm.photopaths.splice(index,1)"></img-upl>
           </div>
         </div>
         <!-- <img-upl type="5" v-model='ruleForm.imgs' :sign-key="signkey" :sign-list="true"></img-upl> -->
@@ -58,7 +58,7 @@ export default {
         amount: '',
         rechargetypeid: '',
         Remark: '',
-        photopath: [{}]
+        photopaths: [{}]
       },
       rules: {
         amount: [{
@@ -79,6 +79,18 @@ export default {
     this.data = this.row
     this.getsignkey()
     this.getchargeTypelist()
+  },
+  watch: {
+    ruleForm: {
+      handler: function (val, oldVal) {
+        if (/\.\d{2,}/.test(val.amount)) {
+          setTimeout(() => {
+            val.amount = parseInt(val.amount * 100) / 100 || ''
+          }, 0)
+        }
+      },
+      deep: true
+    }
   },
   methods: {
     getchargeTypelist() {
@@ -108,9 +120,9 @@ export default {
             })
             return
           }
-          if (this.ruleForm.photopath.length === 1) {
+          if (this.ruleForm.photopaths.length === 1) {
             this.$message({
-              message: '请上传充值凭证',
+              message: '请上传附件',
               type: 'warning'
             })
             return
@@ -123,13 +135,14 @@ export default {
           }
           var str = `您确认为 ${channelname1} 充值 ${amount}元？`
           this.ruleForm.channelid = this.row.ChannelId
-          this.ruleForm.photopath = this.ruleForm.photopath.join(',')
           this.$confirm(str, '充值提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
             console.log(this.ruleForm)
+            // const path = this.ruleForm.photopathss.join(',')
+            // this.ruleForm.photopaths = path
             finance(this.ruleForm).then(res => {
               if (res.status) {
                 this.$message({
@@ -159,7 +172,9 @@ export default {
   height: 30px;
   line-height: 30px;
 }
-
+.bottom {
+ margin-bottom: 30px;
+}
 .moneyWid {
   width: 217px;
 }

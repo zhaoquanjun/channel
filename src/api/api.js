@@ -777,9 +777,15 @@ export const getchannelpromotionlist = params => {
 export const addpromotion = (params) => {
   return axios.post(`${base}/newpromotion/addpromotion`, params).then(res => res.data)
 }
-// 活动类型设置--get修改活动类型
+// 活动类型设置--get修改活动类型通用活动
 export const globlepromotionDetail = params => {
   return axios.get(`${base}/newpromotion/getgloblepromotion`, {
+    params: params
+  }).then(res => res.data)
+}
+// 活动类型设置--get修改活动类型代理商修改活动
+export const GetChannelPromotion = params => {
+  return axios.get(`${base}/newpromotion/GetChannelPromotion`, {
     params: params
   }).then(res => res.data)
 }

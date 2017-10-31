@@ -45,13 +45,13 @@
     </el-table-column>
     <el-table-column prop="Status" label="代理商是否解约" :formatter="handleStatus">
     </el-table-column>
-    <el-table-column prop="BillTime" label="账单日期" align="center" :formatter="StatusDate">
+    <el-table-column prop="BillTime" label="账单日期" width="120" :formatter="StatusDate">
     </el-table-column>
-    <el-table-column prop="Category" label="充值类型" align="center" :formatter="TypeFormat">
+    <el-table-column prop="Category" label="充值类型" width="120" :formatter="TypeFormat">
     </el-table-column>
-    <el-table-column prop="subtype" label="充值子类型" align="center" width="110">
+    <el-table-column prop="subtype" label="充值子类型" width="120">
     </el-table-column>
-    <el-table-column prop="Amount" label="充值金额" align="center">
+    <el-table-column prop="Amount" label="充值金额" width="120">
     </el-table-column>
     <el-table-column prop="CollectionNumber" label="收款编号" align="center" width="200">
     </el-table-column>

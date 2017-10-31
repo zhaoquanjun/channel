@@ -84,6 +84,7 @@ export default {
       var channelid = row.ChannelId
       Dialog(AddPromotion, {
         title: '修改活动',
+        commonPromotion: this.commonPromotion,
         IsGloble: row.IsGloble,
         Id: row.Id,
         ConfigId: row.ConfigId,

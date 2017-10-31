@@ -52,12 +52,15 @@ export default {
           type: 'warning'
         })
       } else {
+        this.record = this.record.replace(/\s/g, '')
+        // console.log(this.record)
         addNewRechargeType(this.record).then(res => {
           if (res.status) {
             this.$message({
               type: 'success',
               message: '添加成功!'
             })
+            this.record = ''
             this.fetchData()
           }
         })
@@ -74,6 +77,7 @@ export default {
           type: 'warning'
         })
       } else {
+        record.RechargeName = record.RechargeName.replace(/\s/g, '')
         updateRechargeType(record.RechargeName, record.Id).then(res => {
           if (res.status) {
             this.$message({

@@ -35,9 +35,9 @@
     </el-table-column>
     <el-table-column prop="Balance" label="余额" width="120">
     </el-table-column>
-    <el-table-column prop="Description" label="订单描述" width="500">
+    <el-table-column prop="Description" label="描述" width="500">
     </el-table-column>
-    <el-table-column prop="BillTime" label="订单时间" width="200">
+    <el-table-column prop="BillTime" label="操作时间" width="200">
     </el-table-column>
     <el-table-column label="操作">
       <template scope="scope">

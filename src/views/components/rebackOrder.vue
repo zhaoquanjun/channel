@@ -28,32 +28,33 @@
       <span>退款信息</span>
       <i></i>
     </div>
-    <el-form :model="ruleForm" ref="ruleForm" label-width="110px" class="demo-ruleForm reback-form">
+    <el-form :model="ruleForm" ref="ruleForm" label-width="132px" class="demo-ruleForm reback-form">
       <el-form-item label="退款详情：" required>
         <div class="serve-month">
-          已服务<input class="input-serveMonth" v-bind:class="isView ? 'readonly-class' : ''" type="number" v-model="ruleForm.ServedMonths" :disabled="isView">个月，可退款
-          <input class="input-serveMonth" v-bind:class="isView ? 'readonly-class' : ''" type="number" v-model="ruleForm.BackMonths" :disabled="isView">个月
+          已服务<input class="input-serveMonth" type="number" v-model="ruleForm.ServedMonths" :readonly="isView">个月，可退款
+          <input class="input-serveMonth" type="number" v-model="ruleForm.BackMonths" :readonly="isView">个月
         </div>
       </el-form-item>
       <el-form-item label="剩余服务费：" required>
-        <el-input v-model="ruleForm.SurplusAmount" @blur="getBackAmount" :disabled="isView"></el-input>
+        <el-input v-model="ruleForm.SurplusAmount" @blur="getBackAmount" :readonly="isView"></el-input>
       </el-form-item>
       <el-form-item label="扣除返点：" required>
-        <el-input v-model="ruleForm.RebateAmount"  @blur="getBackAmount" :disabled="isView"></el-input>
+        <el-input v-model="ruleForm.RebateAmount"  @blur="getBackAmount" :readonly="isView"></el-input>
       </el-form-item>
       <el-form-item v-if="showCommissionAmount" label="一代提成：" required>
-        <el-input v-model="ruleForm.CommissionAmount" :disabled="isView"></el-input>
+        <el-input v-model="ruleForm.CommissionAmount" :readonly="isView"></el-input>
       </el-form-item>
       <el-form-item label="退款金额：">
-        <el-input v-model="ruleForm.BackAmount" :disabled="true"></el-input>
+        <el-input v-model="ruleForm.BackAmount" readonly></el-input>
+        <span v-if="!isView" style="color: red">（剩余服务费-扣除返点=退款金额）</span>
       </el-form-item>
-      <el-form-item label="退款原因：">
+      <el-form-item label="退款原因：" required>
         <el-select v-model="ruleForm.BackReason" class="reason-select" :disabled="isView">
           <el-option v-for="reason in backReason" :key="reason.name" :label="reason.name" :value="reason.name"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="备注：">
-        <el-input type="textarea" v-model="ruleForm.Remark" :disabled="isView"></el-input>
+        <el-input type="textarea" size="small" v-model="ruleForm.Remark" :readonly="isView"></el-input>
       </el-form-item>
     </el-form>
     <div v-if="isView" slot="footer" class="dialog-footer">
@@ -100,13 +101,13 @@ export default {
     getchargebackorder() {
       chargebackorderList(this.params).then((res) => {
         this.ruleForm = res.data
-        if (!this.isView) {
-          this.ruleForm.BackReason = '信息填写错误，退单重提'
-        }
+        // if (!this.isView) {
+        //   this.ruleForm.BackReason = '信息填写错误，退单重提'
+        // }
       })
     },
     getBackAmount() {
-      this.ruleForm.BackAmount = (this.ruleForm.SurplusAmount || 0) - (this.ruleForm.RebateAmount || 0)
+      this.ruleForm.BackAmount = this.ruleForm.SurplusAmount - this.ruleForm.RebateAmount || ''
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -146,6 +147,13 @@ export default {
             })
             return
           }
+          if (!this.ruleForm.BackReason) {
+            this.$message({
+              message: '选择退款原因',
+              type: 'warning'
+            })
+            return
+          }
           for (let i in this.backReason) {
             if (this.backReason[i].id === this.ruleForm.BackReason) {
               this.ruleForm.BackReason = this.backReason[i].name
@@ -172,20 +180,30 @@ export default {
 </script>
 
 <style>
+.el-dialog__footer {
+  padding: 5px 20px 20px;
+}
+.el-dialog__body {
+  padding: 15px 20px 10px;
+}
 .reback-order .title {
   height: 30px;
   line-height: 30px;
   font-size: 14px;
 }
+.el-form-item {
+  margin-bottom: 15px;
+}
 .reback-order .title .lable-title {
-  color: #ccc;
-  width: 100px;
+  color: #a3a3a3;
+  width: 120px;
   display: inline-block;
   text-align: right;
   vertical-align: middle;
+  margin-right: 6px;
 }
 .title-border {
-  padding: 10px 0 10px 10px;
+  padding: 10px 0 10px 20px;
 }
 .title-border span {
   float: left;
@@ -216,16 +234,24 @@ export default {
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-    -webkit-appearance: none !important;
-    margin: 0;
+   -webkit-appearance: none !important;
+   margin: 0;
 }
 .reback-form .el-form-item__label {
-  color: #ccc;
+  color: #a3a3a3;
 }
 .reback-form .el-input {
   width: 100px;
 }
+.reback-form .reason-select .el-input.is-disabled .el-input__inner{
+  background-color: #fff;
+  border-color: #8391a5;
+  color: #1f2d3d;
+}
 .reback-form .reason-select .el-input {
   width: 260px;
+}
+.reback-form .el-textarea__inner {
+ width: 80%;
 }
 </style>

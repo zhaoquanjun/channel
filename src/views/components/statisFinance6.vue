@@ -113,7 +113,7 @@ export default {
         billid,
         status
       } = this.params
-      const url = `/api/download/GetDeduteTab?startdate=${startdate || ''}&enddate=${enddate || ''}&channelname=${channelname || ''}&billid=${billid}&status=${status}`
+      const url = `/api/download/GetDeduteTab?startdate=${startdate || ''}&enddate=${enddate || ''}&channelname=${channelname || ''}&billid=${billid || ''}&status=${status}`
       window.open(url)
     },
     querySearch(queryString, cb) {

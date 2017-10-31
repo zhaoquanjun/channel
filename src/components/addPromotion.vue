@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { addpromotion, Updatepromotion, globlepromotionDetail, updategloblepromotionbychannel } from '@/api/api'
+import { addpromotion, Updatepromotion, globlepromotionDetail, GetChannelPromotion, updategloblepromotionbychannel } from '@/api/api'
 export default {
   props: ['title', 'commonPromotion', 'channelid', 'Id', 'IsGloble', 'modify', 'ConfigId'],
   data() {
@@ -109,6 +109,7 @@ export default {
       this.ruleForm.ChannelId = this.channelid
     }
     if (this.modify) { // 修改
+      // 代理商获取修改列表 && 通用获取修改列表
       this.getgloblepromotion()
       console.log(this.channelid)
       this.ruleForm.ChannelId = this.channelid
@@ -120,19 +121,37 @@ export default {
   methods: {
     getgloblepromotion() {
       let id = this.Id
-      globlepromotionDetail({
-        id: id
-      }).then((res) => {
-        if (res.status) {
-          console.log(res)
-          this.ruleForm = res.data
-          this.ruleForm.PromotionType = this.ruleForm.PromotionType + ''
-          this.ruleForm.Num = this.ruleForm.Num + ''
-          this.ruleForm.StartDate = new Date(this.ruleForm.StartDate)
-          this.ruleForm.EndDate = new Date(this.ruleForm.EndDate)
-          console.log(this.ruleForm.StartDate)
-        }
-      })
+      let configId = this.ConfigId
+      console.log(this.commonPromotion, 'this.commonPromotion')
+      if (this.commonPromotion) {
+        globlepromotionDetail({
+          id: id
+        }).then((res) => {
+          if (res.status) {
+            console.log(res)
+            this.ruleForm = res.data
+            this.ruleForm.PromotionType = this.ruleForm.PromotionType + ''
+            this.ruleForm.Num = this.ruleForm.Num + ''
+            this.ruleForm.StartDate = new Date(this.ruleForm.StartDate)
+            this.ruleForm.EndDate = new Date(this.ruleForm.EndDate)
+            console.log(this.ruleForm.StartDate)
+          }
+        })
+      } else {
+        GetChannelPromotion({
+          configId: configId
+        }).then((res) => {
+          if (res.status) {
+            console.log(res)
+            this.ruleForm = res.data
+            this.ruleForm.PromotionType = this.ruleForm.PromotionType + ''
+            this.ruleForm.Num = this.ruleForm.Num + ''
+            this.ruleForm.StartDate = new Date(this.ruleForm.StartDate)
+            this.ruleForm.EndDate = new Date(this.ruleForm.EndDate)
+            console.log(this.ruleForm.StartDate)
+          }
+        })
+      }
     },
     deletePromotionDetail(list) {
       var index = this.ruleForm.PromotionDetailsEntityList.indexOf(list)
@@ -245,5 +264,8 @@ export default {
 .promotion-condition .promotion-condition-item .condition-item-input-width {
   width: 50px;
   margin: 0 3px;
+}
+.add-promotion-model .el-form-item__label {
+ text-align: left;
 }
 </style>
