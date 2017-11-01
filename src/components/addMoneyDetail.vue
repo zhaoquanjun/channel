@@ -77,7 +77,8 @@ export default {
         if (res.status) {
           postData = res.data
           Dialog(AddOrder, {
-            postData: postData
+            postData: postData,
+            channelid: this.channelId
           })
         }
       })

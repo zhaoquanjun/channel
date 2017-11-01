@@ -5,8 +5,9 @@
     <div class="con-item" v-for="record in records">
       <el-input :class="{active : record.isModify}" v-model="record.RechargeName" :disabled="record.isModify"></el-input>
       <el-button v-if="!record.showSave" @click="modify(record)" type="text" size="small">修改</el-button>
-      <el-button v-else @click="save(record)" type="text" size="small">保存</el-button>
-      <el-button @click="deleteItem(record)" type="text" size="small">删除</el-button>
+      <el-button v-if="record.showSave" @click="save(record)" type="text" size="small">保存</el-button>
+      <el-button v-if="record.showSave" @click="cancelItem(record)" type="text" size="small">取消</el-button>
+      <el-button v-if="!record.showSave" @click="deleteItem(record)" type="text" size="small">删除</el-button>
     </div>
     <div class="charge-border"></div>
     <el-form :inline="true">
@@ -69,6 +70,13 @@ export default {
     modify(record) {
       record.isModify = false
       record.showSave = true
+    },
+    cancelItem(record) {
+      console.log(record)
+      // record.RechargeName = record.RechargeName
+      record.isModify = true
+      record.showSave = false
+      this.fetchData()
     },
     save(record) {
       if (!record.RechargeName) {

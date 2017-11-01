@@ -3,7 +3,7 @@
   <div class="vsearch">
     <el-form ref="params" :inline="true" :model="params">
       <el-form-item label="活动名称">
-        <el-autocomplete v-model="params.name" :trigger-on-focus="false" :fetch-suggestions="querySearch"></el-autocomplete>
+        <el-input v-model="params.name"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="fetchData">查询</el-button>
@@ -129,16 +129,6 @@ export default {
     StatusDate(row) {
       var date = row.EndDate
       return date.substring(0, 10)
-    },
-    querySearch(queryString, cb) {
-      var promotiontypes = this.tableData
-      var results = queryString ? promotiontypes.filter(this.createFilter(queryString)) : promotiontypes
-      cb(results)
-    },
-    createFilter(queryString) {
-      return (promotiontype) => {
-        return (promotiontype.value.indexOf(queryString) >= 0)
-      }
     }
   }
 }

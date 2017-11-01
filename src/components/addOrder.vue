@@ -540,20 +540,31 @@ export default {
       if (!payType) return
       console.log(payType, 'payType')
       let addMonth = payType.ServiceMonths
+      let giftAndPromotionMonth = 0
       const gift = _.find(this.gifts, item => {
         return item.GiftTypeId === +this.postData.GiftTypeId
       })
-      if (gift) addMonth = addMonth + gift.MonthNum
-      if (this.postData.IsPromotion) {
+      if (gift) {
+        // addMonth = addMonth + gift.MonthNum
+        giftAndPromotionMonth = giftAndPromotionMonth + gift.MonthNum
+      }
+      if (this.postData.Promotion && this.postData.IsPromotion && this.postData.Promotion.PromotionType === 1) {
         // addMonth += promotionMap[this.postData.IsPromotion].serviceFn()
         var p = this.postData.Promotion.PromotionDetailsEntityList
         for (let i in p) {
-          if (p[i].ServiceMonths === addMonth) {
-            addMonth += p[i].PromotionMonths
-            break
+          if (p[i].ServiceMonths === 0 && payType.IsZero === 1) {
+            giftAndPromotionMonth += p[i].PromotionMonths
+          }
+          if (p[i].ServiceMonths === addMonth && payType.IsZero !== 1) {
+            // addMonth += p[i].PromotionMonths
+            giftAndPromotionMonth += p[i].PromotionMonths
+            // break
           }
         }
       }
+      console.log(giftAndPromotionMonth, 'giftAndPromotionMonth')
+      addMonth += giftAndPromotionMonth
+      console.log(addMonth, 'addMonth')
       const date = new Date(this.postData.ServiceStart)
       const enddate = new Date(date.setMonth(date.getMonth() + addMonth - 1))
 

@@ -54,13 +54,13 @@
     </el-table-column>
     <el-table-column prop="ContractAmount" label="合同金额" width="100">
     </el-table-column>
-    <el-table-column label="礼包">
+    <el-table-column label="礼包" width="120">
       <template scope="scope">
           <span v-text="scope.row.GiftTypeName"></span>
           <span>{{scope.row.GiftPrice | formatePrice}}</span>
         </template>
     </el-table-column>
-    <el-table-column prop="PromotionName" label="活动">
+    <el-table-column prop="PromotionName" label="活动" width="150">
     </el-table-column>
     <el-table-column prop="LegalPerson" label="法人">
     </el-table-column>

@@ -8,7 +8,7 @@
     <div class="con bottom">余额：{{data.Balance}}</div>
     <el-form :model="ruleForm" :rules="rules" class="demo-ruleForm form" ref="ruleForm" label-width="100px">
       <el-form-item label="充值类型" required>
-        <el-select v-model="ruleForm.rechargetypeid" placeholder="请选择">
+        <el-select v-model="ruleForm.rechargetypeid" placeholder="请选择" class="moneyWid">
           <el-option v-for="type in chargeType" :key="type.Id" :label="type.RechargeName" :value="type.Id">
           </el-option>
         </el-select>
@@ -24,7 +24,7 @@
         </div>
         <!-- <img-upl type="5" v-model='ruleForm.imgs' :sign-key="signkey" :sign-list="true"></img-upl> -->
       </el-form-item>
-      <el-form-item label="备注">
+      <el-form-item label="备注" class="textarea-width">
         <el-input type="textarea" v-model="ruleForm.Remark"></el-input>
       </el-form-item>
     </el-form>
@@ -85,7 +85,7 @@ export default {
       handler: function (val, oldVal) {
         if (/\.\d{2,}/.test(val.amount)) {
           setTimeout(() => {
-            val.amount = parseInt(val.amount * 100) / 100 || ''
+            val.amount = (parseInt(val.amount * 100) / 100) + '' || ''
           }, 0)
         }
       },
@@ -120,6 +120,13 @@ export default {
             })
             return
           }
+          if (!parseFloat(this.ruleForm.amount) || /。/.test(this.ruleForm.amount)) {
+            this.$message({
+              message: '充值金额只能是数字',
+              type: 'warning'
+            })
+            return
+          }
           if (this.ruleForm.photopaths.length === 1) {
             this.$message({
               message: '请上传附件',
@@ -140,9 +147,9 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-            console.log(this.ruleForm)
             // const path = this.ruleForm.photopathss.join(',')
-            // this.ruleForm.photopaths = path
+            this.ruleForm.photopaths.pop()
+            console.log(this.ruleForm)
             finance(this.ruleForm).then(res => {
               if (res.status) {
                 this.$message({
@@ -166,14 +173,14 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .con {
-  padding-left: 28px;
-  height: 30px;
+  padding-left: 32px;
+  height: 35px;
   line-height: 30px;
 }
 .bottom {
- margin-bottom: 30px;
+ margin-bottom: 25px;
 }
 .moneyWid {
   width: 217px;
@@ -186,10 +193,14 @@ export default {
   float: left;
   width: 120px;
   height: 70px;
-  padding: 10px;
+  padding: 10px 10px 10px 0;
 }
 
 .file-upload-area-button {
   clear: both;
+}
+
+.textarea-width .el-textarea__inner {
+  width: 450px;
 }
 </style>

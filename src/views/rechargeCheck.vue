@@ -13,15 +13,15 @@
       <el-form-item label="代理商">
         <el-autocomplete class="form-width2" v-model="params.channelname" :trigger-on-focus="false" :fetch-suggestions="querySearch"></el-autocomplete>
       </el-form-item>
-      <el-form-item class="form-width" label="审核状态">
-        <el-select v-model="params.status">
-          <el-option v-for="item in checkStatus" :key="item.status" :label="item.name" :value="item.status"></el-option>
-        </el-select>
-      </el-form-item>
       <el-form-item class="form-width1" label="代理商是否解约">
         <el-select v-model="params.channelstatus">
           <el-option v-for="item in Status" :key="item.status" :label="item.statusName" :value="item.status">
           </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item class="form-width" label="审核状态">
+        <el-select v-model="params.status">
+          <el-option v-for="item in checkStatus" :key="item.status" :label="item.name" :value="item.status"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
