@@ -16,7 +16,7 @@
     </el-table-column>
     <el-table-column prop="CityName" label="市" max-width="120">
     </el-table-column>
-    <el-table-column prop="ChannelName1" label="代理商" min-width="200">
+    <el-table-column prop="ChannelName1" label="一级代理商" min-width="200">
     </el-table-column>
     <el-table-column prop="ChannelName2" label="二级代理商" min-width="200">
     </el-table-column>

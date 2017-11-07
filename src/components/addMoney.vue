@@ -120,7 +120,8 @@ export default {
             })
             return
           }
-          if (!parseFloat(this.ruleForm.amount) || /。/.test(this.ruleForm.amount)) {
+          console.log(Number(this.ruleForm.amount))
+          if (!Number(this.ruleForm.amount) || /。/.test(this.ruleForm.amount)) {
             this.$message({
               message: '充值金额只能是数字',
               type: 'warning'

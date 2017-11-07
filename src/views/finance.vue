@@ -29,7 +29,7 @@
     </el-table-column>
     <el-table-column prop="ChannelName2" label="二级代理" min-width="200">
     </el-table-column>
-    <el-table-column v-if="params.type == 1" prop="Amount" label="订单金额" width="120">
+    <el-table-column v-if="params.type == 1" prop="Amount" label="支出" width="120">
     </el-table-column>
     <el-table-column v-if="params.type == 2" prop="Amount" label="充值金额" width="120">
     </el-table-column>

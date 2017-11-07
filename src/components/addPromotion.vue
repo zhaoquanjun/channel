@@ -37,10 +37,10 @@
             时，<span v-if="ruleForm.PromotionType == 1">赠送</span><span v-if="ruleForm.PromotionType == 2">优惠</span>
             <el-input class="condition-item-input-width" v-model="list.PromotionMonths" :disabled="isChange"></el-input>
             <span v-if="ruleForm.PromotionType == 1">个月服务时长。</span><span v-if="ruleForm.PromotionType == 2">个月价钱。</span>
-            <el-button v-if="ruleForm.PromotionDetailsEntityList.length > 1" @click="deletePromotionDetail(list)" type="text" size="small">删除</el-button>
+            <el-button v-if="ruleForm.PromotionDetailsEntityList.length > 1" @click="deletePromotionDetail(list)" type="text" size="small" :disabled="isChange">删除</el-button>
           </div>
           <div class="promotion-condition-add">
-            <el-button @click="ruleForm.PromotionDetailsEntityList.push({ServiceMonths:''})" type="text" size="small">添加</el-button>
+            <el-button @click="ruleForm.PromotionDetailsEntityList.push({ServiceMonths:''})" type="text" size="small" :disabled="isChange">添加</el-button>
           </div>
         </div>
       </div>

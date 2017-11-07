@@ -223,8 +223,10 @@ export default {
   padding: 3px 10px;
   margin: 0 3px;
   height: 36px;
+  font-size: 14px;
   border: 1px solid #8391a5;
   background-color: #fff;
+  -moz-appearance: textfield;
 }
 .serve-month .readonly-class {
   background-color: #eef1f6;

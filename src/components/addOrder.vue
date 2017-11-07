@@ -343,7 +343,11 @@ export default {
       signkey: {},
       pickerOptions: {
         disabledDate(time) {
-          return time.getTime() < Date.now() - 8.64e7
+          console.log(time, 'pickerOptions')
+          var date = new Date()
+          var day = date.getDate()
+          var timeStart = Date.now() - 8.64e7 * day
+          return time.getTime() < timeStart
         }
       }
     }
@@ -517,8 +521,14 @@ export default {
         console.log('bb')
         var datestart = new Date(this.postData.ServiceStart)
         var dateend = new Date(this.postData.ServiceEnd)
+        if (datestart.getTime() > dateend.getTime()) {
+          alert('开始账期不能超过结束账期')
+          this.postData.ContractAmount = 0
+          return
+        }
         console.log(dateend, datestart, 'month')
-        var startMonth = (dateend.getMonth() - datestart.getMonth()) + 1
+        var startMonth = (dateend.getYear() - datestart.getYear()) * 12 + ((dateend.getMonth() - datestart.getMonth()) + 1)
+        // var startMonth = (dateend.getMonth() - datestart.getMonth()) + 1
         console.log(startMonth, 'startMonth')
         this.postData.ContractAmount = (400 - 200) * startMonth
         console.log(this.postData.ContractAmount)

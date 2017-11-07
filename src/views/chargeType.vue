@@ -9,7 +9,7 @@
       <el-button v-if="record.showSave" @click="cancelItem(record)" type="text" size="small">取消</el-button>
       <el-button v-if="!record.showSave" @click="deleteItem(record)" type="text" size="small">删除</el-button>
     </div>
-    <div class="charge-border"></div>
+    <div v-if="records.length" class="charge-border"></div>
     <el-form :inline="true">
       <el-form-item label="">
         <el-input v-model="record"></el-input>
@@ -43,6 +43,7 @@ export default {
             res.data[i].showSave = false
           }
           this.records = res.data
+          console.log(this.records)
         }
       })
     },

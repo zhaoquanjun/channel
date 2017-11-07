@@ -58,11 +58,11 @@
     </el-table-column>
     <el-table-column prop="CreateDate" label="退单日期" :formatter="StatusDate" min-width="115">
     </el-table-column>
-    <el-table-column prop="IsInvoice" label="已开发票">
+    <el-table-column prop="IsInvoice" label="已开发票" width="130">
     </el-table-column>
-    <el-table-column prop="InvoiceId" label="发票申请编号" min-width="120">
+    <el-table-column prop="InvoiceId" label="发票申请编号" width="130">
     </el-table-column>
-    <el-table-column prop="BLAmount" label="订单可开金额" min-width="120">
+    <el-table-column prop="BLAmount" label="订单可开票金额" width="140">
     </el-table-column>
     <el-table-column label="操作" width="80">
       <template scope="scope">
