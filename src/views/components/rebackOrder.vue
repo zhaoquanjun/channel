@@ -107,7 +107,7 @@ export default {
       })
     },
     getBackAmount() {
-      this.ruleForm.BackAmount = this.ruleForm.SurplusAmount - this.ruleForm.RebateAmount || ''
+      this.ruleForm.BackAmount = this.ruleForm.SurplusAmount - this.ruleForm.RebateAmount || 0
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -158,6 +158,9 @@ export default {
             if (this.backReason[i].id === this.ruleForm.BackReason) {
               this.ruleForm.BackReason = this.backReason[i].name
             }
+          }
+          if (!this.ruleForm.BackAmount) {
+            this.ruleForm.BackAmount = 0
           }
           console.log(this.ruleForm)
           chargebackorder(this.ruleForm).then(res => {
