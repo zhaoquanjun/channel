@@ -38,6 +38,8 @@
     </el-form>
   </div>
   <el-table :data="tableData" border style="width: 100%">
+    <el-table-column prop="PartitionName" label="大区" width="120">
+    </el-table-column>
     <el-table-column prop="ProvinceName" label="省" width="120">
     </el-table-column>
     <el-table-column prop="CityName" label="市" width="120">
