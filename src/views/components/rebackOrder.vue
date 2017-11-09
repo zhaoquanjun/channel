@@ -42,9 +42,13 @@
         <el-input v-model="ruleForm.RebateAmount"  @blur="getBackAmount" :readonly="isView"></el-input>
       </el-form-item>
       <el-form-item v-if="showCommissionAmount" label="一代提成：" required>
-        <el-input v-model="ruleForm.CommissionAmount" :readonly="isView"></el-input>
+        <el-input v-model="ruleForm.CommissionAmount" :readonly="isView" @blur="getBackAmount"></el-input>
       </el-form-item>
-      <el-form-item label="退款金额：">
+      <el-form-item v-if="showCommissionAmount" label="退款金额：">
+        <el-input v-model="ruleForm.BackAmount" readonly></el-input>
+        <span v-if="!isView" style="color: red">（剩余服务费-扣除返点+一代提成=退款金额）</span>
+      </el-form-item>
+      <el-form-item v-if="!showCommissionAmount" label="退款金额：">
         <el-input v-model="ruleForm.BackAmount" readonly></el-input>
         <span v-if="!isView" style="color: red">（剩余服务费-扣除返点=退款金额）</span>
       </el-form-item>
@@ -75,7 +79,9 @@ export default {
     return {
       dialogFormVisible: true,
       params: {},
-      ruleForm: {},
+      ruleForm: {
+        BackAmount: ''
+      },
       backReason: [
         {name: '信息填写错误，退单重提'},
         {name: '账目问题，无法做账'},
@@ -107,7 +113,13 @@ export default {
       })
     },
     getBackAmount() {
-      this.ruleForm.BackAmount = this.ruleForm.SurplusAmount - this.ruleForm.RebateAmount || ''
+      console.log(this.showCommissionAmount, 'this.showCommissionAmount')
+      if (this.showCommissionAmount) {
+        // console.log(this.ruleForm.CommissionAmount, 'this.ruleForm.CommissionAmount')
+        this.ruleForm.BackAmount = (parseFloat(this.ruleForm.SurplusAmount) || 0) - (parseFloat(this.ruleForm.RebateAmount) || 0) + (parseFloat(this.ruleForm.CommissionAmount) || 0)
+      } else {
+        this.ruleForm.BackAmount = this.ruleForm.SurplusAmount - this.ruleForm.RebateAmount || 0
+      }
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -158,6 +170,9 @@ export default {
             if (this.backReason[i].id === this.ruleForm.BackReason) {
               this.ruleForm.BackReason = this.backReason[i].name
             }
+          }
+          if (!this.ruleForm.BackAmount) {
+            this.ruleForm.BackAmount = 0
           }
           console.log(this.ruleForm)
           chargebackorder(this.ruleForm).then(res => {
