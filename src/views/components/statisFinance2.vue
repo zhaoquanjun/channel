@@ -64,8 +64,8 @@
     </el-table-column>
     <el-table-column prop="ContractNO" label="合同编号" width="200">
     </el-table-column>
-    <el-table-column prop="ContractDate" label="签订日期" :formatter="StatusDate" width="120">
-    </el-table-column>
+    <!-- <el-table-column prop="ContractDate" label="签订日期" :formatter="StatusDate" width="120">
+    </el-table-column> -->
     <el-table-column prop="ServiceStart" label="开始记账日期" :formatter="StatusDate" width="130">
     </el-table-column>
     <el-table-column prop="ServiceCycle" label="服务期间（月）" width="140">
