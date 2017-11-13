@@ -131,20 +131,40 @@ export default {
       window.open(url)
       // alert(index)
     },
+    // downloadColumn(row, column, cell) {
+    //   var channelid = row.ChannelId
+    //   var startdate = this.params.startdate
+    //   var enddate = this.params.enddate
+    //   var url = ''
+    //   var Param = `?channelid=${channelid || ''}&startdate=${startdate || ''}&enddate=${enddate || ''}`
+    //   if (cell.cellIndex === 6) {
+    //     url = '/api/dataanalysis/exportbeforehandlist' + Param
+    //   } else if (cell.cellIndex === 7) {
+    //     url = '/api/dataanalysis/exporttoformallist' + Param
+    //   } else {
+    //     return
+    //   }
+    //   window.open(url)
+    // },
     downloadColumn(row, column, cell) {
       var channelid = row.ChannelId
       var startdate = this.params.startdate
       var enddate = this.params.enddate
-      var url = ''
-      var Param = `?channelid=${channelid || ''}&startdate=${startdate || ''}&enddate=${enddate || ''}`
+      var obj = {
+        title: '',
+        channelid: channelid,
+        startdate: startdate,
+        enddate: enddate
+      }
       if (cell.cellIndex === 6) {
-        url = '/api/dataanalysis/exportbeforehandlist' + Param
+        obj.title = '预提单明细表'
+        this.$router.push({name: 'LZviewDetails', query: obj})
       } else if (cell.cellIndex === 7) {
-        url = '/api/dataanalysis/exporttoformallist' + Param
+        obj.title = '转正式单明细表'
+        this.$router.push({name: 'LZviewDetails', query: obj})
       } else {
         return
       }
-      window.open(url)
     },
     handleStatus(row) {
       // console.log(row)

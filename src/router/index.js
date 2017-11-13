@@ -39,6 +39,9 @@ import StatisOutwork from '@/views/statisOutwork' // 外勤数据管理
 import ChargeType from '@/views/chargeType' // 充值类型设置
 import PromotionType from '@/views/promotionType' // 活动类型设置
 import Chargeback from '@/views/chargeback' // 退单记录
+import YJViewDetails from '@/views/YJviewDetails' // 业绩数据管理-预提单&&零申报查看明细
+import XFViewDetails from '@/views/XFviewDetails' // 续费数据管理-查看明细
+import LZViewDetails from '@/views/LZViewDetails' // 流转数据管理-查看明细
 
 Vue.use(Router)
 const router = new Router({
@@ -196,6 +199,18 @@ const router = new Router({
       name: 'main.statis_outwork',
       path: 'statis_outwork',
       component: StatisOutwork
+    }, {
+      name: 'YJviewDetails',
+      path: 'YJ-viewDetails',
+      component: YJViewDetails
+    }, {
+      name: 'XFviewDetails',
+      path: 'XF-viewDetails',
+      component: XFViewDetails
+    }, {
+      name: 'LZviewDetails',
+      path: 'LZ-viewDetails',
+      component: LZViewDetails
     }]
   }, {
     path: '/login',

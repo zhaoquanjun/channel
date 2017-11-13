@@ -156,15 +156,18 @@ export default {
       var channelid = row.ChannelId
       var startdate = this.params.startdate
       var enddate = this.params.enddate
-      var iscustomers = 1
-      var url = ''
-      var Param = `?iscustomers=1&channelid=${channelid || ''}&startdate=${startdate || ''}&enddate=${enddate || ''}&iscustomers=${iscustomers}`
+      var obj = {
+        title: '零申报明细表',
+        channelid: channelid,
+        startdate: startdate,
+        enddate: enddate,
+        iscustomers: 1
+      }
       if (cell.cellIndex === 6) {
-        url = '/api/download/getzeroorders' + Param
+        this.$router.push({name: 'YJviewDetails', query: obj})
       } else {
         return
       }
-      window.open(url)
     },
     handleStatus(row) {
       // console.log(row)

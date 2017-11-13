@@ -135,11 +135,10 @@ export default {
         }
         // sums[index] = '<a>' + sums[index] + ''
       })
-
       return sums
     },
     downloadSum(index) {
-      console.log(this.params, 'this.params')
+      console.log('合计下载')
       var {
         status,
         startdate,
@@ -157,24 +156,57 @@ export default {
       window.open(url)
       // alert(index)
     },
+    // downloadColumn(row, column, cell) {
+    //   console.log('列下载')
+    //   // console.log(arguments, 'arguments')
+    //   // 不同列下载东西不一样
+    //   // console.log(cell.cellIndex)
+    //   var channelid = row.ChannelId
+    //   // console.log(AccountId)
+    //   var startdate = this.params.startdate
+    //   var enddate = this.params.enddate
+    //   var url = ''
+    //   var Param = `?channelid=${channelid || ''}&startdate=${startdate || ''}&enddate=${enddate || ''}`
+    //   if (cell.cellIndex === 10) {
+    //     url = '/api/download/getreserveorders' + Param
+    //   } else if (cell.cellIndex === 14) {
+    //     url = '/api/download/getzeroorders' + Param
+    //   } else {
+    //     return
+    //   }
+    //   window.open(url)
+    // },
     downloadColumn(row, column, cell) {
-      // console.log(arguments, 'arguments')
-      // 不同列下载东西不一样
-      // console.log(cell.cellIndex)
+      console.log('列下载')
       var channelid = row.ChannelId
-      // console.log(AccountId)
       var startdate = this.params.startdate
       var enddate = this.params.enddate
-      var url = ''
-      var Param = `?channelid=${channelid || ''}&startdate=${startdate || ''}&enddate=${enddate || ''}`
+      var obj = {
+        title: '',
+        channelid: channelid,
+        startdate: startdate,
+        enddate: enddate
+      }
+      console.log(obj, 'obj')
       if (cell.cellIndex === 10) {
-        url = '/api/download/getreserveorders' + Param
+        obj.title = '预提单明细表'
+        this.$router.push({name: 'YJviewDetails', query: obj})
       } else if (cell.cellIndex === 14) {
-        url = '/api/download/getzeroorders' + Param
+        obj.title = '零申报明细表'
+        this.$router.push({name: 'YJviewDetails', query: obj})
       } else {
         return
       }
-      window.open(url)
+      // var url = ''
+      // var Param = `?channelid=${channelid || ''}&startdate=${startdate || ''}&enddate=${enddate || ''}`
+      // if (cell.cellIndex === 10) {
+      //   url = '/api/download/getreserveorders' + Param
+      // } else if (cell.cellIndex === 14) {
+      //   url = '/api/download/getzeroorders' + Param
+      // } else {
+      //   return
+      // }
+      // window.open(url)
     },
     handleStatus(row) {
       // console.log(row)

@@ -135,22 +135,45 @@ export default {
       window.open(url)
       // alert(index)
     },
+    // downloadColumn(row, column, cell) {
+    //   var channelid = row.ChannelId
+    //   var startdate = this.params.startdate
+    //   var enddate = this.params.enddate
+    //   var url = ''
+    //   var Param = `?channelid=${channelid || ''}&startdate=${startdate || ''}&enddate=${enddate || ''}`
+    //   if (cell.cellIndex === 6) {
+    //     url = '/api/dataanalysis/exportzerolist' + Param
+    //   } else if (cell.cellIndex === 7) {
+    //     url = '/api/dataanalysis/exporttolittlelist' + Param
+    //   } else if (cell.cellIndex === 8) {
+    //     url = '/api/dataanalysis/exportzerotoformallist' + Param
+    //   } else {
+    //     return
+    //   }
+    //   window.open(url)
+    // },
     downloadColumn(row, column, cell) {
       var channelid = row.ChannelId
       var startdate = this.params.startdate
       var enddate = this.params.enddate
-      var url = ''
-      var Param = `?channelid=${channelid || ''}&startdate=${startdate || ''}&enddate=${enddate || ''}`
+      var obj = {
+        title: '',
+        channelid: channelid,
+        startdate: startdate,
+        enddate: enddate
+      }
       if (cell.cellIndex === 6) {
-        url = '/api/dataanalysis/exportzerolist' + Param
+        obj.title = '零申报明细表'
+        this.$router.push({name: 'LZviewDetails', query: obj})
       } else if (cell.cellIndex === 7) {
-        url = '/api/dataanalysis/exporttolittlelist' + Param
+        obj.title = '零申报转小规模明细表'
+        this.$router.push({name: 'LZviewDetails', query: obj})
       } else if (cell.cellIndex === 8) {
-        url = '/api/dataanalysis/exportzerotoformallist' + Param
+        obj.title = '零申报转一般纳税人明细表'
+        this.$router.push({name: 'LZviewDetails', query: obj})
       } else {
         return
       }
-      window.open(url)
     },
     handleStatus(row) {
       // console.log(row)

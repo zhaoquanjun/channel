@@ -731,9 +731,39 @@ export const getStatisOrders = params => {
     params: params
   }).then(res => res.data)
 }
+// 业绩管理--订单统计--预提单下载查看详情
+export const ytdDetails = params => {
+  return axios.get(`${base}/dataanalysis/getreserveorders`, {
+    params: params
+  }).then(res => res.data)
+}
+// 业绩管理--订单统计--零申报下载查看详情
+export const zsbDetails = params => {
+  return axios.get(`${base}/dataanalysis/getzeroorders`, {
+    params: params
+  }).then(res => res.data)
+}
 // 业绩管理-续费管理
 export const getStatisRenew = params => {
   return axios.get(`${base}/report/getreordersnum`, {
+    params: params
+  }).then(res => res.data)
+}
+// 续费管理--到期客户数下载查看详情
+export const dqDetails = params => {
+  return axios.get(`${base}/dataanalysis/getexpireorderdetails`, {
+    params: params
+  }).then(res => res.data)
+}
+// 续费管理--未续费客户数下载查看详情
+export const wxfdDetails = params => {
+  return axios.get(`${base}/dataanalysis/getnoreorderdetails`, {
+    params: params
+  }).then(res => res.data)
+}
+// 续费管理--已续费客户数下载查看详情
+export const yxfDetails = params => {
+  return axios.get(`${base}/dataanalysis/getreorderdetails`, {
     params: params
   }).then(res => res.data)
 }
@@ -752,6 +782,48 @@ export const getStatisZeroTonoZero = params => {
 // 流转数据管理--小规模转一般纳税人统计
 export const getStatisCompany1to2 = params => {
   return axios.get(`${base}/dataanalysis/littletoformal`, {
+    params: params
+  }).then(res => res.data)
+}
+// 流转数据管理--预提单转正式订单--预提单数量下载查看详情
+export const LZytdDetails = params => {
+  return axios.get(`${base}/dataanalysis/getbeforehandlist`, {
+    params: params
+  }).then(res => res.data)
+}
+// 流转数据管理--预提单转正式订单--转正式订单数量数量下载查看详情
+export const LZzzsDetails = params => {
+  return axios.get(`${base}/dataanalysis/gettoformallist`, {
+    params: params
+  }).then(res => res.data)
+}
+// 流转数据管理--零申报转非零申报--零申报下载查看详情
+export const LZzsbDetails = params => {
+  return axios.get(`${base}/dataanalysis/getzerolist`, {
+    params: params
+  }).then(res => res.data)
+}
+// 流转数据管理--零申报转非零申报--转小规模下载查看详情
+export const LZzToxgmDetails = params => {
+  return axios.get(`${base}/dataanalysis/gettolittlelist`, {
+    params: params
+  }).then(res => res.data)
+}
+// 流转数据管理--零申报转非零申报--转一般纳税人下载查看详情
+export const LZzToybDetails = params => {
+  return axios.get(`${base}/dataanalysis/getzerotoformallist`, {
+    params: params
+  }).then(res => res.data)
+}
+// 流转数据管理--小规模转一般纳税人--小规模下载查看详情
+export const LZlittleDetails = params => {
+  return axios.get(`${base}/dataanalysis/getlittlelist`, {
+    params: params
+  }).then(res => res.data)
+}
+// 流转数据管理--小规模转一般纳税人--小规模转一般纳税人下载查看详情
+export const LZxToybDetails = params => {
+  return axios.get(`${base}/dataanalysis/getlittletoformallist`, {
     params: params
   }).then(res => res.data)
 }

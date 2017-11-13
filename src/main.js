@@ -3,6 +3,7 @@
 import 'normalize.css/normalize.css'
 import 'element-ui/lib/theme-default/index.css'
 import '../static/main.css'
+import 'font-awesome/css/font-awesome.css'
 import Vue from 'vue'
 import App from './App'
 import router from './router'

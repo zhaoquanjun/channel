@@ -125,22 +125,41 @@ export default {
       window.open(url)
       // alert(index)
     },
+    // downloadColumn(row, column, cell) {
+    //   var channelid = row.ChannelId
+    //   var year = this.params.year
+    //   var months = this.params.months
+    //   var url = ''
+    //   var Param = `?channelid=${channelid || ''}&year=${year || ''}&months=${months || ''}`
+    //   if (cell.cellIndex === 6) {
+    //     url = '/api/download/getexpireorderdetails' + Param
+    //   } else if (cell.cellIndex === 7) {
+    //     url = '/api/download/getnoreorderdetails' + Param
+    //   } else if (cell.cellIndex === 8) {
+    //     url = '/api/download/getreorderdetails' + Param
+    //   } else {
+    //     return
+    //   }
+    //   window.open(url)
+    // },
     downloadColumn(row, column, cell) {
-      var channelid = row.ChannelId
-      var year = this.params.year
-      var months = this.params.months
-      var url = ''
-      var Param = `?channelid=${channelid || ''}&year=${year || ''}&months=${months || ''}`
+      var obj = {
+        channelid: row.ChannelId,
+        year: this.params.year,
+        months: this.params.months
+      }
       if (cell.cellIndex === 6) {
-        url = '/api/download/getexpireorderdetails' + Param
+        obj.title = '到期客户明细'
+        this.$router.push({name: 'XFviewDetails', query: obj})
       } else if (cell.cellIndex === 7) {
-        url = '/api/download/getnoreorderdetails' + Param
+        obj.title = '未续费客户明细'
+        this.$router.push({name: 'XFviewDetails', query: obj})
       } else if (cell.cellIndex === 8) {
-        url = '/api/download/getreorderdetails' + Param
+        obj.title = '续费客户明细'
+        this.$router.push({name: 'XFviewDetails', query: obj})
       } else {
         return
       }
-      window.open(url)
     },
     handleStatus(row) {
       // console.log(row)
