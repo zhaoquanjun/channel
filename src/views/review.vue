@@ -67,6 +67,7 @@ import {
 } from '../api/api'
 import Refuse from '../components/refuse'
 import AddOrder from '../components/addOrder'
+import AddOrder2 from '../components/addOrder2'
 import Dialog from '../service/dialog'
 import bus from '../bus'
 export default {
@@ -155,7 +156,7 @@ export default {
     },
     viewOrder(row) { // 查看订单传递订单id
       orderTitle(row.OrderId).then(res => {
-        Dialog(AddOrder, {
+        Dialog(AddOrder2, {
           postData: res.data,
           channelid: row.ChannelId
         })

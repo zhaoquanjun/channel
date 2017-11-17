@@ -6,6 +6,7 @@ import '../static/main.css'
 import 'font-awesome/css/font-awesome.css'
 import Vue from 'vue'
 import App from './App'
+import Plugins from './plugins/install'
 import router from './router'
 import axios from 'axios'
 import ElementUI from 'element-ui'
@@ -14,7 +15,7 @@ import _ from 'lodash'
 import tableSum from './service/tableSum'
 
 Vue.use(Vuex)
-
+Vue.use(Plugins)
 Vue.prototype.$ajax = axios
 
 Vue.use(ElementUI)
