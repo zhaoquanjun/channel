@@ -45,9 +45,9 @@ function buildKey(type, fileName) {
   return gObjectName
 }
 
-export default function(file) {
+export default function(file, type = 1) {
   var formData = new FormData()
-  var key = buildKey(1, file.name)
+  var key = buildKey(type, file.name)
   var url = uploadUrl + '/' + key
   formData.append('key', key)
   for (var k in signkey) {
@@ -59,11 +59,12 @@ export default function(file) {
     type: 'POST',
     data: formData,
     processData: false,
-    contentType: false,
-    dataType: 'JSON'
+    contentType: false
   }).then(function (res) {
-    console.log(res, 'res')
+    res = res === '' ? { status: 200 } : res
     res['sourceUrl'] = url
     return res
+  }, function (err) {
+    return err
   })
 }

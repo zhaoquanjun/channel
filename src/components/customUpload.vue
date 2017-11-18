@@ -6,20 +6,25 @@
     </div>
     <p class="ng-binding">
       <span class="required"></span>
-      请上传清晰的身份证人像面，图片大小不要超过1M
+      {{title}}
     </p>
   </div>
 </template>
 <script>
+  import Viewer from 'viewerjs'
   export default {
     props: {
       uploader: Function,
-      value: String
+      value: String,
+      title: String,
+      uploaded: Function
     },
     mounted () {
       var _self = this
+
       var ele = $(this.$el)
       ele.find('.upload-area').hover(function (e) {
+        if (ele.attr('disabled')) return
         if (_self.value) {
           ele.find('.upload-area span').show()
           ele.find('.upload-area span').removeClass().addClass('enter')
@@ -34,7 +39,8 @@
       })
 
       ele.find('.upload-area').click(function (e) {
-        if (this.path) {
+        if (ele.attr('disabled')) return
+        if (_self.value) {
           if (e.target.tagName.toUpperCase() === 'SPAN') {
             ele.find('input[type=file]').trigger('click')
           }
@@ -44,7 +50,6 @@
       })
       if (this.value) {
         this.appendImg(this.value)
-        // ele.find('.upload-area').css({'background': 'url(' + ngModel.$viewValue + ') 0 0 / 100% 100% no-repeat'})
       } else {
         ele.find('.upload-area span').hide()
       }
@@ -62,40 +67,33 @@
           return
         }
         ele.find('.upload-area').append('<div class="upload-shadow"></div><i class="fa fa-spinner fa-pulse" aria-hidden="true"></i>')
-
         _self.$ossUploader(file).then(function (res) {
-          console.log(res)
           if (res.status === 200) {
-            console.log(res.config.data instanceof FormData)
             ele.find('.upload-area .upload-shadow, .upload-area i').remove()
             _self.appendImg(res.sourceUrl)
-            // ngModel.$setViewValue(res.sourceUrl)
+            _self.$emit('input', res.sourceUrl)
+            _self.uploaded && _self.uploaded()
           } else {
             alert('上传失败')
           }
-        }, function () {
-          alert('上传失败')
         })
       })
     },
     methods: {
       appendImg (src) {
+        var _self = this
         var ele = $(this.$el)
         ele.find('.upload-area img')[0] ? ele.find('.upload-area img').prop('src', src) : ele.find('.upload-area').append('<img src="' + src + '"  />')
-        // ele.find('.upload-area img').viewer({
-        //   navbar: false,
-        //   title:false,
-        //   url: 'url',
-        //   built: function() {
-        //     var container = $(this).next()
-        //     var that= this
-        //     container.find('.viewer-canvas').on('click',function(e){
-        //         if(e.target.tagName.toUpperCase() !=="IMG")
-        //         $(that).viewer('hide')
-        //     })
-        //     $('body').append(container)
-        //   }
-        // })
+        this.viewer = new Viewer(this.$el.querySelector('img'), {
+          navbar: false,
+          title: false,
+          zIndex: 9999,
+          view: function () {
+            document.onclick = function (e) {
+              if (e.target.className === 'viewer-canvas') _self.viewer.hide()
+            }
+          }
+        })
       }
     }
   }
@@ -114,6 +112,10 @@
   .img-upload-container
     width: 400px
     text-align: center
+    .required
+      &:before
+        color: red;
+        content: '*';
     p
       margin-top: 10px
       font-size: 16px
