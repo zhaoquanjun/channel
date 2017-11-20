@@ -2,34 +2,13 @@
   <div>
     <el-dialog title='订单查看' :visible.sync='dialogFormVisible' size='mini'>
       <div class='container add-order-container'>
-        <el-form ref='form' :rules='rules' :model='form' label-width='180px'>
+        <el-form ref='postData' :rules='rules' :model='postData' label-width='180px'>
           <div>
-            <el-row>
-              <el-col :span='24'>
-                <el-form-item label='账户余额：'>
-                  <span style='color: red;'>￥48600</span>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span='24'>
-                <el-form-item label='销售：'>
-                  <el-select v-model='value' placeholder='请选择'>
-                    <el-option
-                      v-for='item in options'
-                      :key='item.value'
-                      :label='item.label'
-                      :value='item.value'>
-                    </el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col>
-            </el-row>
-
-            <el-form-item label-width='100px'>
-              <el-checkbox v-model='checked'>预提单</el-checkbox>
-            </el-form-item>
-
+            <p ng-if="postData.OrderId" class="form-control-static">
+              销售：{{postData.SalerName}} 订单号：{{postData.OrderId}} 所属公司：{{postData.ChannelName}} 提单员：{{postData.BillName}}
+              <span v-if="postData.Category != 1" style="color:red">预提单</span>
+              <span v-if="postData.FreChangeOrderId" style="color:red">企业性质变更</span>
+            </p>
             <div class='gray-line'></div>
 
             <div class='add-order-title'>
@@ -38,46 +17,36 @@
 
             <div class='custom-tips mb-10'>
               <i class='fa fa-exclamation-circle' aria-hidden='true'></i>
-              <span>【温馨提示】支持对二代居民身份证的关键字段识别。上传身份证后，即可自动读取并带出姓名、身份证号等信息。</span>
+              <span v-if="postData.Category == 2">【温馨提示】支持对二代居民身份证的关键字段识别。上传身份证后，即可自动读取并带出姓名、身份证号等信息。</span>
+              <span v-else>【温馨提示】可根据客户在国家企业信息公示系统的链接地址，快速完成工商信息的录入。</span>
             </div>
 
             <el-row>
               <el-col :span='12'>
-                <el-form-item label='公司名称：' prop='name'>
-                  <el-autocomplete
-                    class='company-search'
-                    v-model='form.state2'
-                    :fetch-suggestions='querySearch'
-                    placeholder='请输入内容'
-                    :trigger-on-focus='false'
-                    @select='handleSelect'
-                  >
-                    <template slot='append'>快速录入</template>
-                  </el-autocomplete>
+                <el-form-item label='公司名称：' required>
+                  <el-input class='company-search' v-model='postData.Customer.Name' :readonly="!modify"></el-input>
+                  <el-button v-if="modify" type="primary" class="company-alert" @click="getCompanyInfo">同步官方</el-button>
                 </el-form-item>
               </el-col>
               <el-col :span='12'>
                 <el-form-item label='所在城市：'>
-                  <el-select v-model='value' placeholder='请选择'>
-                    <el-option
-                      v-for='item in options'
-                      :key='item.value'
-                      :label='item.label'
-                      :value='item.value'>
+                  <el-select v-model="postData.Customer.CityCode" placeholder='请选择' :disabled="!modify">
+                    <el-option v-for="item in citys" :key="item.CityCode" :label="item.CityName" :value="item.CityCode">
                     </el-option>
                   </el-select>
                 </el-form-item>
               </el-col>
             </el-row>
+
             <el-row>
               <el-col :span='12'>
-                <el-form-item label='联系人：' prop='name'>
-                  <el-input v-model='form.name'></el-input>
+                <el-form-item label='联系人：'>
+                  <el-input v-model='postData.Customer.Contacts' :readonly="!modify"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span='12'>
                 <el-form-item label='手机号：'>
-                  <el-input v-model='form.name'></el-input>
+                  <el-input v-model='postData.Customer.Mobile' :readonly="!modify"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -88,30 +57,35 @@
 
             <el-row>
               <el-col :span='12'>
-                <custom-upload v-model='path' :uploaded="uploaded" title='请上传清晰的身份证人像面，图片大小不要超过1M' disabled='disabled'></custom-upload>
-                <custom-upload v-model='path2' :uploaded="uploaded" title='请上传清晰的营业执照，图片大小不要超过1M' class='mt-30'></custom-upload>
+                <custom-upload v-model='postData.Customer.PersonCardPath' :uploaded="uploaded" title='请上传清晰的身份证人像面，图片大小不要超过1M' :disabled="!modify"></custom-upload>
+                <custom-upload v-model='postData.Customer.BusinessLicense' :uploaded="uploaded" title='请上传清晰的营业执照，图片大小不要超过1M' class='mt-30' :disabled="!modify"></custom-upload>
               </el-col>
               <el-col :span='12'>
-                <el-form-item label='法人姓名：' prop='name'>
-                  <el-input v-model='form.name'></el-input>
+                <el-form-item label='法人姓名：' required>
+                  <el-input v-model='postData.Customer.LegalPerson' :readonly="!modify"></el-input>
                 </el-form-item>
-                <el-form-item label='法人身份证号：' prop='name'>
-                  <el-input v-model='form.name'></el-input>
+                <el-form-item label='法人身份证号：' required>
+                  <el-input v-model='postData.Customer.PersonCardID' :readonly="!modify"></el-input>
                 </el-form-item>
-                <el-form-item label='公司住所：' prop='name'>
-                  <el-input v-model='form.name'></el-input>
+                <el-form-item label='公司住所：' required>
+                  <el-input v-model='postData.Customer.Address' :readonly="!modify"></el-input>
                 </el-form-item>
-                <el-form-item label='社会统一信用代码：' prop='name'>
-                  <el-input v-model='form.name'></el-input>
+                <el-form-item label='社会统一信用代码：' required>
+                  <el-input v-model='postData.Customer.RegNO' :readonly="!modify"></el-input>
                 </el-form-item>
-                <el-form-item label='营业期限：' prop='name'>
-                  <el-input v-model='form.name'></el-input>
+                <el-form-item label='营业期限：' required>
+                  <el-date-picker width="100" v-model="postData.Customer.RegisterDate" type="date" placeholder="开始日期" :readonly="!modify">
+                  </el-date-picker>
+                  <span>-</span>
+                  <el-date-picker v-if="postData.Customer.NoDeadLine === 0" v-model="postData.Customer.BusnissDeadline" type="date" placeholder="结束日期" :readonly="!modify">
+                  </el-date-picker>
+                  <el-checkbox v-if="postData.Customer.NoDeadLine === 1" v-model="checked" :disabled="!modify">无限期</el-checkbox>
                 </el-form-item>
-                <el-form-item label='注册资金：' prop='name'>
-                  <el-input v-model='form.name'></el-input>
+                <el-form-item label='注册资金：' required>
+                  <el-input v-model='postData.Customer.RegisteredCapital' :readonly="!modify"></el-input>
                 </el-form-item>
-                <el-form-item label='经营范围：' prop='name'>
-                  <el-input type='textarea' v-model='form.name' :rows=8></el-input>
+                <el-form-item label='经营范围：' required>
+                  <el-input type='textarea' v-model='postData.Customer.BusinessScope' :rows=8 :readonly="!modify"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -122,27 +96,79 @@
 
             <el-row>
               <el-col :span='12'>
-                <el-form-item label='合同编号：' prop='name'>
-                  <el-input v-model='form.name'></el-input>
+                <el-form-item label='合同编号：' required>
+                  <el-input v-model='postData.ContractNO' :readonly="!modify"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span='12'>
                 <el-form-item label='纳税人类别：' prop='name'>
-                  <el-radio-group v-model='form.type'>
-                    <el-radio label='小规模'></el-radio>
-                    <el-radio label='一般纳税人'></el-radio>
+                  <el-radio-group v-model="postData.Customer.AddedValue">
+                    <el-radio label='1' :disabled="!modify">小规模</el-radio>
+                    <el-radio label='2' :disabled="!modify">一般纳税人</el-radio>
                   </el-radio-group>
                 </el-form-item>
               </el-col>
             </el-row>
 
-            <el-form-item label='社经营范围：' prop='name'>
-              <el-input type='textarea' v-model='form.name'></el-input>
+            <el-row>
+              <el-col>
+                <el-form-item v-if="postData.FreChangeOrderId" label='套餐类型：' prop='name'>
+                  <div class="price-type">产品变更</div>
+                </el-form-item>
+                <el-form-item v-else label='套餐类型：' required>
+                  <div>
+                    <span class="price-type">
+                      {{prices.PriceName}}
+                    </span>
+                    <span v-if="postData.GiftTypeName">{{postData.GiftTypeName + '(￥' + postData.GiftPrice + ')'}}</span>
+                    <span v-if="postData.IsPromotion" style="color:red">{{postData.Promotion.PromotionName}}</span>
+                  </div>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-row>
+              <el-col :span='12'>
+                <el-form-item label='开始账期：' required>
+                  <el-date-picker v-if="modify && !postData.FreChangeOrderId && postData.IsChange === 0 && postData.IsChanging === '0'" v-model="postData.ServiceStart" type="month" @change="setServiceEnd" :clearable="false"></el-date-picker>
+                  <el-date-picker v-if="modify && postData.FreChangeOrderId && postData.IsChange === 0 && postData.IsChanging === '0'" v-model="postData.ServiceStart" type="month" @change="setServiceEnd" :disabled="postData.Status === 2" :picker-options="pickerOptions" :clearable="false"></el-date-picker>
+                  <el-date-picker v-if="modify && (postData.IsChange === 1 || postData.IsChanging === '1')" v-model="postData.ServiceStart" type="month" @change="setServiceEnd" readonly></el-date-picker>
+                  <el-date-picker v-if="!modify" v-model="postData.ServiceStart" type="month" readonly></el-date-picker>
+                </el-form-item>
+              </el-col>
+              <el-col :span='12'>
+                <el-form-item label='结束账期：' required>
+                  <el-date-picker v-model="postData.ServiceEnd" type="month" :readonly="!modify"></el-date-picker>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-row>
+              <el-col>
+                <el-form-item label='合同金额：' required>
+                  <el-input v-model='postData.ContractAmount' :readonly="!modify"></el-input>
+                </el-form-item>
+                <div style="padding-left:180px;color:red;margin-top: -10px;margin-bottom: 10px;">注:合同金额根据所属城市、公司性质和付款方式自动计算，不包含礼包价格。</div>
+              </el-col>
+            </el-row>
+
+            <el-row>
+              <el-col>
+                <el-form-item label='合同照片：'>
+                  <div class="img-style" v-for="img in imgs">
+                    <img :src="img">
+                  </div>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-form-item label='备注'>
+              <el-input type='textarea' v-model='postData.Remark' :readonly="!modify"></el-input>
             </el-form-item>
 
             <div style='float: right; margin-top: 20px;'>
-              <el-button icon='el-icon-arrow-left' @click="dialogFormVisible = false">取消</el-button>
-              <el-button type='warning' @click="submitForm('form')">保存</el-button>
+              <el-button type="primary" @click="dialogFormVisible = false">关闭</el-button>
+              <el-button v-if="modify" type='primary' @click="submitForm('form')">保存</el-button>
             </div>
 
           </div>
@@ -152,44 +178,24 @@
   </div>
 </template>
 <script>
+  import {
+    citybychannel,
+    cityprice
+    // getChannelGift,
+    // modifyOrders,
+    // urlsignkey
+} from '../api/api'
   import customUpload from '@/components/customUpload'
   export default {
     props: ['postData', 'modify', 'channelid'],
     data () {
       return {
         dialogFormVisible: true,
-        restaurants: [],
-        form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: '',
-          state2: ''
-        },
-        path: 'https://pilipa.oss-cn-beijing.aliyuncs.com/FileUploads/Order/CardID/201711/GQYAxBRFr2.png',
-        path2: '',
-        options: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }],
-        value: '',
-        checked: false,
+        citys: '',
+        checked: true, // 营业时间无限期是否
+        prices: {},
+        allprices: [],
+        imgs: [],
         rules: {
           name: [
             { required: true, message: '请输入活动名称', trigger: 'blur' },
@@ -225,9 +231,40 @@
       customUpload
     },
     mounted () {
-      this.restaurants = this.loadAll()
+      if (this.postData.Customer.NoDeadLine === 0) {
+        this.checked = false
+      } else if (this.postData.Customer.NoDeadLine === 1) {
+        this.checked = true
+      }
+      if (this.postData.Customer.BusnissDeadline.substr(0, 4) === '0001') {
+        this.postData.Customer.BusnissDeadline = ''
+      }
+      this.postData.Customer.AddedValue = this.postData.Customer.AddedValue + ''
+      this.imgs = this.postData.ContractPath ? this.postData.ContractPath.split(';') : []
+      this.getCitybychannel()
+      this.getCityPrice()
     },
     methods: {
+      getCitybychannel() {
+        citybychannel().then(res => {
+          this.citys = res.data
+        })
+      },
+      getCityPrice() {
+        const _ = window._
+        var cityCode = this.postData.Customer.CityCode
+        var channelid = this.channelid
+        var ischeck = 1
+        cityprice(cityCode, channelid, ischeck).then(res => {
+          console.log(res, 'res')
+          this.allprices = res.data
+          if (this.postData.FreChangeOrderId) return
+          const price = _.find(res.data, { Id: +this.postData.PayType })
+          console.log(price)
+          this.prices = price
+          console.log()
+        })
+      },
       submitForm (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -240,83 +277,19 @@
       },
       uploaded () {
         // alert('上传完毕')
-      },
-      querySearch (queryString, cb) {
-        var restaurants = this.restaurants
-        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
-        // 调用 callback 返回建议列表的数据
-        cb(results)
-      },
-      createFilter (queryString) {
-        return (restaurant) => {
-          return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
-        }
-      },
-      loadAll() {
-        return [
-          { 'value': '三全鲜食（北新泾店）', 'address': '长宁区新渔路144号' },
-          { 'value': 'Hot honey 首尔炸鸡（仙霞路）', 'address': '上海市长宁区淞虹路661号' },
-          { 'value': '新旺角茶餐厅', 'address': '上海市普陀区真北路988号创邑金沙谷6号楼113' },
-          { 'value': '泷千家(天山西路店)', 'address': '天山西路438号' },
-          { 'value': '胖仙女纸杯蛋糕（上海凌空店）', 'address': '上海市长宁区金钟路968号1幢18号楼一层商铺18-101' },
-          { 'value': '贡茶', 'address': '上海市长宁区金钟路633号' },
-          { 'value': '豪大大香鸡排超级奶爸', 'address': '上海市嘉定区曹安公路曹安路1685号' },
-          { 'value': '茶芝兰（奶茶，手抓饼）', 'address': '上海市普陀区同普路1435号' },
-          { 'value': '十二泷町', 'address': '上海市北翟路1444弄81号B幢-107' },
-          { 'value': '星移浓缩咖啡', 'address': '上海市嘉定区新郁路817号' },
-          { 'value': '阿姨奶茶/豪大大', 'address': '嘉定区曹安路1611号' },
-          { 'value': '新麦甜四季甜品炸鸡', 'address': '嘉定区曹安公路2383弄55号' },
-          { 'value': 'Monica摩托主题咖啡店', 'address': '嘉定区江桥镇曹安公路2409号1F，2383弄62号1F' },
-          { 'value': '浮生若茶（凌空soho店）', 'address': '上海长宁区金钟路968号9号楼地下一层' },
-          { 'value': 'NONO JUICE  鲜榨果汁', 'address': '上海市长宁区天山西路119号' },
-          { 'value': 'CoCo都可(北新泾店）', 'address': '上海市长宁区仙霞西路' },
-          { 'value': '快乐柠檬（神州智慧店）', 'address': '上海市长宁区天山西路567号1层R117号店铺' },
-          { 'value': 'Merci Paul cafe', 'address': '上海市普陀区光复西路丹巴路28弄6号楼819' },
-          { 'value': '猫山王（西郊百联店）', 'address': '上海市长宁区仙霞西路88号第一层G05-F01-1-306' },
-          { 'value': '枪会山', 'address': '上海市普陀区棕榈路' },
-          { 'value': '纵食', 'address': '元丰天山花园(东门) 双流路267号' },
-          { 'value': '钱记', 'address': '上海市长宁区天山西路' },
-          { 'value': '壹杯加', 'address': '上海市长宁区通协路' },
-          { 'value': '唦哇嘀咖', 'address': '上海市长宁区新泾镇金钟路999号2幢（B幢）第01层第1-02A单元' },
-          { 'value': '爱茜茜里(西郊百联)', 'address': '长宁区仙霞西路88号1305室' },
-          { 'value': '爱茜茜里(近铁广场)', 'address': '上海市普陀区真北路818号近铁城市广场北区地下二楼N-B2-O2-C商铺' },
-          { 'value': '鲜果榨汁（金沙江路和美广店）', 'address': '普陀区金沙江路2239号金沙和美广场B1-10-6' },
-          { 'value': '开心丽果（缤谷店）', 'address': '上海市长宁区威宁路天山路341号' },
-          { 'value': '超级鸡车（丰庄路店）', 'address': '上海市嘉定区丰庄路240号' },
-          { 'value': '妙生活果园（北新泾店）', 'address': '长宁区新渔路144号' },
-          { 'value': '香宜度麻辣香锅', 'address': '长宁区淞虹路148号' },
-          { 'value': '凡仔汉堡（老真北路店）', 'address': '上海市普陀区老真北路160号' },
-          { 'value': '港式小铺', 'address': '上海市长宁区金钟路968号15楼15-105室' },
-          { 'value': '蜀香源麻辣香锅（剑河路店）', 'address': '剑河路443-1' },
-          { 'value': '北京饺子馆', 'address': '长宁区北新泾街道天山西路490-1号' },
-          { 'value': '饭典*新简餐（凌空SOHO店）', 'address': '上海市长宁区金钟路968号9号楼地下一层9-83室' },
-          { 'value': '焦耳·川式快餐（金钟路店）', 'address': '上海市金钟路633号地下一层甲部' },
-          { 'value': '动力鸡车', 'address': '长宁区仙霞西路299弄3号101B' },
-          { 'value': '浏阳蒸菜', 'address': '天山西路430号' },
-          { 'value': '四海游龙（天山西路店）', 'address': '上海市长宁区天山西路' },
-          { 'value': '樱花食堂（凌空店）', 'address': '上海市长宁区金钟路968号15楼15-105室' },
-          { 'value': '壹分米客家传统调制米粉(天山店)', 'address': '天山西路428号' },
-          { 'value': '福荣祥烧腊（平溪路店）', 'address': '上海市长宁区协和路福泉路255弄57-73号' },
-          { 'value': '速记黄焖鸡米饭', 'address': '上海市长宁区北新泾街道金钟路180号1层01号摊位' },
-          { 'value': '红辣椒麻辣烫', 'address': '上海市长宁区天山西路492号' },
-          { 'value': '(小杨生煎)西郊百联餐厅', 'address': '长宁区仙霞西路88号百联2楼' },
-          { 'value': '阳阳麻辣烫', 'address': '天山西路389号' },
-          { 'value': '南拳妈妈龙虾盖浇饭', 'address': '普陀区金沙江路1699号鑫乐惠美食广场A13' }
-        ]
-      },
-      handleSelect (item) {
-        console.log(item)
       }
     }
   }
 </script>
 <style lang='stylus' scoped>
   .container
-    width: 1200px
+    width: 1100px
     margin-bottom: 20px
     overflow: hidden
     .company-search
-      width: 300px !important
+      width: auto !important
+      .company-alert
+        float: left
     .gray-line
       height: 1px
       width: 100%
@@ -343,6 +316,30 @@
       color: #1b9bfc
       font-size: 14px
       padding: 0px 10px
+    .price-type
+      display: inline-block
+      background-color: #fff
+      border-color: #1b9bfc
+      border-radius: 4px;
+      color: #1f2d3d
+      cursor: pointer
+      width: 80px
+      text-align: center
+      height: 34px
+      line-height: 34px
+      background: #20a0ff
+    .img-style
+      width: 110px
+      height: 85px
+      line-height: 85px
+      float: left
+      line-height: 75px
+      text-align: center
+      position: relative
+      margin: 0 5px
+      img
+        width: 100px
+        height: 75px
   .mb-10
     margin-bottom: 10px
   .mt-30
@@ -350,6 +347,8 @@
 </style>
 <style lang='stylus'>
   .add-order-container
+  .el-date-editor.el-input
+    width: 120px
     form
       input, textarea
         width: 300px

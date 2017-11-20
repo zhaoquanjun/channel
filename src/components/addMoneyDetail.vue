@@ -31,7 +31,7 @@ import {
   rechargeDetail,
   orderTitle
 } from '../api/api'
-import AddOrder from './addOrder'
+import AddOrder from './addOrder2'
 import Dialog from '../service/dialog.js'
 export default {
   props: ['type', 'channelId'],

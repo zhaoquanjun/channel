@@ -57,7 +57,7 @@ import {
   agents,
   orderTitle
 } from '../api/api'
-import AddOrder from '../components/addOrder'
+import AddOrder from '../components/addOrder2'
 import Dialog from '../service/dialog.js'
 export default {
   data: function() {

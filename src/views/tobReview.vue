@@ -72,7 +72,7 @@ import {
 } from '../api/api'
 import Dialog from '../service/dialog.js'
 import Refuse from '../components/refuse.vue'
-import AddOrder from '../components/addOrder.vue'
+import AddOrder from '../components/addOrder2.vue'
 import bus from '../bus'
 export default {
   name: 'tobReview',

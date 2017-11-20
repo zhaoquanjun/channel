@@ -264,57 +264,6 @@ import {
 } from '../api/api'
 import ImageUploader from '@/components/imageUploader.vue'
 
-// const promotionMap = {
-//   1: {
-//     priceFn: function (price) {
-//       return price
-//     },
-//     serviceFn: function (payType) {
-//       var map = {
-//         6: 1,
-//         12: 2
-//       }
-//       return map[payType] || 0
-//     },
-//     validPayType: [6, 12]
-//   },
-//   2: {
-//     priceFn: function (price) {
-//       return 0
-//     },
-//     serviceFn: function (payType) {
-//       return 0
-//     },
-//     validPayType: [3]
-//   },
-//   3: {
-//     priceFn: function (price, payType) {
-//       return price + -(price / 6)
-//     },
-//     serviceFn: function (payType) {
-//       return 0
-//     },
-//     validPayType: [6, 12]
-//   },
-//   4: {
-//     priceFn: function (price, payType) {
-//       return price
-//     },
-//     serviceFn: function (payType) {
-//       return 3
-//     },
-//     validPayType: [12]
-//   },
-//   5: {
-//     priceFn: function (price, payType) {
-//       return price
-//     },
-//     serviceFn: function (payType) {
-//       return 3
-//     },
-//     validPayType: [12]
-//   }
-// }
 export default {
   props: ['postData', 'modify', 'channelid'],
   data() {
