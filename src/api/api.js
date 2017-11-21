@@ -360,6 +360,14 @@ export const backO = params => {
 export const deleteSearch = (OrderId) => {
   return axios.delete(`${base}/orders/${OrderId}`).then(res => res.data)
 }
+// 订单查询--修改同步官方工商信息
+export const getcustomerupdatebygs = params => {
+  return axios.get(`${base}/order/getcustomerupdatebygs?word= ${params}`).then(res => res.data)
+}
+// 订单查询--修改上传识别身份证
+export const getpersoncardbypath = params => {
+  return axios.get(`${base}/order/getpersoncardbypath?path= ${params}`).then(res => res.data)
+}
 // 订单审核--审核回退
 export const rebackSearch = (OrderId) => {
   return axios.put(`${base}/orderauditback?orderid=${OrderId}`).then(res => res.data)

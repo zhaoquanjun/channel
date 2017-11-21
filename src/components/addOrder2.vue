@@ -2,7 +2,7 @@
   <div>
     <el-dialog title='订单查看' :visible.sync='dialogFormVisible' size='mini'>
       <div class='container add-order-container'>
-        <el-form ref='postData' :rules='rules' :model='postData' label-width='180px'>
+        <el-form ref='postData' :model='postData' label-width='180px'>
           <div>
             <p ng-if="postData.OrderId" class="form-control-static">
               销售：{{postData.SalerName}} 订单号：{{postData.OrderId}} 所属公司：{{postData.ChannelName}} 提单员：{{postData.BillName}}
@@ -29,7 +29,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span='12'>
-                <el-form-item label='所在城市：'>
+                <el-form-item label='所在城市：' required>
                   <el-select v-model="postData.Customer.CityCode" placeholder='请选择' :disabled="!modify">
                     <el-option v-for="item in citys" :key="item.CityCode" :label="item.CityName" :value="item.CityCode">
                     </el-option>
@@ -40,12 +40,12 @@
 
             <el-row>
               <el-col :span='12'>
-                <el-form-item label='联系人：'>
+                <el-form-item label='联系人：' required>
                   <el-input v-model='postData.Customer.Contacts' :readonly="!modify"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span='12'>
-                <el-form-item label='手机号：'>
+                <el-form-item label='手机号：' required>
                   <el-input v-model='postData.Customer.Mobile' :readonly="!modify"></el-input>
                 </el-form-item>
               </el-col>
@@ -57,8 +57,8 @@
 
             <el-row>
               <el-col :span='12'>
-                <custom-upload v-model='postData.Customer.PersonCardPath' :uploaded="uploaded" title='请上传清晰的身份证人像面，图片大小不要超过1M' :disabled="!modify"></custom-upload>
-                <custom-upload v-model='postData.Customer.BusinessLicense' :uploaded="uploaded" title='请上传清晰的营业执照，图片大小不要超过1M' class='mt-30' :disabled="!modify"></custom-upload>
+                <custom-upload v-model='postData.Customer.PersonCardPath' :uploaded="uploaded1" title='请上传清晰的身份证人像面，图片大小不要超过1M' :disabled="!modify"></custom-upload>
+                <custom-upload v-model='postData.Customer.BusinessLicense' title='请上传清晰的营业执照，图片大小不要超过1M' class='mt-30' :disabled="!modify"></custom-upload>
               </el-col>
               <el-col :span='12'>
                 <el-form-item label='法人姓名：' required>
@@ -74,12 +74,12 @@
                   <el-input v-model='postData.Customer.RegNO' :readonly="!modify"></el-input>
                 </el-form-item>
                 <el-form-item label='营业期限：' required>
-                  <el-date-picker width="100" v-model="postData.Customer.RegisterDate" type="date" placeholder="开始日期" :readonly="!modify">
+                  <el-date-picker width="100" v-model="postData.Customer.RegisterDate" type="date" placeholder="开始日期" :clearable="false" :readonly="!modify">
                   </el-date-picker>
                   <span>-</span>
-                  <el-date-picker v-if="postData.Customer.NoDeadLine === 0" v-model="postData.Customer.BusnissDeadline" type="date" placeholder="结束日期" :readonly="!modify">
+                  <el-date-picker v-if="postData.Customer.NoDeadLine === 0 || modify" v-model="postData.Customer.BusnissDeadline" type="date" placeholder="结束日期" :clearable="false" :readonly="!modify || ShowBusnissDeadline">
                   </el-date-picker>
-                  <el-checkbox v-if="postData.Customer.NoDeadLine === 1" v-model="checked" :disabled="!modify">无限期</el-checkbox>
+                  <el-checkbox v-if="postData.Customer.NoDeadLine === 1 || modify" v-model="checked" :disabled="!modify" @change="BusnissDeadlineCanBeChoose">无限期</el-checkbox>
                 </el-form-item>
                 <el-form-item label='注册资金：' required>
                   <el-input v-model='postData.Customer.RegisteredCapital' :readonly="!modify"></el-input>
@@ -103,8 +103,8 @@
               <el-col :span='12'>
                 <el-form-item label='纳税人类别：' prop='name'>
                   <el-radio-group v-model="postData.Customer.AddedValue">
-                    <el-radio label='1' :disabled="!modify">小规模</el-radio>
-                    <el-radio label='2' :disabled="!modify">一般纳税人</el-radio>
+                    <el-radio label='1' :disabled="true">小规模</el-radio>
+                    <el-radio label='2' :disabled="true">一般纳税人</el-radio>
                   </el-radio-group>
                 </el-form-item>
               </el-col>
@@ -146,7 +146,7 @@
             <el-row>
               <el-col>
                 <el-form-item label='合同金额：' required>
-                  <el-input v-model='postData.ContractAmount' :readonly="!modify"></el-input>
+                  <el-input v-model='postData.ContractAmount' readonly></el-input>
                 </el-form-item>
                 <div style="padding-left:180px;color:red;margin-top: -10px;margin-bottom: 10px;">注:合同金额根据所属城市、公司性质和付款方式自动计算，不包含礼包价格。</div>
               </el-col>
@@ -155,8 +155,13 @@
             <el-row>
               <el-col>
                 <el-form-item label='合同照片：'>
-                  <div class="img-style" v-for="img in imgs">
+                  <!-- <div class="img-style" v-for="img in imgs">
                     <img :src="img">
+                  </div> -->
+                  <div class="file-upload-area">
+                    <div v-for="(img, index) in imgs" :class="index == imgs.length - 1 ? 'file-upload-area-button' : 'file-upload-area-img-item'">
+                      <img-upl type="5" v-model='imgs[index]' :sign-key="signkey" :isClose="true" :sign-list="index == imgs.length - 1" @input="imgs.push({})" @delete="imgs.splice(index,1)"></img-upl>
+                    </div>
                   </div>
                 </el-form-item>
               </el-col>
@@ -168,7 +173,7 @@
 
             <div style='float: right; margin-top: 20px;'>
               <el-button type="primary" @click="dialogFormVisible = false">关闭</el-button>
-              <el-button v-if="modify" type='primary' @click="submitForm('form')">保存</el-button>
+              <el-button v-if="modify" type='primary' @click="submitForm('postData')">保存</el-button>
             </div>
 
           </div>
@@ -180,12 +185,16 @@
 <script>
   import {
     citybychannel,
-    cityprice
-    // getChannelGift,
-    // modifyOrders,
-    // urlsignkey
+    cityprice,
+    getpersoncardbypath,
+    modifyOrders,
+    getChannelGift,
+    urlsignkey
 } from '../api/api'
+  import Dialog from '@/service/dialog.js'
+  import CompanyInfo from '@/views/components/companyInfo'
   import customUpload from '@/components/customUpload'
+  import ImageUploader from '@/components/imageUploader.vue'
   export default {
     props: ['postData', 'modify', 'channelid'],
     data () {
@@ -195,31 +204,9 @@
         checked: true, // 营业时间无限期是否
         prices: {},
         allprices: [],
-        imgs: [],
-        rules: {
-          name: [
-            { required: true, message: '请输入活动名称', trigger: 'blur' },
-            { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-          ],
-          region: [
-            { required: true, message: '请选择活动区域', trigger: 'change' }
-          ],
-          date1: [
-            { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-          ],
-          date2: [
-            { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
-          ],
-          type: [
-            { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
-          ],
-          resource: [
-            { required: true, message: '请选择活动资源', trigger: 'change' }
-          ],
-          desc: [
-            { required: true, message: '请填写活动形式', trigger: 'blur' }
-          ]
-        }
+        imgs: [{}],
+        ShowBusnissDeadline: true,
+        signkey: {}
       }
     },
     watch: {
@@ -228,7 +215,8 @@
       }
     },
     components: {
-      customUpload
+      customUpload,
+      imgUpl: ImageUploader
     },
     mounted () {
       if (this.postData.Customer.NoDeadLine === 0) {
@@ -243,8 +231,56 @@
       this.imgs = this.postData.ContractPath ? this.postData.ContractPath.split(';') : []
       this.getCitybychannel()
       this.getCityPrice()
+      this.getChannelGift()
+      this.BusnissDeadlineCanBeChoose()
+      this.getsignkey()
     },
     methods: {
+      getChannelGift() {
+        const addedvalue = this.postData.Customer.AddedValue
+        getChannelGift({
+          ChannelId: this.postData.ChannelId
+        }).then(res => {
+          const _ = window._
+          this.allgifts = res.data
+          this.gifts = _.filter(res.data, item => item.AddedValue === addedvalue)
+        })
+      },
+      BusnissDeadlineCanBeChoose() { // 判断营业期限是无限期的时候 结束账期不能选择
+        if (this.checked) {
+          this.postData.Customer.BusnissDeadline = ''
+          this.ShowBusnissDeadline = true
+        } else {
+          this.ShowBusnissDeadline = false
+        }
+        console.log(this.checked, 'checked')
+      },
+      getCompanyInfo() { // 同步官方
+        Dialog(CompanyInfo, {}).then(res => {
+          console.log(res, 'res')
+          if (!res) {
+            this.$message({
+              message: '抱歉，没有检索到企业信息，请重试或手动录入！',
+              type: 'warning'
+            })
+          } else {
+            this.postData.Customer.IsSync = 1
+            this.postData.Customer.Name = res.CompanyName
+            this.postData.Customer.Address = res.Address
+            this.postData.Customer.BusinessScope = res.BusinessScope
+            this.postData.Customer.BusnissDeadline = new Date(res.BusnissDeadline)
+            if (this.postData.Customer.LegalPerson && this.postData.Customer.LegalPerson !== res.LegalPerson) {
+              this.postData.Customer.LegalPerson = res.LegalPerson
+              this.postData.Customer.PersonCardID = ''
+            } else {
+              this.postData.Customer.LegalPerson = res.LegalPerson
+            }
+            this.postData.Customer.RegNO = res.RegNO
+            this.postData.Customer.RegisterDate = new Date(res.RegisterDate)
+            this.postData.Customer.RegisteredCapital = res.RegisteredCapital
+          }
+        })
+      },
       getCitybychannel() {
         citybychannel().then(res => {
           this.citys = res.data
@@ -265,18 +301,225 @@
           console.log()
         })
       },
+      setContractAmount() {
+        if (this.postData.FreChangeOrderId) { // 企业性质变更时候重新根据开始账期结算合同金额差额
+          console.log('bb')
+          var datestart = new Date(this.postData.ServiceStart)
+          var dateend = new Date(this.postData.ServiceEnd)
+          if (datestart.getTime() > dateend.getTime()) {
+            alert('开始账期不能超过结束账期')
+            this.postData.ContractAmount = 0
+            return
+          }
+          console.log(dateend, datestart, 'month')
+          var startMonth = (dateend.getYear() - datestart.getYear()) * 12 + ((dateend.getMonth() - datestart.getMonth()) + 1)
+          // var startMonth = (dateend.getMonth() - datestart.getMonth()) + 1
+          console.log(startMonth, 'startMonth')
+          this.postData.ContractAmount = (400 - 200) * startMonth
+          console.log(this.postData.ContractAmount)
+        }
+      },
+      setServiceEnd() {
+        console.log('aaa')
+        if (this.postData.FreChangeOrderId) {
+          this.setContractAmount()
+        }
+        const _ = window._
+        if (!this.postData.ServiceStart) return
+        if (!this.postData.PayType) return
+        if (this.postData.FreChangeOrderId) return
+        console.log(this.postData)
+        var payType = _.find(this.allprices, item => {
+          return item.Id === +this.postData.PayType
+        })
+        if (!payType) return
+        console.log(payType, 'payType')
+        let addMonth = payType.ServiceMonths
+        let giftAndPromotionMonth = 0
+        console.log(this.allgifts, 'this.allgifts')
+        var res = _.filter(this.allgifts, {
+          'AddedValue': +this.postData.Customer.AddedValue,
+          'GiftTypeId': +this.postData.GiftTypeId
+        })
+        console.log(res, 'res')
+        // const gift = _.find(this.gifts, item => {
+        //   return item.GiftTypeId === +this.postData.GiftTypeId
+        // })
+        // console.log(gift, 'gift')
+        if (res && res[0]) {
+          // addMonth = addMonth + gift.MonthNum
+          giftAndPromotionMonth = giftAndPromotionMonth + res[0].MonthNum
+        }
+        if (this.postData.Promotion && this.postData.IsPromotion && this.postData.Promotion.PromotionType === 1) {
+          // addMonth += promotionMap[this.postData.IsPromotion].serviceFn()
+          var p = this.postData.Promotion.PromotionDetailsEntityList
+          for (let i in p) {
+            if (p[i].ServiceMonths === 0 && payType.IsZero === 1) {
+              giftAndPromotionMonth += p[i].PromotionMonths
+            }
+            if (p[i].ServiceMonths === addMonth && payType.IsZero !== 1) {
+              // addMonth += p[i].PromotionMonths
+              giftAndPromotionMonth += p[i].PromotionMonths
+              // break
+            }
+          }
+        }
+        console.log(giftAndPromotionMonth, 'giftAndPromotionMonth')
+        addMonth += giftAndPromotionMonth
+        console.log(addMonth, 'addMonth')
+        const date = new Date(this.postData.ServiceStart)
+        const enddate = new Date(date.setMonth(date.getMonth() + addMonth - 1))
+
+        this.postData.ServiceEnd = enddate.format('yyyy-MM')
+      },
+      rules (postData) {
+        if (!postData.Customer.Name) {
+          this.$message({
+            message: '请填写公司名称',
+            type: 'warning'
+          })
+          return
+        }
+        if (!postData.Customer.Contacts) {
+          this.$message({
+            message: '请填写联系人',
+            type: 'warning'
+          })
+          return
+        }
+        if (!postData.Customer.Mobile) {
+          this.$message({
+            message: '请填写手机号',
+            type: 'warning'
+          })
+          return
+        }
+        if (!postData.Customer.LegalPerson) {
+          this.$message({
+            message: '请填写法人姓名',
+            type: 'warning'
+          })
+          return
+        }
+        if (!postData.Customer.PersonCardID) {
+          this.$message({
+            message: '请填写法人身份证号',
+            type: 'warning'
+          })
+          return
+        }
+        if (!postData.Customer.PersonCardPath) {
+          this.$message({
+            message: '请上传法人身份证',
+            type: 'warning'
+          })
+          return
+        }
+        if (!postData.Customer.Address) {
+          this.$message({
+            message: '请填写公司住所',
+            type: 'warning'
+          })
+          return
+        }
+        if (!postData.Customer.LocalTaxNO) {
+          this.$message({
+            message: '请填写社会统一信用代码',
+            type: 'warning'
+          })
+          return
+        }
+        if (!postData.Customer.NoDeadLine && !postData.Customer.BusnissDeadline) {
+          this.$message({
+            message: '请填写营业期限',
+            type: 'warning'
+          })
+          return
+        }
+        if (!postData.Customer.RegisteredCapital) {
+          this.$message({
+            message: '请填写注册资金',
+            type: 'warning'
+          })
+          return
+        }
+        if (!postData.Customer.BusinessScope) {
+          this.$message({
+            message: '请填写经验范围',
+            type: 'warning'
+          })
+          return
+        }
+        if (!postData.Customer.BusinessLicense) {
+          this.$message({
+            message: '请上传营业执照',
+            type: 'warning'
+          })
+          return
+        }
+        if (!postData.ContractNO) {
+          this.$message({
+            message: '请填写合同编号',
+            type: 'warning'
+          })
+          return
+        }
+      },
       submitForm (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!')
+            console.log(this.postData)
+            this.rules(this.postData)
+            this.postData = window._.extend(this.postData, this.postData.Customer)
+            modifyOrders(this.postData.OrderId, this.postData).then(res => {
+              if (res.status) {
+                this.$message.info('保存成功!')
+                this.dialogFormVisible = false
+                this.$emit('done')
+              } else {
+                this.$message.error(res.message)
+              }
+            })
           } else {
-            console.log('error submit!!')
             return false
           }
         })
       },
-      uploaded () {
-        // alert('上传完毕')
+      uploaded1 () {
+        console.log(this.postData.Customer.PersonCardPath)
+        var path = this.postData.Customer.PersonCardPath
+        getpersoncardbypath(path).then(res => {
+          console.log(res)
+          if (res.status && res.data) {
+            if (this.postData.Customer.IsSync && this.postData.Customer.LegalPerson && this.postData.Customer.LegalPerson === res.data.LegalPerson) {
+              this.postData.Customer.PersonCardID = res.data.PersonCardID
+            } else if (this.postData.Customer.IsSync && this.postData.Customer.LegalPerson && this.postData.Customer.LegalPerson !== res.data.LegalPerson) {
+              this.$message({
+                message: '身份证上的法人姓名与营业执照上的法人不符',
+                type: 'warning'
+              })
+            } else {
+              this.postData.Customer.LegalPerson = res.data.LegalPerson
+              this.postData.Customer.PersonCardID = res.data.PersonCardID
+            }
+          } else if (res.status && !res.data) {
+            this.postData.Customer.PersonCardPath = ''
+            this.$message({
+              message: '请上传清晰的身份证人像面',
+              type: 'warning'
+            })
+          }
+        })
+      },
+      getsignkey() {
+        urlsignkey().then((res) => {
+          delete res.data.Filename
+          delete res.data.key
+          delete res.data.callback
+          delete res.data.expire
+          delete res.data.Host
+          this.signkey = res.data
+        })
       }
     }
   }
@@ -364,4 +607,19 @@
         color: white
         border: none
         cursor: pointer
+</style>
+<style scoped>
+.file-upload-area {
+  overflow: hidden;
+}
+.file-upload-area-img-item {
+  float: left;
+  width: 120px;
+  height: 70px;
+  padding: 10px 10px 10px 0;
+}
+
+.file-upload-area-button {
+  clear: both;
+}
 </style>

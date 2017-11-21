@@ -4,9 +4,6 @@
     <div>
       <label>销售员：</label>
       <span v-if="postData.OrderId" v-text="postData.SalerName"></span>
-      <!-- <select v-if="!postData.OrderId" v-model="postData.SalesId">
-          <option value="{{::sale.UserId}}" v-for="sale in sales" v-text="sale.RealName"></option>
-        </select> -->
       <span>订单号：{{postData.OrderId}}</span>
       <span>所属公司：{{postData.ChannelName}}</span>
       <span>提单人：{{postData.BillName}}</span>
