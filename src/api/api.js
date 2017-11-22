@@ -352,6 +352,11 @@ export const agents = params => {
 export const passO = (OrderId) => {
   return axios.put(`${base}/orders/audit/${OrderId}`).then(res => res.data)
 }
+export const CheckIsConnectDate = params => {
+  return axios.get(`${base}/order/CheckIsConnectDate`, {
+    params: params
+  }).then(res => res.data)
+}
 // 订单审核--驳回 && 订单注册审核--驳回 && 记账审核--驳回
 export const backO = params => {
   return axios.put(`${base}/orders/back`, params).then(res => res.data)

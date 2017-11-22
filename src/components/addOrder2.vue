@@ -224,11 +224,23 @@
       } else if (this.postData.Customer.NoDeadLine === 1) {
         this.checked = true
       }
+      if (this.postData.Customer.RegisterDate.substr(0, 4) === '0001') {
+        this.postData.Customer.RegisterDate = ''
+      }
       if (this.postData.Customer.BusnissDeadline.substr(0, 4) === '0001') {
         this.postData.Customer.BusnissDeadline = ''
       }
+      if (this.postData.ServiceStart.substr(0, 4) === '0001') {
+        this.postData.ServiceStart = ''
+      }
+      if (this.postData.ServiceEnd.substr(0, 4) === '0001') {
+        this.postData.ServiceEnd = ''
+      }
       this.postData.Customer.AddedValue = this.postData.Customer.AddedValue + ''
-      this.imgs = this.postData.ContractPath ? this.postData.ContractPath.split(';') : []
+      console.log(this.postData.ContractPath, 'this.postData.ContractPath')
+      this.imgs = this.postData.ContractPath ? this.postData.ContractPath.split(';') : [{}]
+      this.imgs.push({})
+      console.log(this.imgs, 'imgs')
       this.getCitybychannel()
       this.getCityPrice()
       this.getChannelGift()
@@ -422,7 +434,7 @@
           })
           return
         }
-        if (!postData.Customer.LocalTaxNO) {
+        if (!postData.Customer.RegNO) {
           this.$message({
             message: '请填写社会统一信用代码',
             type: 'warning'
@@ -470,6 +482,12 @@
           if (valid) {
             console.log(this.postData)
             this.rules(this.postData)
+            if (this.imgs.length === 1) {
+              this.postData.ContractPath = ''
+            } else if (this.imgs.length > 1) {
+              this.imgs.pop()
+              this.postData.ContractPath = this.imgs.join(';')
+            }
             this.postData = window._.extend(this.postData, this.postData.Customer)
             modifyOrders(this.postData.OrderId, this.postData).then(res => {
               if (res.status) {
@@ -611,6 +629,8 @@
 <style scoped>
 .file-upload-area {
   overflow: hidden;
+  float: left;
+  width: 100%;
 }
 .file-upload-area-img-item {
   float: left;

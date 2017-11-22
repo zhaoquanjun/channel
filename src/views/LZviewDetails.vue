@@ -14,35 +14,35 @@
     </div>
   </div>
   <el-table :data="tableData" border style="width: 100%" height="570">
-    <el-table-column prop="PartitionName" label="大区">
+    <el-table-column prop="PartitionName" label="大区" width="50px">
     </el-table-column>
-    <el-table-column prop="ProvinceName" label="省">
+    <el-table-column prop="ProvinceName" label="省" width="70px">
     </el-table-column>
-    <el-table-column prop="CityName" label="市">
+    <el-table-column prop="CityName" label="市" width="70px">
     </el-table-column>
-    <el-table-column prop="ChannelName1" label="一级代理商">
+    <el-table-column prop="ChannelName1" label="一级代理商" min-width="150px">
     </el-table-column>
-    <el-table-column prop="ChannelName2" label="二级代理商">
+    <el-table-column prop="ChannelName2" label="二级代理商" min-width="100px">
     </el-table-column>
-    <el-table-column prop="cname" label="公司名称">
+    <el-table-column prop="cname" label="公司名称" min-width="150px">
     </el-table-column>
-    <el-table-column prop="ctype" label="公司性质">
+    <el-table-column prop="ctype" label="公司性质" width="80px">
     </el-table-column>
-    <el-table-column prop="lperson" label="法人">
+    <el-table-column prop="lperson" label="法人" width="80px">
     </el-table-column>
-    <el-table-column v-if="showDiffView === 3" prop="little" label="是否转为小规模">
+    <el-table-column v-if="showDiffView === 3" prop="little" label="是否转为小规模" width="80px">
     </el-table-column>
-    <el-table-column v-if="showDiffView === 3" prop="formal" label="是否转为一般纳税人">
+    <el-table-column v-if="showDiffView === 3" prop="formal" label="是否转为一般纳税人" width="80px">
     </el-table-column>
-    <el-table-column v-if="showDiffView === 6" prop="istoformal" label="是否转为一般纳税人">
+    <el-table-column v-if="showDiffView === 6" prop="istoformal" label="是否转为一般纳税人" width="80px">
     </el-table-column>
-    <el-table-column v-if="showDiffView === 1" prop="ischange" label="是否转为正式订单">
+    <el-table-column v-if="showDiffView === 1" prop="ischange" label="是否转为正式订单" width="80px">
     </el-table-column>
-    <el-table-column prop="CreateDate" label="提单时间">
+    <el-table-column prop="CreateDate" label="提单时间" width="100px">
     </el-table-column>
-    <el-table-column prop="ChangeDate" label="转化时间">
+    <el-table-column prop="ChangeDate" label="转化时间" width="100px">
     </el-table-column>
-    <el-table-column prop="cdays" label="转化周期（天）">
+    <el-table-column prop="cdays" label="转化周期（天）" width="80px">
     </el-table-column>
   </el-table>
 </div>

@@ -14,31 +14,31 @@
     </div>
   </div>
   <el-table :data="tableData" border style="width: 100%" height="570">
-    <el-table-column prop="PartitionName" label="大区">
+    <el-table-column prop="PartitionName" label="大区" width="80px">
     </el-table-column>
-    <el-table-column prop="ProvinceName" label="省">
+    <el-table-column prop="ProvinceName" label="省" width="90px">
     </el-table-column>
-    <el-table-column prop="CityName" label="市">
+    <el-table-column prop="CityName" label="市" width="90px">
     </el-table-column>
-    <el-table-column prop="ChannelName1" label="一级代理商">
+    <el-table-column prop="ChannelName1" label="一级代理商" min-width="150px">
     </el-table-column>
-    <el-table-column prop="ChannelName2" label="二级代理商">
+    <el-table-column prop="ChannelName2" label="二级代理商" min-width="100px">
     </el-table-column>
-    <el-table-column prop="Name" label="公司名称">
+    <el-table-column prop="Name" label="公司名称" min-width="150px">
     </el-table-column>
-    <el-table-column prop="AddedValueText" label="法人">
+    <el-table-column prop="AddedValueText" label="法人" width="100px">
     </el-table-column>
-    <el-table-column v-if="isShowZSB" prop="ServiceStart" label="开始账期">
+    <el-table-column v-if="isShowZSB" prop="ServiceStart" label="开始账期" width="115px">
     </el-table-column>
-    <el-table-column v-if="isShowZSB" prop="ServiceEnd" label="结束账期">
+    <el-table-column v-if="isShowZSB" prop="ServiceEnd" label="结束账期" width="115px">
     </el-table-column>
-    <el-table-column v-if="isShowZSB" prop="CategoryText" label="订单类型">
+    <el-table-column v-if="isShowZSB" prop="CategoryText" label="订单类型" width="100px">
     </el-table-column>
-    <el-table-column prop="ContractAmount" label="合同金额">
+    <el-table-column prop="ContractAmount" label="合同金额" width="100px">
     </el-table-column>
-    <el-table-column prop="BLAmount" label="提单金额">
+    <el-table-column prop="BLAmount" label="提单金额" width="100px">
     </el-table-column>
-    <el-table-column prop="SSAmount" label="折后金额">
+    <el-table-column prop="SSAmount" label="折后金额" width="100px">
     </el-table-column>
   </el-table>
 </div>

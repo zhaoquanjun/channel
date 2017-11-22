@@ -13,36 +13,36 @@
       </div>
     </div>
   </div>
-  <el-table :data="tableData" border style="width: 100%" height="570">
-    <el-table-column prop="PartitionName" label="大区">
+  <el-table :data="tableData" border style="width: 100%" height="560">
+    <el-table-column prop="PartitionName" label="大区" width="50px">
     </el-table-column>
-    <el-table-column prop="ProvinceName" label="省">
+    <el-table-column prop="ProvinceName" label="省" width="70px">
     </el-table-column>
-    <el-table-column prop="CityName" label="市">
+    <el-table-column prop="CityName" label="市" width="70px">
     </el-table-column>
-    <el-table-column prop="ChannelName1" label="一级代理商">
+    <el-table-column prop="ChannelName1" label="一级代理商" min-width="150px">
     </el-table-column>
-    <el-table-column prop="ChannelName2" label="二级代理商">
+    <el-table-column prop="ChannelName2" label="二级代理商" min-width="100px">
     </el-table-column>
-    <el-table-column prop="Name" label="公司名称">
+    <el-table-column prop="Name" label="公司名称" min-width="150px">
     </el-table-column>
-    <el-table-column prop="AddedValueText" label="公司性质">
+    <el-table-column prop="AddedValueText" label="公司性质" width="80px">
     </el-table-column>
-    <el-table-column prop="LegalPerson" label="法人">
+    <el-table-column prop="LegalPerson" label="法人" width="100px">
     </el-table-column>
-    <el-table-column prop="Contacts" label="联系人">
+    <el-table-column prop="Contacts" label="联系人" width="80px">
     </el-table-column>
-    <el-table-column prop="Mobile" label="联系人电话">
+    <el-table-column prop="Mobile" label="联系人电话" width="100px">
     </el-table-column>
-    <el-table-column prop="UserName" label="销售">
+    <el-table-column prop="UserName" label="销售" width="80px">
     </el-table-column>
-    <el-table-column prop="ServiceStart" label="开始账期">
+    <el-table-column prop="ServiceStart" label="开始账期" width="100px">
     </el-table-column>
-    <el-table-column prop="ServiceEnd" label="结束账期">
+    <el-table-column prop="ServiceEnd" label="结束账期" width="100px">
     </el-table-column>
-    <el-table-column v-if="showDiffView = 1" prop="IsReOrderText" label="是否续费">
+    <el-table-column v-if="showDiffView = 1" prop="IsReOrderText" label="是否续费" width="60px">
     </el-table-column>
-    <el-table-column v-if="showDiffView != 2" prop="ReOrderData" label="续费时间">
+    <el-table-column v-if="showDiffView != 2" prop="ReOrderData" label="续费时间" width="100px">
     </el-table-column>
   </el-table>
 </div>
@@ -116,7 +116,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .view-detail-1 .vheader {
   overflow: hidden;
 }
@@ -134,5 +134,9 @@ export default {
   margin: 0 10px;
   text-align: center;
   color: #20a0ff;
+}
+.view-detail-1 .el-table .cell, .el-table th>div {
+  padding: 0;
+  text-align: center;
 }
 </style>

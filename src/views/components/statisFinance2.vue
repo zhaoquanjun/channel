@@ -22,6 +22,12 @@
       <el-form-item class="form-width" label="订单编号">
         <el-input v-model="params.orderid"></el-input>
       </el-form-item>
+      <el-form-item class="form-width" label="订单类型">
+        <el-select v-model="params.Category " clearable placeholder="全部">
+          <el-option v-for="data in orderType" :key="data.Category" :label="data.name" :value="data.Category">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item class="form-width" label="是否退单">
         <el-select v-model="params.isback">
           <el-option v-for="item in isBackStatus" :key="item.status" :label="item.statusName" :value="item.status">
@@ -42,15 +48,17 @@
     </el-form>
   </div>
   <el-table :data="tableData" border style="width: 100%">
-    <el-table-column prop="ChannelName1" label="一级代理" min-width="200">
+    <el-table-column prop="ChannelName1" label="一级代理" min-width="150">
     </el-table-column>
-    <el-table-column prop="ChannelName2" label="二级代理" min-width="200">
+    <el-table-column prop="ChannelName2" label="二级代理" min-width="100">
     </el-table-column>
     <el-table-column prop="Stext" label="代理商状态">
     </el-table-column>
     <el-table-column prop="CreateDate" label="订单日期" :formatter="StatusDate" width="120">
     </el-table-column>
     <el-table-column prop="OrderId" label="订单编号" width="210">
+    </el-table-column>
+    <el-table-column prop="OrderCategoryText" label="订单类型" width="110">
     </el-table-column>
     <el-table-column prop="IsChargeBack" label="是否退单" width="110">
     </el-table-column>
@@ -101,6 +109,19 @@ export default {
         {status: 1, statusName: '是'},
         {status: 0, statusName: '否'}
       ],
+      orderType: [{
+        name: '全部',
+        Category: 0
+      }, {
+        name: '正常',
+        Category: 1
+      }, {
+        name: '预提单初审',
+        Category: 2
+      }, {
+        name: '预提单复审',
+        Category: 3
+      }],
       pagination: {
         total: 0,
         pageSize: 10,
@@ -115,7 +136,8 @@ export default {
         orderid: '',
         isback: '',
         tstart: '',
-        tend: ''
+        tend: '',
+        Category: ''
       },
       clearable: false
     }
@@ -135,6 +157,7 @@ export default {
       let isback = this.params.isback
       let tstart = this.params.tstart
       let tend = this.params.tend
+      let Category = this.params.Category
       getpaymentdetails({
         limit: limit,
         offset: offset,
@@ -145,7 +168,8 @@ export default {
         orderid: orderid,
         isback: isback,
         tstart: tstart,
-        tend: tend
+        tend: tend,
+        Category: Category
       }).then((res) => {
         // console.log(res.data)
         this.tableData = res.data

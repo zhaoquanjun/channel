@@ -63,7 +63,8 @@ import {
   review,
   agents,
   passO,
-  orderTitle
+  orderTitle,
+  CheckIsConnectDate
 } from '../api/api'
 import Refuse from '../components/refuse'
 import AddOrder from '../components/addOrder'
@@ -125,21 +126,51 @@ export default {
       })
     },
     passOrder(row) {
-      this.$confirm('您确定要通过吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        passO(row.OrderId).then(res => {
-          if (res.status) {
-            this.$message({
-              type: 'success',
-              message: '通过!'
-            })
-            this.fetchData()
+      var customerid = row.CustomerId
+      var serviceStart = row.ServiceStart
+      CheckIsConnectDate({
+        servicestart: serviceStart,
+        customerid: customerid
+      }).then((res) => {
+        if (res.status) {
+          if (!res.data) { // 账期连续
+            console.log('账期联系')
+            this.$confirm('您确定要通过吗?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              passO(row.OrderId).then(res => {
+                if (res.status) {
+                  this.$message({
+                    type: 'success',
+                    message: '通过!'
+                  })
+                  this.fetchData()
+                }
+              })
+            }).catch(() => {})
+          } else if (res.data) {
+            var errorMsg = res.data
+            console.log(errorMsg, 'errorMsg')
+            this.$confirm(errorMsg, '提示', {
+              confirmButtonText: '确定通过',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              passO(row.OrderId).then(res => {
+                if (res.status) {
+                  this.$message({
+                    type: 'success',
+                    message: '通过!'
+                  })
+                  this.fetchData()
+                }
+              })
+            }).catch(() => {})
           }
-        })
-      }).catch(() => {})
+        }
+      })
     },
     refuseOrder(row) {
       var item = {
