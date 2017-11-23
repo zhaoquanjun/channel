@@ -187,17 +187,17 @@ export default {
   width: 217px;
 }
 
-.file-upload-area {
+.content .file-upload-area {
   overflow: hidden;
 }
-.file-upload-area-img-item {
+.content .file-upload-area-img-item {
   float: left;
   width: 120px;
   height: 70px;
   padding: 10px 10px 10px 0;
 }
 
-.file-upload-area-button {
+.content .file-upload-area-button {
   clear: both;
 }
 

@@ -108,6 +108,7 @@ import {
 } from '@/api/api'
 import Dialog from '../service/dialog.js'
 import AddOrder from '../components/addOrder2.vue'
+import ZCAddOrder from '@/components/ZCaddOrder'
 import Refuse from '../components/refuse.vue'
 import RebackOrder from '@/views/components/rebackOrder'
 import bus from '../bus'
@@ -222,10 +223,17 @@ export default {
       // console.log(row.ChannelId)
       orderTitle(row.OrderId).then(res => {
         postData = res.data
-        Dialog(AddOrder, {
-          postData: postData,
-          channelid: row.ChannelId
-        })
+        if (postData.Category === 2) {
+          Dialog(ZCAddOrder, {
+            postData: postData,
+            channelid: row.ChannelId
+          })
+        } else {
+          Dialog(AddOrder, {
+            postData: postData,
+            channelid: row.ChannelId
+          })
+        }
       })
     },
     modify(row) {
@@ -235,11 +243,19 @@ export default {
         if (Number(postData.Customer.NoDeadLine) === 1) {
           postData.Customer.BusnissDeadline = ''
         }
-        Dialog(AddOrder, {
-          postData: postData,
-          modify: true,
-          channelid: row.ChannelId
-        }).then(res => this.fetchData())
+        if (postData.Category === 2) {
+          Dialog(ZCAddOrder, {
+            postData: postData,
+            modify: true,
+            channelid: row.ChannelId
+          }).then(res => this.fetchData())
+        } else {
+          Dialog(AddOrder, {
+            postData: postData,
+            modify: true,
+            channelid: row.ChannelId
+          }).then(res => this.fetchData())
+        }
       })
     },
     deleteOrder(row) {
