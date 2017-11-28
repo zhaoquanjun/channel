@@ -30,16 +30,16 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item label='法人姓名：' required>
-                  <el-input v-model='postData.Customer.LegalPerson' :readonly="!modify"></el-input>
+                  <el-input v-model='postData.Customer.LegalPerson' :readonly="!modify" :maxlength="20"></el-input>
                 </el-form-item>
                 <el-form-item label='法人身份证号：' required>
-                  <el-input v-model='postData.Customer.PersonCardID' :readonly="!modify"></el-input>
+                  <el-input v-model='postData.Customer.PersonCardID' :readonly="!modify" :maxlength="18"></el-input>
                 </el-form-item>
                 <el-form-item label='联系人：' required>
-                  <el-input v-model='postData.Customer.Contacts' :readonly="!modify"></el-input>
+                  <el-input v-model='postData.Customer.Contacts' :readonly="!modify" :maxlength="10"></el-input>
                 </el-form-item>
                 <el-form-item label='手机号：' required>
-                  <el-input v-model='postData.Customer.Mobile' :readonly="!modify"></el-input>
+                  <el-input v-model='postData.Customer.Mobile' :readonly="!modify" :maxlength="11"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -75,6 +75,7 @@
                       {{prices.PriceName}}
                     </span>
                     <span v-if="postData.GiftTypeName">{{postData.GiftTypeName + '(￥' + postData.GiftPrice + ')'}}</span>
+                    <el-checkbox v-if="postData.IsPromotion" v-model="ischecked" disabled></el-checkbox>
                     <span v-if="postData.IsPromotion" style="color:red">{{postData.Promotion.PromotionName}}</span>
                   </div>
                 </el-form-item>
@@ -116,6 +117,16 @@
               <el-input type='textarea' v-model='postData.Remark' :readonly="!modify"></el-input>
             </el-form-item>
 
+            <div v-if="postData.Status === 3" class='add-order-title'>
+              <span>拒审原因</span>
+            </div>
+            <el-row v-if="postData.Status === 3">
+              <el-col>
+                <el-form-item label='驳回原因：'>
+                  <el-input type='textarea' v-model='postData.BackReason' :readonly="true"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
             <div style='float: right; margin-top: 20px;'>
               <el-button @click="dialogFormVisible = false">关闭</el-button>
               <el-button v-if="modify" type='primary' @click="submitForm('postData')">保存</el-button>
@@ -149,7 +160,8 @@
         allprices: [],
         imgs: [],
         ShowBusnissDeadline: true,
-        signkey: {}
+        signkey: {},
+        ischecked: true
       }
     },
     watch: {

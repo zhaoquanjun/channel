@@ -3,7 +3,7 @@
   <el-dialog title="同步官方" :visible.sync="dialogFormVisible" size="small">
     <el-form :model="ruleForm" :rules="rules" class="demo-ruleForm" ref="ruleForm" label-width="0px">
       <el-form-item label="" prop="path">
-        <el-input type="text" v-model="ruleForm.path"></el-input>
+        <el-input type="text" v-model="ruleForm.path" placeholder="请输入该公司在国家企业信息公示系统的链接地址"></el-input>
         <span class="href-style">打开链接：</span>
         <a class="href-style" href="http://www.gsxt.gov.cn/index.html" target="view_window">http://www.gsxt.gov.cn/index.html</a>
       </el-form-item>

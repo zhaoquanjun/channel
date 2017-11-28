@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <el-dialog title='订单查看' :visible.sync='dialogFormVisible' size='mini'>
+  <div class="add-order2">
+    <el-dialog :title=title :visible.sync='dialogFormVisible' size='mini'>
       <div class='container add-order-container'>
-        <el-form ref='postData' :model='postData' label-width='180px'>
+        <el-form ref='postData' :model='postData' label-width='130px'>
           <div>
             <p ng-if="postData.OrderId" class="form-control-static">
               销售：{{postData.SalerName}} 订单号：{{postData.OrderId}} 所属公司：{{postData.ChannelName}} 提单员：{{postData.BillName}}
@@ -16,7 +16,7 @@
             </div>
 
             <div class='custom-tips mb-10'>
-              <i class='fa fa-exclamation-circle' aria-hidden='true'></i>
+              <!-- <i class='fa fa-exclamation-circle' aria-hidden='true'></i> -->
               <span v-if="postData.Category == 2">【温馨提示】支持对二代居民身份证的关键字段识别。上传身份证后，即可自动读取并带出姓名、身份证号等信息。</span>
               <span v-else>【温馨提示】可根据客户在国家企业信息公示系统的链接地址，快速完成工商信息的录入。</span>
             </div>
@@ -24,7 +24,8 @@
             <el-row>
               <el-col :span='12'>
                 <el-form-item label='公司名称：' required>
-                  <el-input class='company-search' v-model='postData.Customer.Name' :readonly="!modify"></el-input>
+                  <span v-if="!modify">{{postData.Customer.Name}}</span>
+                  <el-input v-if="modify" class='company-search' v-model='postData.Customer.Name'></el-input>
                   <el-button v-if="modify" type="primary" class="company-alert" @click="getCompanyInfo">同步官方</el-button>
                 </el-form-item>
               </el-col>
@@ -41,12 +42,12 @@
             <el-row>
               <el-col :span='12'>
                 <el-form-item label='联系人：' required>
-                  <el-input v-model='postData.Customer.Contacts' :readonly="!modify"></el-input>
+                  <el-input v-model='postData.Customer.Contacts' :readonly="!modify" :maxlength="10"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span='12'>
                 <el-form-item label='手机号：' required>
-                  <el-input v-model='postData.Customer.Mobile' :readonly="!modify"></el-input>
+                  <el-input v-model='postData.Customer.Mobile' :readonly="!modify" :maxlength="11"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -62,16 +63,16 @@
               </el-col>
               <el-col :span='12'>
                 <el-form-item label='法人姓名：' required>
-                  <el-input v-model='postData.Customer.LegalPerson' :readonly="!modify"></el-input>
+                  <el-input v-model='postData.Customer.LegalPerson' :readonly="!modify" :maxlength="20"></el-input>
                 </el-form-item>
                 <el-form-item label='法人身份证号：' required>
-                  <el-input v-model='postData.Customer.PersonCardID' :readonly="!modify"></el-input>
+                  <el-input v-model='postData.Customer.PersonCardID' :readonly="!modify" :maxlength="18"></el-input>
                 </el-form-item>
-                <el-form-item label='公司住所：' required>
-                  <el-input v-model='postData.Customer.Address' :readonly="!modify"></el-input>
+                <el-form-item label='公司住所：' class="address-area" required>
+                  <el-input type="textarea" v-model='postData.Customer.Address' :rows=3 :readonly="!modify" :maxlength="100"></el-input>
                 </el-form-item>
-                <el-form-item label='社会统一信用代码：' required>
-                  <el-input v-model='postData.Customer.RegNO' :readonly="!modify"></el-input>
+                <el-form-item label='统一信用代码：' required>
+                  <el-input v-model='postData.Customer.RegNO' :readonly="!modify" :maxlength="18"></el-input>
                 </el-form-item>
                 <el-form-item label='营业期限：' required>
                   <el-date-picker width="100" v-model="postData.Customer.RegisterDate" type="date" placeholder="开始日期" :clearable="false" :readonly="!modify">
@@ -103,8 +104,8 @@
               <el-col :span='12'>
                 <el-form-item label='纳税人类别：' prop='name'>
                   <el-radio-group v-model="postData.Customer.AddedValue">
-                    <el-radio label='1' :disabled="true">小规模</el-radio>
-                    <el-radio label='2' :disabled="true">一般纳税人</el-radio>
+                    <el-radio class="radio-style-bg" label='1' :disabled="true">小规模</el-radio>
+                    <el-radio class="radio-style-bg" label='2' :disabled="true">一般纳税人</el-radio>
                   </el-radio-group>
                 </el-form-item>
               </el-col>
@@ -121,6 +122,7 @@
                       {{prices.PriceName}}
                     </span>
                     <span v-if="postData.GiftTypeName">{{postData.GiftTypeName + '(￥' + postData.GiftPrice + ')'}}</span>
+                    <el-checkbox v-if="postData.IsPromotion" v-model="ischecked" disabled></el-checkbox>
                     <span v-if="postData.IsPromotion" style="color:red">{{postData.Promotion.PromotionName}}</span>
                   </div>
                 </el-form-item>
@@ -169,17 +171,27 @@
                   <div class="img-style" v-for="item in imgs">
                     <img-upl :key="item" :value='item' :readonly='true'></img-upl>
                   </div>
-                  <!-- <div class="contract-button">
+                  <div class="contract-button">
                     <el-button type="primary button-upload" name="button">点击上传</el-button>
-                  </div> -->
+                  </div>
                 </el-form-item>
               </el-col>
             </el-row>
 
-            <el-form-item label='备注'>
+            <el-form-item label='备注：'>
               <el-input type='textarea' v-model='postData.Remark' :readonly="!modify"></el-input>
             </el-form-item>
 
+            <div v-if="postData.Status === 3" class='add-order-title'>
+              <span>拒审原因</span>
+            </div>
+            <el-row v-if="postData.Status === 3">
+              <el-col>
+                <el-form-item label='驳回原因：'>
+                  <el-input type='textarea' v-model='postData.BackReason' :readonly="true"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
             <div style='float: right; margin-top: 20px;'>
               <el-button @click="dialogFormVisible = false">取消</el-button>
               <el-button v-if="modify" type='primary' @click="submitForm('postData')">保存</el-button>
@@ -215,7 +227,18 @@
         allprices: [],
         imgs: [{}],
         ShowBusnissDeadline: true,
-        signkey: {}
+        signkey: {},
+        ischecked: true,
+        title: '订单查看',
+        pickerOptions: {
+          disabledDate(time) {
+            console.log(time, 'pickerOptions')
+            var date = new Date()
+            var day = date.getDate()
+            var timeStart = Date.now() - 8.64e7 * day
+            return time.getTime() < timeStart
+          }
+        }
       }
     },
     watch: {
@@ -227,6 +250,11 @@
       customUpload,
       imgUpl: ImageUploader
     },
+    created() {
+      if (this.modify) {
+        this.title = '订单修改'
+      }
+    },
     mounted () {
       if (this.postData.Customer.NoDeadLine === 0) {
         this.checked = false
@@ -236,8 +264,10 @@
       if (this.postData.Customer.RegisterDate.substr(0, 4) === '0001') {
         this.postData.Customer.RegisterDate = ''
       }
-      if (this.postData.Customer.BusnissDeadline.substr(0, 4) === '0001') {
+      if (this.postData.Customer.BusnissDeadline.substr(0, 4) === '0001' || this.postData.Customer.BusnissDeadline.substr(0, 4) === '9999') {
         this.postData.Customer.BusnissDeadline = ''
+        this.postData.Customer.NoDeadLine === 1
+        this.checked = true
       }
       if (this.postData.ServiceStart.substr(0, 4) === '0001') {
         this.postData.ServiceStart = ''
@@ -279,8 +309,10 @@
         if (this.checked) {
           this.postData.Customer.BusnissDeadline = ''
           this.ShowBusnissDeadline = true
+          this.postData.Customer.NoDeadLine = 1
         } else {
           this.ShowBusnissDeadline = false
+          this.postData.Customer.NoDeadLine = 0
         }
         console.log(this.checked, 'checked')
       },
@@ -294,19 +326,52 @@
             })
           } else {
             this.postData.Customer.IsSync = 1
-            this.postData.Customer.Name = res.CompanyName
-            this.postData.Customer.Address = res.Address
-            this.postData.Customer.BusinessScope = res.BusinessScope
-            this.postData.Customer.BusnissDeadline = new Date(res.BusnissDeadline)
-            if (this.postData.Customer.LegalPerson && this.postData.Customer.LegalPerson !== res.LegalPerson) {
-              this.postData.Customer.LegalPerson = res.LegalPerson
-              this.postData.Customer.PersonCardID = ''
-            } else {
-              this.postData.Customer.LegalPerson = res.LegalPerson
+            if (res.CompanyName) {
+              this.postData.Customer.Name = res.CompanyName
             }
-            this.postData.Customer.RegNO = res.RegNO
-            this.postData.Customer.RegisterDate = new Date(res.RegisterDate)
-            this.postData.Customer.RegisteredCapital = res.RegisteredCapital
+            if (res.Address) {
+              this.postData.Customer.Address = res.Address
+            }
+            if (res.BusinessScope) {
+              this.postData.Customer.BusinessScope = res.BusinessScope
+            }
+            if (res.BusnissDeadline) {
+              if (res.BusnissDeadline.substr(0, 4) === '0001' || res.BusnissDeadline.substr(0, 4) === '9999') {
+                this.postData.Customer.BusnissDeadline = ''
+              } else {
+                this.postData.Customer.BusnissDeadline = new Date(res.BusnissDeadline)
+              }
+            }
+            if (res.LegalPerson) {
+              if (this.postData.Customer.LegalPerson !== res.LegalPerson) {
+                this.postData.Customer.LegalPerson = res.LegalPerson
+                this.postData.Customer.PersonCardID = ''
+              } else {
+                this.postData.Customer.LegalPerson = res.LegalPerson
+              }
+            }
+            if (res.RegNO) {
+              this.postData.Customer.RegNO = res.RegNO
+            }
+            if (res.RegisterDate) {
+              this.postData.Customer.RegisterDate = new Date(res.RegisterDate)
+            }
+            if (res.RegisteredCapital) {
+              this.postData.Customer.RegisteredCapital = res.RegisteredCapital
+            }
+            // this.postData.Customer.Name = res.CompanyName
+            // this.postData.Customer.Address = res.Address
+            // this.postData.Customer.BusinessScope = res.BusinessScope
+            // this.postData.Customer.BusnissDeadline = new Date(res.BusnissDeadline)
+            // if (this.postData.Customer.LegalPerson && this.postData.Customer.LegalPerson !== res.LegalPerson) {
+            //   this.postData.Customer.LegalPerson = res.LegalPerson
+            //   this.postData.Customer.PersonCardID = ''
+            // } else {
+            //   this.postData.Customer.LegalPerson = res.LegalPerson
+            // }
+            // this.postData.Customer.RegNO = res.RegNO
+            // this.postData.Customer.RegisterDate = new Date(res.RegisterDate)
+            // this.postData.Customer.RegisteredCapital = res.RegisteredCapital
           }
         })
       },
@@ -401,104 +466,102 @@
 
         this.postData.ServiceEnd = enddate.format('yyyy-MM')
       },
-      rules (postData) {
-        if (!postData.Customer.Name) {
-          this.$message({
-            message: '请填写公司名称',
-            type: 'warning'
-          })
-          return
-        }
-        if (!postData.Customer.Contacts) {
-          this.$message({
-            message: '请填写联系人',
-            type: 'warning'
-          })
-          return
-        }
-        if (!postData.Customer.Mobile) {
-          this.$message({
-            message: '请填写手机号',
-            type: 'warning'
-          })
-          return
-        }
-        if (!postData.Customer.LegalPerson) {
-          this.$message({
-            message: '请填写法人姓名',
-            type: 'warning'
-          })
-          return
-        }
-        if (!postData.Customer.PersonCardID) {
-          this.$message({
-            message: '请填写法人身份证号',
-            type: 'warning'
-          })
-          return
-        }
-        if (!postData.Customer.PersonCardPath) {
-          this.$message({
-            message: '请上传法人身份证',
-            type: 'warning'
-          })
-          return
-        }
-        if (!postData.Customer.Address) {
-          this.$message({
-            message: '请填写公司住所',
-            type: 'warning'
-          })
-          return
-        }
-        if (!postData.Customer.RegNO) {
-          this.$message({
-            message: '请填写社会统一信用代码',
-            type: 'warning'
-          })
-          return
-        }
-        if (!postData.Customer.NoDeadLine && !postData.Customer.BusnissDeadline) {
-          this.$message({
-            message: '请填写营业期限',
-            type: 'warning'
-          })
-          return
-        }
-        if (!postData.Customer.RegisteredCapital) {
-          this.$message({
-            message: '请填写注册资金',
-            type: 'warning'
-          })
-          return
-        }
-        if (!postData.Customer.BusinessScope) {
-          this.$message({
-            message: '请填写经验范围',
-            type: 'warning'
-          })
-          return
-        }
-        if (!postData.Customer.BusinessLicense) {
-          this.$message({
-            message: '请上传营业执照',
-            type: 'warning'
-          })
-          return
-        }
-        if (!postData.ContractNO) {
-          this.$message({
-            message: '请填写合同编号',
-            type: 'warning'
-          })
-          return
-        }
-      },
       submitForm (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            console.log(this.postData)
-            this.rules(this.postData)
+            console.log(this.postData, '提交数据')
+            if (!this.postData.Customer.Name) {
+              this.$message({
+                message: '请填写公司名称',
+                type: 'warning'
+              })
+              return
+            }
+            if (!this.postData.Customer.Contacts) {
+              this.$message({
+                message: '请填写联系人',
+                type: 'warning'
+              })
+              return
+            }
+            if (!this.postData.Customer.Mobile) {
+              this.$message({
+                message: '请填写手机号',
+                type: 'warning'
+              })
+              return
+            }
+            if (!this.postData.Customer.LegalPerson) {
+              this.$message({
+                message: '请填写法人姓名',
+                type: 'warning'
+              })
+              return
+            }
+            if (!this.postData.Customer.PersonCardID) {
+              this.$message({
+                message: '请填写法人身份证号',
+                type: 'warning'
+              })
+              return
+            }
+            if (!this.postData.Customer.PersonCardPath) {
+              this.$message({
+                message: '请上传法人身份证',
+                type: 'warning'
+              })
+              return
+            }
+            if (!this.postData.Customer.Address) {
+              this.$message({
+                message: '请填写公司住所',
+                type: 'warning'
+              })
+              return
+            }
+            if (!this.postData.Customer.RegNO) {
+              this.$message({
+                message: '请填写社会统一信用代码',
+                type: 'warning'
+              })
+              return
+            }
+            console.log(this.postData.Customer.NoDeadLine, this.postData.Customer.BusnissDeadline, '22')
+            if (!this.postData.Customer.NoDeadLine && !this.postData.Customer.BusnissDeadline) {
+              this.$message({
+                message: '请填写营业期限',
+                type: 'warning'
+              })
+              return
+            }
+            if (!this.postData.Customer.RegisteredCapital) {
+              this.$message({
+                message: '请填写注册资金',
+                type: 'warning'
+              })
+              return
+            }
+            if (!this.postData.Customer.BusinessScope) {
+              this.$message({
+                message: '请填写经验范围',
+                type: 'warning'
+              })
+              return
+            }
+            if (!this.postData.Customer.BusinessLicense) {
+              this.$message({
+                message: '请上传营业执照',
+                type: 'warning'
+              })
+              return
+            }
+            if (!this.postData.ContractNO) {
+              this.$message({
+                message: '请填写合同编号',
+                type: 'warning'
+              })
+              return
+            }
             if (this.imgs.length === 1) {
               this.postData.ContractPath = ''
             } else if (this.imgs.length > 1) {
@@ -642,20 +705,39 @@
         border: none
         cursor: pointer
 </style>
-<style scoped>
-.file-upload-area {
+<style>
+.add-order2 .file-upload-area {
   overflow: hidden;
   float: left;
   width: 100%;
 }
-.file-upload-area-img-item {
+.add-order2 .file-upload-area-img-item {
   float: left;
   width: 120px;
   height: 70px;
   padding: 10px 10px 10px 0;
 }
 
-.file-upload-area-button {
+.add-order2 .file-upload-area-button {
   clear: both;
+}
+.add-order2 .contract-style .el-form-item__content {
+  height: auto;
+}
+.add-order2 .contract-style .contract-button {
+  clear: both;
+}
+.add-order2 .contract-style .contract-button .button-upload {
+  height: 30px;
+  padding: 5px 10px;
+  font-size: 12px;
+  cursor: not-allowed;
+}
+.add-order2 .radio-style-bg .el-radio__input.is-disabled.is-checked .el-radio__inner {
+  border-color: #20a0ff;
+  background: #20a0ff;
+}
+.add-order2 .address-area .el-form-item__content {
+  height: auto;
 }
 </style>

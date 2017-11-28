@@ -367,11 +367,11 @@ export const deleteSearch = (OrderId) => {
 }
 // 订单查询--修改同步官方工商信息
 export const getcustomerupdatebygs = params => {
-  return axios.get(`${base}/order/getcustomerupdatebygs?word= ${params}`).then(res => res.data)
+  return axios.get(`${base}/order/getcustomerupdatebygs?word=${params}`).then(res => res.data)
 }
 // 订单查询--修改上传识别身份证
 export const getpersoncardbypath = params => {
-  return axios.get(`${base}/order/getpersoncardbypath?path= ${params}`).then(res => res.data)
+  return axios.get(`${base}/order/getpersoncardbypath?path=${params}`).then(res => res.data)
 }
 // 订单审核--审核回退
 export const rebackSearch = (OrderId) => {
