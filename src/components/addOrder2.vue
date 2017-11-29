@@ -28,6 +28,7 @@
                   <el-input v-if="modify" class='company-search' v-model='postData.Customer.Name'></el-input>
                   <el-button v-if="modify" type="primary" class="company-alert" @click="getCompanyInfo">同步官方</el-button>
                 </el-form-item>
+                <!-- <el-button v-if="modify" type="primary" class="company-alert" @click="getCompanyInfo">同步官方</el-button> -->
               </el-col>
               <el-col :span='12'>
                 <el-form-item label='所在城市：' required>
@@ -102,7 +103,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span='12'>
-                <el-form-item label='纳税人类别：' prop='name'>
+                <el-form-item label='纳税人类别：' required>
                   <el-radio-group v-model="postData.Customer.AddedValue">
                     <el-radio class="radio-style-bg" label='1' :disabled="true">小规模</el-radio>
                     <el-radio class="radio-style-bg" label='2' :disabled="true">一般纳税人</el-radio>
@@ -140,7 +141,7 @@
               </el-col>
               <el-col :span='12'>
                 <el-form-item label='结束账期：' required>
-                  <el-date-picker v-model="postData.ServiceEnd" type="month" :readonly="!modify"></el-date-picker>
+                  <el-date-picker v-model="postData.ServiceEnd" type="month" :readonly="true"></el-date-picker>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -150,7 +151,7 @@
                 <el-form-item label='合同金额：' required>
                   <el-input v-model='postData.ContractAmount' readonly></el-input>
                 </el-form-item>
-                <div style="padding-left:180px;color:red;margin-top: -10px;margin-bottom: 10px;">注:合同金额根据所属城市、公司性质和付款方式自动计算，不包含礼包价格。</div>
+                <div style="padding-left:135px;color:red;margin-top: -10px;margin-bottom: 10px;">注:合同金额根据所属城市、公司性质和付款方式自动计算，不包含礼包价格。</div>
               </el-col>
             </el-row>
 
@@ -178,7 +179,7 @@
               </el-col>
             </el-row>
 
-            <el-form-item label='备注：'>
+            <el-form-item class="text-area" label='备注：'>
               <el-input type='textarea' v-model='postData.Remark' :readonly="!modify"></el-input>
             </el-form-item>
 
@@ -188,12 +189,13 @@
             <el-row v-if="postData.Status === 3">
               <el-col>
                 <el-form-item label='驳回原因：'>
-                  <el-input type='textarea' v-model='postData.BackReason' :readonly="true"></el-input>
+                  <!-- <el-input type='textarea' v-model='postData.BackReason' :readonly="true"></el-input> -->
+                  <div style="color:red;width:500px">{{postData.BackReason}}</div>
                 </el-form-item>
               </el-col>
             </el-row>
             <div style='float: right; margin-top: 20px;'>
-              <el-button @click="dialogFormVisible = false">取消</el-button>
+              <el-button @click="dialogFormVisible = false">关闭</el-button>
               <el-button v-if="modify" type='primary' @click="submitForm('postData')">保存</el-button>
             </div>
 
@@ -498,19 +500,15 @@
               })
               return
             }
-            if (!this.postData.Customer.PersonCardID) {
-              this.$message({
-                message: '请填写法人身份证号',
-                type: 'warning'
-              })
-              return
-            }
-            if (!this.postData.Customer.PersonCardPath) {
-              this.$message({
-                message: '请上传法人身份证',
-                type: 'warning'
-              })
-              return
+            // console.log(this.postData.Customer.PersonCardPath)
+            if (this.postData.Customer.PersonCardPath) {
+              if (!this.postData.Customer.PersonCardID) {
+                this.$message({
+                  message: '请输入身份证号',
+                  type: 'warning'
+                })
+                return
+              }
             }
             if (!this.postData.Customer.Address) {
               this.$message({
@@ -652,10 +650,11 @@
       padding: 8px 0px
       line-height: 36px
       width: 100%
-      background-color: #f3fafa
+      background-color: #f0fafa
       color: #1b9bfc
       font-size: 14px
       padding: 0px 10px
+      font-weight: 600
     .price-type
       display: inline-block
       background-color: #fff
@@ -696,7 +695,7 @@
         width: 120px
     .company-search
       input
-        width: 220px
+        width: 300px !important
       .el-input-group__append
         width: 80px
         text-align: center
@@ -739,5 +738,11 @@
 }
 .add-order2 .address-area .el-form-item__content {
   height: auto;
+}
+.add-order2 .text-area .el-textarea__inner {
+  width: 500px;
+}
+.add-order2 textarea {
+  font-family: Microsoft YaHei;
 }
 </style>

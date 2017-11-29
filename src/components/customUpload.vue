@@ -110,7 +110,7 @@
     100%
       height: 0px
   .img-upload-container
-    width: 400px
+    width: 450px
     text-align: center
     .required
       &:before
@@ -122,9 +122,10 @@
       color: black
     .upload-area
       margin: 0px auto
-      width: 369px
+      width: 370px
       height: 226px
       background: url('../assets/images/u2051.png')
+      background-size: 370px 226px
       position: relative
       img
         width: 100%

@@ -245,54 +245,49 @@
         }
       },
       rules (postData) {
-        if (!postData.Customer.Contacts) {
-          this.$message({
-            message: '请填写联系人',
-            type: 'warning'
-          })
-          return
-        }
-        if (!postData.Customer.Mobile) {
-          this.$message({
-            message: '请填写手机号',
-            type: 'warning'
-          })
-          return
-        }
-        if (!postData.Customer.LegalPerson) {
-          this.$message({
-            message: '请填写法人姓名',
-            type: 'warning'
-          })
-          return
-        }
-        if (!postData.Customer.PersonCardID) {
-          this.$message({
-            message: '请填写法人身份证号',
-            type: 'warning'
-          })
-          return
-        }
-        if (!postData.Customer.PersonCardPath) {
-          this.$message({
-            message: '请上传法人身份证',
-            type: 'warning'
-          })
-          return
-        }
-        if (!postData.ContractNO) {
-          this.$message({
-            message: '请填写合同编号',
-            type: 'warning'
-          })
-          return
-        }
+
       },
       submitForm (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             console.log(this.postData)
-            this.rules(this.postData)
+            if (!this.postData.Customer.Contacts) {
+              this.$message({
+                message: '请填写联系人',
+                type: 'warning'
+              })
+              return
+            }
+            if (!this.postData.Customer.Mobile) {
+              this.$message({
+                message: '请填写手机号',
+                type: 'warning'
+              })
+              return
+            }
+            if (!this.postData.Customer.LegalPerson) {
+              this.$message({
+                message: '请填写法人姓名',
+                type: 'warning'
+              })
+              return
+            }
+            if (this.postData.Customer.PersonCardPath) {
+              if (!this.postData.Customer.PersonCardID) {
+                this.$message({
+                  message: '请输入身份证号',
+                  type: 'warning'
+                })
+                return
+              }
+            }
+            if (!this.postData.ContractNO) {
+              this.$message({
+                message: '请填写合同编号',
+                type: 'warning'
+              })
+              return
+            }
             if (this.imgs.length === 1) {
               this.postData.ContractPath = ''
             } else if (this.imgs.length > 1) {
