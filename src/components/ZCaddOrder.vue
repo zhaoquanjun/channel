@@ -2,7 +2,7 @@
   <div class="add-order-zc">
     <el-dialog title='订单查看' :visible.sync='dialogFormVisible' size='mini'>
       <div class='container add-order-container'>
-        <el-form ref='postData' :model='postData' label-width='180px'>
+        <el-form ref='postData' :model='postData' label-width='130px'>
           <div>
             <p ng-if="postData.OrderId" class="form-control-static">
               销售：{{postData.SalerName}} 订单号：{{postData.OrderId}} 所属公司：{{postData.ChannelName}} 提单员：{{postData.BillName}}
@@ -55,7 +55,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span='12'>
-                <el-form-item label='纳税人类别：' prop='name'>
+                <el-form-item label='纳税人类别：' required>
                   <el-radio-group v-model="postData.Customer.AddedValue">
                     <el-radio class="radio-style-bg" label='1' :disabled="true">小规模</el-radio>
                     <el-radio class="radio-style-bg" label='2' :disabled="true">一般纳税人</el-radio>
@@ -73,6 +73,7 @@
                   <div>
                     <span class="price-type">
                       {{prices.PriceName}}
+                      <i style="position: absolute;top: 15px;" class="el-icon-check"></i>
                     </span>
                     <span v-if="postData.GiftTypeName">{{postData.GiftTypeName + '(￥' + postData.GiftPrice + ')'}}</span>
                     <el-checkbox v-if="postData.IsPromotion" v-model="ischecked" disabled></el-checkbox>
@@ -113,7 +114,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            <el-form-item label='备注'>
+            <el-form-item class="contract-style" label='备注'>
               <el-input type='textarea' v-model='postData.Remark' :readonly="!modify"></el-input>
             </el-form-item>
 
@@ -123,7 +124,8 @@
             <el-row v-if="postData.Status === 3">
               <el-col>
                 <el-form-item label='驳回原因：'>
-                  <el-input type='textarea' v-model='postData.BackReason' :readonly="true"></el-input>
+                  <!-- <el-input type='textarea' v-model='postData.BackReason' :readonly="true"></el-input> -->
+                  <div style="color:red;width:500px">{{postData.BackReason}}</div>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -377,15 +379,15 @@
     .price-type
       display: inline-block
       background-color: #fff
-      border-color: #1b9bfc
       border-radius: 4px;
-      color: #1f2d3d
       cursor: pointer
       width: 80px
       text-align: center
       height: 34px
       line-height: 34px
-      background: #20a0ff
+      border: 1px solid #ccc
+      border-color: #1a9bfc
+      color: #1a9bfc
     .img-style
       width: 110px
       height: 85px
@@ -439,9 +441,9 @@
 .add-order-zc .file-upload-area-button {
   clear: both;
 }
-.add-order-zc .contract-button {
+/*.add-order-zc .contract-button {
   clear: both;
-}
+}*/
 .add-order-zc .contract-button .el-button--primary {
   height: 30px;
   padding: 5px 10px;

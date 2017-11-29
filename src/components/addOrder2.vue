@@ -114,13 +114,14 @@
 
             <el-row>
               <el-col>
-                <el-form-item v-if="postData.FreChangeOrderId" label='套餐类型：' prop='name'>
+                <el-form-item v-if="postData.FreChangeOrderId" label='套餐类型：' required>
                   <div class="price-type">产品变更</div>
                 </el-form-item>
                 <el-form-item v-else label='套餐类型：' required>
                   <div>
                     <span class="price-type">
                       {{prices.PriceName}}
+                      <i style="position: absolute;top: 15px;" class="el-icon-check"></i>
                     </span>
                     <span v-if="postData.GiftTypeName">{{postData.GiftTypeName + '(￥' + postData.GiftPrice + ')'}}</span>
                     <el-checkbox v-if="postData.IsPromotion" v-model="ischecked" disabled></el-checkbox>
@@ -658,15 +659,15 @@
     .price-type
       display: inline-block
       background-color: #fff
-      border-color: #1b9bfc
       border-radius: 4px;
-      color: #1f2d3d
       cursor: pointer
       width: 80px
       text-align: center
       height: 34px
       line-height: 34px
-      background: #20a0ff
+      border: 1px solid #ccc
+      border-color: #1a9bfc
+      color: #1a9bfc
     .img-style
       width: 110px
       height: 85px
@@ -723,9 +724,9 @@
 .add-order2 .contract-style .el-form-item__content {
   height: auto;
 }
-.add-order2 .contract-style .contract-button {
+/*.add-order2 .contract-style .contract-button {
   clear: both;
-}
+}*/
 .add-order2 .contract-style .contract-button .button-upload {
   height: 30px;
   padding: 5px 10px;
