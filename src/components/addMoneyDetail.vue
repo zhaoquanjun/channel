@@ -32,6 +32,7 @@ import {
   orderTitle
 } from '../api/api'
 import AddOrder from './addOrder2'
+import zcAddOrder from './ZCaddOrder.vue'
 import Dialog from '../service/dialog.js'
 export default {
   props: ['type', 'channelId'],
@@ -75,11 +76,26 @@ export default {
       var postData = ''
       orderTitle(row.OrderId).then(res => {
         if (res.status) {
-          postData = res.data
-          Dialog(AddOrder, {
-            postData: postData,
-            channelid: this.channelId
-          })
+          if (res.data) {
+            postData = res.data
+            if (postData.Category === 2) {
+              Dialog(zcAddOrder, {
+                postData: postData,
+                channelid: this.channelId
+              })
+            } else {
+              Dialog(AddOrder, {
+                postData: postData,
+                channelid: this.channelId
+              })
+            }
+          } else {
+            this.$message({
+              message: '该订单已删除',
+              type: 'warning'
+            })
+            return
+          }
         }
       })
     },

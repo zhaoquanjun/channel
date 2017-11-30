@@ -137,7 +137,7 @@ export default {
         isback: '',
         tstart: '',
         tend: '',
-        Category: ''
+        Category: 0
       },
       clearable: false
     }

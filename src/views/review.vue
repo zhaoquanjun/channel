@@ -67,7 +67,7 @@ import {
   CheckIsConnectDate
 } from '../api/api'
 import Refuse from '../components/refuse'
-import AddOrder from '../components/addOrder'
+// import AddOrder from '../components/addOrder'
 import AddOrder2 from '../components/addOrder2'
 import Dialog from '../service/dialog'
 import bus from '../bus'
@@ -195,7 +195,7 @@ export default {
     },
     viewOrg(row) {
       orderTitle(row.FreChangeOrderId).then(res => {
-        Dialog(AddOrder, {
+        Dialog(AddOrder2, {
           postData: res.data,
           channelid: row.ChannelId
         })

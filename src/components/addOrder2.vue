@@ -59,8 +59,8 @@
 
             <el-row>
               <el-col :span='12'>
-                <custom-upload v-model='postData.Customer.PersonCardPath' :uploaded="uploaded1" title='请上传清晰的身份证人像面，图片大小不要超过1M' :disabled="!modify"></custom-upload>
-                <custom-upload v-model='postData.Customer.BusinessLicense' title='请上传清晰的营业执照，图片大小不要超过1M' class='mt-30' :disabled="!modify"></custom-upload>
+                <custom-upload v-model='postData.Customer.PersonCardPath' :uploaded="uploaded1" title='请上传清晰的身份证人像面，图片大小不要超过3M' :disabled="!modify"></custom-upload>
+                <custom-upload v-model='postData.Customer.BusinessLicense' title='请上传清晰的营业执照，图片大小不要超过3M' class='mt-30' :disabled="!modify"></custom-upload>
               </el-col>
               <el-col :span='12'>
                 <el-form-item label='法人姓名：' required>
@@ -173,7 +173,7 @@
                   <div class="img-style" v-for="item in imgs">
                     <img-upl :key="item" :value='item' :readonly='true'></img-upl>
                   </div>
-                  <div class="contract-button">
+                  <div class="contract-button" :class="{'contract-button-view' : imgs.length}">
                     <el-button type="primary button-upload" name="button">点击上传</el-button>
                   </div>
                 </el-form-item>
@@ -341,9 +341,18 @@
             if (res.BusnissDeadline) {
               if (res.BusnissDeadline.substr(0, 4) === '0001' || res.BusnissDeadline.substr(0, 4) === '9999') {
                 this.postData.Customer.BusnissDeadline = ''
+                this.postData.Customer.NoDeadLine = 1
+                this.checked = true
               } else {
                 this.postData.Customer.BusnissDeadline = new Date(res.BusnissDeadline)
+                this.postData.Customer.NoDeadLine = 0
+                this.checked = false
               }
+            }
+            if (!res.BusnissDeadline) {
+              this.postData.Customer.BusnissDeadline = ''
+              this.postData.Customer.NoDeadLine = 1
+              this.checked = true
             }
             if (res.LegalPerson) {
               if (this.postData.Customer.LegalPerson !== res.LegalPerson) {
@@ -661,7 +670,7 @@
       background-color: #fff
       border-radius: 4px;
       cursor: pointer
-      width: 80px
+      width: 89px
       text-align: center
       height: 34px
       line-height: 34px
@@ -724,9 +733,9 @@
 .add-order2 .contract-style .el-form-item__content {
   height: auto;
 }
-/*.add-order2 .contract-style .contract-button {
+.add-order2 .contract-style .contract-button-view {
   clear: both;
-}*/
+}
 .add-order2 .contract-style .contract-button .button-upload {
   height: 30px;
   padding: 5px 10px;

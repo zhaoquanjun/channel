@@ -1,6 +1,6 @@
 <template>
   <div class="add-order-zc">
-    <el-dialog title='订单查看' :visible.sync='dialogFormVisible' size='mini'>
+    <el-dialog :title=title :visible.sync='dialogFormVisible' size='mini'>
       <div class='container add-order-container'>
         <el-form ref='postData' :model='postData' label-width='130px'>
           <div>
@@ -15,12 +15,12 @@
             </div>
 
             <div class='custom-tips mb-10'>
-              <i class='fa fa-exclamation-circle' aria-hidden='true'></i>
+              <!-- <i class='fa fa-exclamation-circle' aria-hidden='true'></i> -->
               <span>【温馨提示】支持对二代居民身份证的关键字段识别。上传身份证后，即可自动读取并带出姓名、身份证号等信息。</span>
             </div>
             <el-row>
               <el-col :span='12'>
-                <custom-upload v-model='postData.Customer.PersonCardPath' :uploaded="uploaded1" title='请上传清晰的身份证人像面，图片大小不要超过1M' :disabled="!modify"></custom-upload>
+                <custom-upload v-model='postData.Customer.PersonCardPath' :uploaded="uploaded1" title='请上传清晰的身份证人像面，图片大小不要超过3M' :disabled="!modify"></custom-upload>
               </el-col>
               <el-col :span='12'>
                 <el-form-item label='所在城市：' required>
@@ -87,7 +87,7 @@
                 <el-form-item label='合同金额：' required>
                   <el-input v-model='postData.ContractAmount' readonly></el-input>
                 </el-form-item>
-                <div style="padding-left:180px;color:red;margin-top: -10px;margin-bottom: 10px;">注:合同金额根据所属城市、公司性质和付款方式自动计算，不包含礼包价格。</div>
+                <div style="padding-left:135px;color:red;margin-top: -10px;margin-bottom: 10px;">注:合同金额根据所属城市、公司性质和付款方式自动计算，不包含礼包价格。</div>
               </el-col>
             </el-row>
 
@@ -108,13 +108,13 @@
                   <div class="img-style" v-for="item in imgs">
                     <img-upl :key="item" :value='item' :readonly='true'></img-upl>
                   </div>
-                  <div class="contract-button">
+                  <div class="contract-button" :class="{'contract-button-view' : imgs.length}">
                     <el-button type="primary button-upload" name="button">点击上传</el-button>
                   </div>
                 </el-form-item>
               </el-col>
             </el-row>
-            <el-form-item class="contract-style" label='备注'>
+            <el-form-item class="contract-style text-area" label='备注：'>
               <el-input type='textarea' v-model='postData.Remark' :readonly="!modify"></el-input>
             </el-form-item>
 
@@ -163,7 +163,8 @@
         imgs: [],
         ShowBusnissDeadline: true,
         signkey: {},
-        ischecked: true
+        ischecked: true,
+        title: '订单查看'
       }
     },
     watch: {
@@ -174,6 +175,11 @@
     components: {
       customUpload,
       imgUpl: ImageUploader
+    },
+    created() {
+      if (this.modify) {
+        this.title = '订单修改'
+      }
     },
     mounted () {
       this.postData.Customer.AddedValue = this.postData.Customer.AddedValue + ''
@@ -381,7 +387,7 @@
       background-color: #fff
       border-radius: 4px;
       cursor: pointer
-      width: 80px
+      width: 89px
       text-align: center
       height: 34px
       line-height: 34px
@@ -441,9 +447,9 @@
 .add-order-zc .file-upload-area-button {
   clear: both;
 }
-/*.add-order-zc .contract-button {
+.add-order-zc .contract-button-view {
   clear: both;
-}*/
+}
 .add-order-zc .contract-button .el-button--primary {
   height: 30px;
   padding: 5px 10px;
@@ -456,5 +462,9 @@
 .add-order-zc .radio-style-bg .el-radio__input.is-disabled.is-checked .el-radio__inner {
   border-color: #20a0ff;
   background: #20a0ff;
+}
+.add-order-zc .text-area .el-textarea__inner {
+  width: 500px;
+  font-family: Microsoft YaHei;
 }
 </style>

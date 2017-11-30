@@ -58,6 +58,7 @@ import {
   orderTitle
 } from '../api/api'
 import AddOrder from '../components/addOrder2'
+import zcAddOrder from '../components/ZCaddOrder.vue'
 import Dialog from '../service/dialog.js'
 export default {
   data: function() {
@@ -111,11 +112,28 @@ export default {
     financeView(row) {
       var postData = ''
       orderTitle(row.OrderId).then(res => {
-        postData = res.data
-        Dialog(AddOrder, {
-          postData: postData,
-          channelid: row.Channelid
-        })
+        if (res.status) {
+          if (res.data) {
+            postData = res.data
+            if (postData.Category === 2) {
+              Dialog(zcAddOrder, {
+                postData: postData,
+                channelid: row.Channelid
+              })
+            } else {
+              Dialog(AddOrder, {
+                postData: postData,
+                channelid: row.Channelid
+              })
+            }
+          } else {
+            this.$message({
+              message: '该订单已删除',
+              type: 'warning'
+            })
+            return
+          }
+        }
       })
     },
     handleSizeChange(val) {
