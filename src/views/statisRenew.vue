@@ -125,23 +125,6 @@ export default {
       window.open(url)
       // alert(index)
     },
-    // downloadColumn(row, column, cell) {
-    //   var channelid = row.ChannelId
-    //   var year = this.params.year
-    //   var months = this.params.months
-    //   var url = ''
-    //   var Param = `?channelid=${channelid || ''}&year=${year || ''}&months=${months || ''}`
-    //   if (cell.cellIndex === 6) {
-    //     url = '/api/download/getexpireorderdetails' + Param
-    //   } else if (cell.cellIndex === 7) {
-    //     url = '/api/download/getnoreorderdetails' + Param
-    //   } else if (cell.cellIndex === 8) {
-    //     url = '/api/download/getreorderdetails' + Param
-    //   } else {
-    //     return
-    //   }
-    //   window.open(url)
-    // },
     downloadColumn(row, column, cell) {
       var obj = {
         channelid: row.ChannelId,
@@ -150,13 +133,16 @@ export default {
       }
       if (cell.cellIndex === 6) {
         obj.title = '到期客户明细'
-        this.$router.push({name: 'XFviewDetails', query: obj})
+        window.open('/#/XF-viewDetails?' + $.param(obj), '_blank')
+        // this.$router.push({name: 'XFviewDetails', query: obj})
       } else if (cell.cellIndex === 7) {
         obj.title = '未续费客户明细'
-        this.$router.push({name: 'XFviewDetails', query: obj})
+        window.open('/#/XF-viewDetails?' + $.param(obj), '_blank')
+        // this.$router.push({name: 'XFviewDetails', query: obj})
       } else if (cell.cellIndex === 8) {
         obj.title = '续费客户明细'
-        this.$router.push({name: 'XFviewDetails', query: obj})
+        window.open('/#/XF-viewDetails?' + $.param(obj), '_blank')
+        // this.$router.push({name: 'XFviewDetails', query: obj})
       } else {
         return
       }

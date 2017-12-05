@@ -13,10 +13,10 @@
       </div>
     </div>
   </div>
-  <el-table :data="tableData" border style="width: 100%" height="570">
+  <el-table :data="tableData" border style="width: 100%" height="590">
     <el-table-column prop="PartitionName" label="大区" width="80px">
     </el-table-column>
-    <el-table-column prop="ProvinceName" label="省" width="90px">
+    <el-table-column prop="ProvinceName" label="省" width="80px">
     </el-table-column>
     <el-table-column prop="CityName" label="市" width="90px">
     </el-table-column>
@@ -38,7 +38,7 @@
     </el-table-column>
     <el-table-column prop="BLAmount" label="提单金额" width="100px">
     </el-table-column>
-    <el-table-column prop="SSAmount" label="折后金额" width="100px">
+    <el-table-column prop="SSAmount" label="折后金额" width="90px">
     </el-table-column>
   </el-table>
 </div>

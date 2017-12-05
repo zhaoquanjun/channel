@@ -199,23 +199,23 @@ const router = new Router({
       name: 'main.statis_outwork',
       path: 'statis_outwork',
       component: StatisOutwork
-    }, {
-      name: 'YJviewDetails',
-      path: 'YJ-viewDetails',
-      component: YJViewDetails
-    }, {
-      name: 'XFviewDetails',
-      path: 'XF-viewDetails',
-      component: XFViewDetails
-    }, {
-      name: 'LZviewDetails',
-      path: 'LZ-viewDetails',
-      component: LZViewDetails
     }]
   }, {
     path: '/login',
     name: 'Login',
     component: Login
+  }, {
+    name: 'YJviewDetails',
+    path: '/YJ-viewDetails',
+    component: YJViewDetails
+  }, {
+    name: 'XFviewDetails',
+    path: '/XF-viewDetails',
+    component: XFViewDetails
+  }, {
+    name: 'LZviewDetails',
+    path: '/LZ-viewDetails',
+    component: LZViewDetails
   }]
 })
 

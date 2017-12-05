@@ -13,7 +13,7 @@
       </div>
     </div>
   </div>
-  <el-table :data="tableData" border style="width: 100%" height="570">
+  <el-table :data="tableData" border style="width: 100%" height="590">
     <el-table-column prop="PartitionName" label="大区" width="50px">
     </el-table-column>
     <el-table-column prop="ProvinceName" label="省" width="70px">
@@ -68,7 +68,7 @@ export default {
     setView() {
       if (this.commonData.title === '预提单明细表') {
         this.showDiffView = 1
-      } else if (this.commonData.title === '转正式单明细表') {
+      } else if (this.commonData.title === '转正式订单明细表') {
         this.showDiffView = 2
       } else if (this.commonData.title === '零申报明细表') {
         this.showDiffView = 3

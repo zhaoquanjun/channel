@@ -156,26 +156,6 @@ export default {
       window.open(url)
       // alert(index)
     },
-    // downloadColumn(row, column, cell) {
-    //   console.log('列下载')
-    //   // console.log(arguments, 'arguments')
-    //   // 不同列下载东西不一样
-    //   // console.log(cell.cellIndex)
-    //   var channelid = row.ChannelId
-    //   // console.log(AccountId)
-    //   var startdate = this.params.startdate
-    //   var enddate = this.params.enddate
-    //   var url = ''
-    //   var Param = `?channelid=${channelid || ''}&startdate=${startdate || ''}&enddate=${enddate || ''}`
-    //   if (cell.cellIndex === 10) {
-    //     url = '/api/download/getreserveorders' + Param
-    //   } else if (cell.cellIndex === 14) {
-    //     url = '/api/download/getzeroorders' + Param
-    //   } else {
-    //     return
-    //   }
-    //   window.open(url)
-    // },
     downloadColumn(row, column, cell) {
       console.log('列下载')
       var channelid = row.ChannelId
@@ -190,23 +170,14 @@ export default {
       console.log(obj, 'obj')
       if (cell.cellIndex === 10) {
         obj.title = '预提单明细表'
-        this.$router.push({name: 'YJviewDetails', query: obj})
+        window.open('/#/YJ-viewDetails?' + $.param(obj), '_blank')
       } else if (cell.cellIndex === 14) {
         obj.title = '零申报明细表'
-        this.$router.push({name: 'YJviewDetails', query: obj})
+        window.open('/#/YJ-viewDetails?' + $.param(obj), '_blank')
+        // this.$router.push({name: 'YJviewDetails', query: obj})
       } else {
         return
       }
-      // var url = ''
-      // var Param = `?channelid=${channelid || ''}&startdate=${startdate || ''}&enddate=${enddate || ''}`
-      // if (cell.cellIndex === 10) {
-      //   url = '/api/download/getreserveorders' + Param
-      // } else if (cell.cellIndex === 14) {
-      //   url = '/api/download/getzeroorders' + Param
-      // } else {
-      //   return
-      // }
-      // window.open(url)
     },
     handleStatus(row) {
       // console.log(row)

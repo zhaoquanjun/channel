@@ -597,6 +597,18 @@
         getpersoncardbypath(path).then(res => {
           console.log(res)
           if (res.status && res.data) {
+            // if (this.postData.Customer.IsSync) {
+            //   if (this.postData.Customer.LegalPerson && this.postData.Customer.LegalPerson === res.data.LegalPerson) {
+            //     this.postData.Customer.PersonCardID = res.data.PersonCardID
+            //   } else if (this.postData.Customer.LegalPerson && this.postData.Customer.LegalPerson !== res.data.LegalPerson) {
+            //     this.$message({
+            //       message: '身份证上的法人姓名与营业执照上的法人不符',
+            //       type: 'warning'
+            //     })
+            //   }
+            // } else {
+            //
+            // }
             if (this.postData.Customer.IsSync && this.postData.Customer.LegalPerson && this.postData.Customer.LegalPerson === res.data.LegalPerson) {
               this.postData.Customer.PersonCardID = res.data.PersonCardID
             } else if (this.postData.Customer.IsSync && this.postData.Customer.LegalPerson && this.postData.Customer.LegalPerson !== res.data.LegalPerson) {
@@ -605,8 +617,8 @@
                 type: 'warning'
               })
             } else {
-              this.postData.Customer.LegalPerson = res.data.LegalPerson
-              this.postData.Customer.PersonCardID = res.data.PersonCardID
+              this.postData.Customer.LegalPerson = res.data.LegalPerson ? res.data.LegalPerson : this.postData.Customer.LegalPerson
+              this.postData.Customer.PersonCardID = res.data.PersonCardID ? res.data.PersonCardID : this.postData.Customer.PersonCardID
             }
           } else if (res.status && !res.data) {
             this.$message({

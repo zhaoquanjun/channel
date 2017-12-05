@@ -13,7 +13,7 @@
       </div>
     </div>
   </div>
-  <el-table :data="tableData" border style="width: 100%" height="560">
+  <el-table :data="tableData" border style="width: 100%" height="590">
     <el-table-column prop="PartitionName" label="大区" width="50px">
     </el-table-column>
     <el-table-column prop="ProvinceName" label="省" width="70px">

@@ -128,7 +128,7 @@ export default {
             }
           } else {
             this.$message({
-              message: '该订单已删除',
+              message: '该订单已退单',
               type: 'warning'
             })
             return

@@ -185,7 +185,8 @@ export default {
         orderid,
         isback,
         tstart,
-        tend
+        tend,
+        Category
       } = this.params
       // if (this.pagination.total > 1000) {
       //   this.$message({
@@ -193,7 +194,7 @@ export default {
       //     message: '总条数过多，请缩小查询范围'
       //   })
       // } else {
-      const url = `/api/download/getpaymentdetails?starttime=${starttime || ''}&endtime=${endtime || ''}&channelname=${channelname || ''}&status=${status}&orderid=${orderid}&isback=${isback}&tstart=${tstart}&tend=${tend}`
+      const url = `/api/download/getpaymentdetails?starttime=${starttime || ''}&endtime=${endtime || ''}&channelname=${channelname || ''}&status=${status}&orderid=${orderid}&isback=${isback}&tstart=${tstart}&tend=${tend}&Category=${Category || 0}`
       // console.log(url)
       window.open(url)
       // }

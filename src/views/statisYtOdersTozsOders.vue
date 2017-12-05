@@ -131,22 +131,8 @@ export default {
       window.open(url)
       // alert(index)
     },
-    // downloadColumn(row, column, cell) {
-    //   var channelid = row.ChannelId
-    //   var startdate = this.params.startdate
-    //   var enddate = this.params.enddate
-    //   var url = ''
-    //   var Param = `?channelid=${channelid || ''}&startdate=${startdate || ''}&enddate=${enddate || ''}`
-    //   if (cell.cellIndex === 6) {
-    //     url = '/api/dataanalysis/exportbeforehandlist' + Param
-    //   } else if (cell.cellIndex === 7) {
-    //     url = '/api/dataanalysis/exporttoformallist' + Param
-    //   } else {
-    //     return
-    //   }
-    //   window.open(url)
-    // },
     downloadColumn(row, column, cell) {
+      console.log(cell, 'cell')
       var channelid = row.ChannelId
       var startdate = this.params.startdate
       var enddate = this.params.enddate
@@ -158,10 +144,12 @@ export default {
       }
       if (cell.cellIndex === 6) {
         obj.title = '预提单明细表'
-        this.$router.push({name: 'LZviewDetails', query: obj})
+        window.open('/#/LZ-viewDetails?' + $.param(obj), '_blank')
+        // this.$router.push({name: 'LZviewDetails', query: obj})
       } else if (cell.cellIndex === 7) {
-        obj.title = '转正式单明细表'
-        this.$router.push({name: 'LZviewDetails', query: obj})
+        obj.title = '转正式订单明细表'
+        window.open('/#/LZ-viewDetails?' + $.param(obj), '_blank')
+        // this.$router.push({name: 'LZviewDetails', query: obj})
       } else {
         return
       }
