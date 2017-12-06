@@ -133,15 +133,15 @@ export default {
       }
       if (cell.cellIndex === 6) {
         obj.title = '到期客户明细'
-        window.open('/#/XF-viewDetails?' + $.param(obj), '_blank')
+        window.open('/admin.html#/XF-viewDetails?' + $.param(obj), '_blank')
         // this.$router.push({name: 'XFviewDetails', query: obj})
       } else if (cell.cellIndex === 7) {
         obj.title = '未续费客户明细'
-        window.open('/#/XF-viewDetails?' + $.param(obj), '_blank')
+        window.open('/admin.html#/XF-viewDetails?' + $.param(obj), '_blank')
         // this.$router.push({name: 'XFviewDetails', query: obj})
       } else if (cell.cellIndex === 8) {
         obj.title = '续费客户明细'
-        window.open('/#/XF-viewDetails?' + $.param(obj), '_blank')
+        window.open('/admin.html#/XF-viewDetails?' + $.param(obj), '_blank')
         // this.$router.push({name: 'XFviewDetails', query: obj})
       } else {
         return

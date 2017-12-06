@@ -46,11 +46,11 @@
       </el-form-item>
       <el-form-item v-if="showCommissionAmount" label="退款金额：">
         <el-input v-model="ruleForm.BackAmount" readonly></el-input>
-        <span v-if="!isView" style="color: red">（剩余服务费-扣除返点+一代提成=退款金额）</span>
+        <span style="color: red">（剩余服务费-扣除返点+一代提成=退款金额）</span>
       </el-form-item>
       <el-form-item v-if="!showCommissionAmount" label="退款金额：">
         <el-input v-model="ruleForm.BackAmount" readonly></el-input>
-        <span v-if="!isView" style="color: red">（剩余服务费-扣除返点=退款金额）</span>
+        <span style="color: red">（剩余服务费-扣除返点=退款金额）</span>
       </el-form-item>
       <el-form-item label="退款原因：" required>
         <el-select v-model="ruleForm.BackReason" class="reason-select" :disabled="isView">

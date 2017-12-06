@@ -164,7 +164,8 @@ export default {
         iscustomers: 1
       }
       if (cell.cellIndex === 6) {
-        this.$router.push({name: 'YJviewDetails', query: obj})
+        window.open('/admin.html#/YJ-viewDetails?' + $.param(obj), '_blank')
+        // this.$router.push({name: 'YJviewDetails', query: obj})
       } else {
         return
       }

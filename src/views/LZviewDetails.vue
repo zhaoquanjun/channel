@@ -26,7 +26,7 @@
     </el-table-column>
     <el-table-column prop="cname" label="公司名称" min-width="150px">
     </el-table-column>
-    <el-table-column prop="ctype" label="公司性质" width="80px">
+    <el-table-column prop="ctype" label="纳税人类别" width="80px">
     </el-table-column>
     <el-table-column prop="lperson" label="法人" width="80px">
     </el-table-column>

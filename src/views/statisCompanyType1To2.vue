@@ -158,11 +158,11 @@ export default {
       }
       if (cell.cellIndex === 6) {
         obj.title = '小规模明细表'
-        window.open('/#/LZ-viewDetails?' + $.param(obj), '_blank')
+        window.open('/admin.html#/LZ-viewDetails?' + $.param(obj), '_blank')
         // this.$router.push({name: 'LZviewDetails', query: obj})
       } else if (cell.cellIndex === 7) {
         obj.title = '小规模转一般纳税人明细表'
-        window.open('/#/LZ-viewDetails?' + $.param(obj), '_blank')
+        window.open('/admin.html#/LZ-viewDetails?' + $.param(obj), '_blank')
         // this.$router.push({name: 'LZviewDetails', query: obj})
       } else {
         return

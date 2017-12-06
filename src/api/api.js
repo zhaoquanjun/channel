@@ -824,7 +824,7 @@ export const LZzToxgmDetails = params => {
 }
 // 流转数据管理--零申报转非零申报--转一般纳税人下载查看详情
 export const LZzToybDetails = params => {
-  return axios.get(`${base}/dataanalysis/getzerotoformallist`, {
+  return axios.get(`${base}/dataanalysis/zerotoformallist`, {
     params: params
   }).then(res => res.data)
 }

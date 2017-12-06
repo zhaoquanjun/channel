@@ -144,11 +144,11 @@ export default {
       }
       if (cell.cellIndex === 6) {
         obj.title = '预提单明细表'
-        window.open('/#/LZ-viewDetails?' + $.param(obj), '_blank')
+        window.open('/admin.html#/LZ-viewDetails?' + $.param(obj), '_blank')
         // this.$router.push({name: 'LZviewDetails', query: obj})
       } else if (cell.cellIndex === 7) {
         obj.title = '转正式订单明细表'
-        window.open('/#/LZ-viewDetails?' + $.param(obj), '_blank')
+        window.open('/admin.html#/LZ-viewDetails?' + $.param(obj), '_blank')
         // this.$router.push({name: 'LZviewDetails', query: obj})
       } else {
         return

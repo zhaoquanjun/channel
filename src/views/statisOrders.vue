@@ -170,10 +170,10 @@ export default {
       console.log(obj, 'obj')
       if (cell.cellIndex === 10) {
         obj.title = '预提单明细表'
-        window.open('/#/YJ-viewDetails?' + $.param(obj), '_blank')
+        window.open('/admin.html#/YJ-viewDetails?' + $.param(obj), '_blank')
       } else if (cell.cellIndex === 14) {
         obj.title = '零申报明细表'
-        window.open('/#/YJ-viewDetails?' + $.param(obj), '_blank')
+        window.open('/admin.html#/YJ-viewDetails?' + $.param(obj), '_blank')
         // this.$router.push({name: 'YJviewDetails', query: obj})
       } else {
         return
