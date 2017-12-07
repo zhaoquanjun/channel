@@ -9,15 +9,21 @@
     </el-table-column>
     <el-table-column prop="CityName" label="市" width="120">
     </el-table-column>
-    <el-table-column prop="ChannelName1" label="一级代理商" width="200">
+    <el-table-column prop="ChannelName1" label="一级代理商" min-width="200">
     </el-table-column>
-    <el-table-column prop="ChannelName2" label="二级代理商" width="200">
+    <el-table-column prop="ChannelName2" label="二级代理商" min-width="200">
+    </el-table-column>
+    <el-table-column prop="TotalNum" label="Agent系统客户数" width="150">
     </el-table-column>
     <el-table-column prop="UnMakeAccount" label="未建账客户数" width="150">
+    </el-table-column>
+    <el-table-column prop="UnMakeAccountRate" label="未建账比率列" width="150">
     </el-table-column>
     <el-table-column prop="UnMakeAccountLess10Day" label="10天以内未建账" width="150">
     </el-table-column>
     <el-table-column prop="UnMakeAccountMore10Day" label="10天以上未建账" width="150">
+    </el-table-column>
+    <el-table-column prop="" label="未开始账期未建账客户数" width="150">
     </el-table-column>
   </el-table>
 </div>
@@ -76,7 +82,7 @@ export default {
           return
         }
         const values = data.map(item => Number(item[column.property]))
-        if (index > 4) {
+        if (index > 4 && index !== 7) {
           sums[index] = values.reduce((prev, curr) => {
             const value = Number(curr)
             if (!isNaN(value)) {
@@ -87,6 +93,7 @@ export default {
           }, 0)
         } else {
           sums[index] = '-'
+          sums[7] = ''
         }
       })
 
@@ -103,9 +110,9 @@ export default {
       // console.log(enddate)
       var agent = 'https://agent.pilipa.cn/api/v1/AgentExport.ashx'
       var url = ''
-      if (cell.cellIndex === 5) {
+      if (cell.cellIndex === 6) {
         url = agent + `?type=getunaccount&accountid=${AccountId || ''}&enddate=${enddate || ''}`
-      } else if (cell.cellIndex === 7) {
+      } else if (cell.cellIndex === 9) {
         url = agent + `?type=getunaccountmore10day&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else {
         // console.log(url, '不能点')
@@ -120,12 +127,12 @@ export default {
 }
 </script>
 <style>
-.baobiao2 .el-table__body tr td:nth-child(6) .cell{
+.baobiao2 .el-table__body tr td:nth-child(7) .cell{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;
 }
-.baobiao2 .el-table__body tr td:nth-child(8) .cell{
+.baobiao2 .el-table__body tr td:nth-child(10) .cell{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;

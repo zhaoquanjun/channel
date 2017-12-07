@@ -84,7 +84,9 @@
     </el-table-column>
     <el-table-column prop="BLAmount" label="订单总金额" width="110">
     </el-table-column>
-    <el-table-column prop="PurchaseAmount" label="实收金额" width="100">
+    <el-table-column prop="PurchaseAmount" label="折扣金额" width="100">
+    </el-table-column>
+    <el-table-column prop="SSAmount" label="实收金额" width="100">
     </el-table-column>
   </el-table>
   <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 30]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"

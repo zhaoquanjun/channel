@@ -13,9 +13,13 @@
     </el-table-column>
     <el-table-column prop="ChannelName2" label="二级代理商" width="200">
     </el-table-column>
+    <el-table-column prop="" label="代理商入驻日期" width="150">
+    </el-table-column>
     <el-table-column prop="AllCusNum" label="全部客户数" width="150">
     </el-table-column>
     <el-table-column prop="TotalNum" label="Agent系统客户数" width="150">
+    </el-table-column>
+    <el-table-column prop="TiDanZero" label="零申报">
     </el-table-column>
     <el-table-column prop="NoSetUpNum" label="未建账">
     </el-table-column>
@@ -86,7 +90,7 @@ export default {
           return
         }
         const values = data.map(item => Number(item[column.property]))
-        if (index > 4) {
+        if (index > 5) {
           sums[index] = values.reduce((prev, curr) => {
             const value = Number(curr)
             if (!isNaN(value)) {
@@ -116,11 +120,11 @@ export default {
       // console.log(enddate)
       var agent = 'https://agent.pilipa.cn/api/v1/AgentExport.ashx'
       var url = ''
-      if (cell.cellIndex === 6) {
+      if (cell.cellIndex === 7) {
         url = agent + `?type=totalcustomer&accountid=${AccountId || ''}&enddate=${enddate || ''}`
-      } else if (cell.cellIndex === 9) {
-        url = agent + `?type=historybusinessdate&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else if (cell.cellIndex === 11) {
+        url = agent + `?type=historybusinessdate&accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else if (cell.cellIndex === 13) {
         url = agent + `?type=totalhung&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else {
         // console.log(url, '不能点')
@@ -135,17 +139,17 @@ export default {
 }
 </script>
 <style>
-.baobiao1 .el-table__body tr td:nth-child(7) .cell{
-  cursor: pointer;
-  color: #20a0ff;
-  text-decoration: underline;
-}
-.baobiao1 .el-table__body tr td:nth-child(10) .cell{
+.baobiao1 .el-table__body tr td:nth-child(8) .cell{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;
 }
 .baobiao1 .el-table__body tr td:nth-child(12) .cell{
+  cursor: pointer;
+  color: #20a0ff;
+  text-decoration: underline;
+}
+.baobiao1 .el-table__body tr td:nth-child(14) .cell{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;

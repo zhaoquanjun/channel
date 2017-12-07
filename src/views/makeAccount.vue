@@ -31,6 +31,8 @@
       <el-table-column prop="Confirm" label="已确认" width="130">
       </el-table-column>
     </el-table-column>
+    <el-table-column prop="ConfirmRate" label="已确认比率" width="130">
+    </el-table-column>
     <el-table-column label="报税" header-align="center">
       <el-table-column prop="Tax" label="申报" width="130">
       </el-table-column>
@@ -94,7 +96,7 @@ export default {
           return
         }
         const values = data.map(item => Number(item[column.property]))
-        if (index > 4) {
+        if (index > 4 && index !== 12) {
           sums[index] = values.reduce((prev, curr) => {
             const value = Number(curr)
             if (!isNaN(value)) {
@@ -105,6 +107,7 @@ export default {
           }, 0)
         } else {
           sums[index] = '-'
+          sums[12] = ''
         }
       })
 
@@ -125,7 +128,7 @@ export default {
         url = agent + `?type=getmonitionandunmakeaccount&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else if (cell.cellIndex === 10) {
         url = agent + `?type=getmakeaccountandunconfirm&accountid=${AccountId || ''}&enddate=${enddate || ''}`
-      } else if (cell.cellIndex === 13) {
+      } else if (cell.cellIndex === 14) {
         url = agent + `?type=getuntax&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else {
         // console.log(url, '不能点')
@@ -150,7 +153,7 @@ export default {
   color: #20a0ff;
   text-decoration: underline;
 }
-.baobiao4 .el-table__body tr td:nth-child(14) .cell{
+.baobiao4 .el-table__body tr td:nth-child(15) .cell{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;

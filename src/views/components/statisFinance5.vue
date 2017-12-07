@@ -72,6 +72,8 @@
     </el-table-column>
     <el-table-column prop="BLAmount" label="订单总金额" width="110">
     </el-table-column>
+    <el-table-column prop="SSAmount" label="折扣金额" width="100">
+    </el-table-column>
     <el-table-column prop="SSAmount" label="实收金额" width="100">
     </el-table-column>
     <el-table-column prop="KKAmount" label="可开金额" width="100">
