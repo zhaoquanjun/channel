@@ -68,13 +68,11 @@
     </el-table-column>
     <el-table-column prop="Name" label="公司名称" width="200">
     </el-table-column>
-    <el-table-column prop="AddedValueText" label="公司性质" width="110">
+    <el-table-column prop="AddedValueText" label="纳税人类别" width="110">
     </el-table-column>
     <el-table-column prop="BLAmount" label="订单总金额" width="110">
     </el-table-column>
     <el-table-column prop="SSAmount" label="折扣金额" width="100">
-    </el-table-column>
-    <el-table-column prop="SSAmount" label="实收金额" width="100">
     </el-table-column>
     <el-table-column prop="KKAmount" label="可开金额" width="100">
     </el-table-column>

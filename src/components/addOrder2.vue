@@ -7,7 +7,7 @@
             <p ng-if="postData.OrderId" class="form-control-static">
               销售：{{postData.SalerName}} 订单号：{{postData.OrderId}} 所属公司：{{postData.ChannelName}} 提单员：{{postData.BillName}}
               <span v-if="postData.Category != 1" style="color:red">预提单</span>
-              <span v-if="postData.FreChangeOrderId" style="color:red">企业性质变更</span>
+              <span v-if="postData.FreChangeOrderId" style="color:red">纳税人类别变更</span>
             </p>
             <div class='gray-line'></div>
 
@@ -408,7 +408,7 @@
         })
       },
       setContractAmount() {
-        if (this.postData.FreChangeOrderId) { // 企业性质变更时候重新根据开始账期结算合同金额差额
+        if (this.postData.FreChangeOrderId) { // 纳税人类别变更时候重新根据开始账期结算合同金额差额
           console.log('bb')
           var datestart = new Date(this.postData.ServiceStart)
           var dateend = new Date(this.postData.ServiceEnd)
