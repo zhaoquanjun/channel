@@ -1,6 +1,6 @@
 <template>
 <el-dialog title="设置礼包" :visible.sync="isShow">
-  <el-table :data="tableData" border style="width: 100%">
+  <el-table :data="tableData" border style="width: 100%" height="440">
     <el-table-column prop="GiftTypeName" label="礼包类型">
     </el-table-column>
     <el-table-column prop="AddedValue" label="客户类型" :formatter="AddedValueFormat">
