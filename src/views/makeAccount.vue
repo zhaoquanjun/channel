@@ -31,7 +31,7 @@
       <el-table-column prop="Confirm" label="已确认" width="130">
       </el-table-column>
     </el-table-column>
-    <el-table-column prop="ConfirmRate" label="已确认比率" width="130">
+    <el-table-column prop="ConfirmRate" label="已确认比率" :formatter="handleNum" width="130">
     </el-table-column>
     <el-table-column label="报税" header-align="center">
       <el-table-column prop="Tax" label="申报" width="130">
@@ -69,6 +69,12 @@ export default {
     this.tableHeight = document.querySelector('.content-right').offsetHeight - 105
   },
   methods: {
+    handleNum(row) {
+      // console.log(row)
+      var ConfirmRate = row.ConfirmRate
+      ConfirmRate = (ConfirmRate * 100).toFixed(2) + '%'
+      return ConfirmRate
+    },
     fetchData() {
       agentaccountcustomer(this.params).then((res) => {
         this.tableData = res.data

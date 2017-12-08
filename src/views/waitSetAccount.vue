@@ -17,13 +17,13 @@
     </el-table-column>
     <el-table-column prop="UnMakeAccount" label="未建账客户数" width="150">
     </el-table-column>
-    <el-table-column prop="UnMakeAccountRate" label="未建账比率列" width="150">
+    <el-table-column prop="UnMakeAccountRate" label="未建账比率" :formatter="handleNum" width="150">
     </el-table-column>
     <el-table-column prop="UnMakeAccountLess10Day" label="10天以内未建账" width="150">
     </el-table-column>
     <el-table-column prop="UnMakeAccountMore10Day" label="10天以上未建账" width="150">
     </el-table-column>
-    <el-table-column prop="" label="未开始账期未建账客户数" width="150">
+    <el-table-column prop="UnBusinessDate" label="未开始账期未建账客户数" width="150">
     </el-table-column>
   </el-table>
 </div>
@@ -55,6 +55,12 @@ export default {
     this.tableHeight = document.querySelector('.content-right').offsetHeight - 105
   },
   methods: {
+    handleNum(row) {
+      // console.log(row)
+      var UnMakeAccountRate = row.UnMakeAccountRate
+      UnMakeAccountRate = (UnMakeAccountRate * 100).toFixed(2) + '%'
+      return UnMakeAccountRate
+    },
     fetchData() {
       agentrecallcustomer(this.params).then((res) => {
         this.tableData = res.data
@@ -109,6 +115,7 @@ export default {
       }
       // console.log(enddate)
       var agent = 'https://agent.pilipa.cn/api/v1/AgentExport.ashx'
+      // var agent = 'http://123.56.31.133:8083'
       var url = ''
       if (cell.cellIndex === 6) {
         url = agent + `?type=getunaccount&accountid=${AccountId || ''}&enddate=${enddate || ''}`

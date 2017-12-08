@@ -13,7 +13,7 @@
     </el-table-column>
     <el-table-column prop="ChannelName2" label="二级代理商" width="200">
     </el-table-column>
-    <el-table-column prop="" label="代理商入驻日期" width="150">
+    <el-table-column prop="CreateDate" label="代理商入驻日期" :formatter="StatusDate" width="150">
     </el-table-column>
     <el-table-column prop="AllCusNum" label="全部客户数" width="150">
     </el-table-column>
@@ -63,6 +63,10 @@ export default {
     this.tableHeight = document.querySelector('.content-right').offsetHeight - 105
   },
   methods: {
+    StatusDate(row) {
+      var date = row.CreateDate
+      return date.substring(0, 10)
+    },
     fetchData() {
       agenttotalcustomer(this.params).then((res) => {
         this.tableData = res.data
