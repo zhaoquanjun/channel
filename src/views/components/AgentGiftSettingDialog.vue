@@ -1,6 +1,6 @@
 <template>
 <el-dialog title="设置礼包" :visible.sync="isShow">
-  <el-table :data="tableData" border style="width: 100%" height="440">
+  <el-table :data="tableData" border style="width: 100%" :height="tableHeight">
     <el-table-column prop="GiftTypeName" label="礼包类型">
     </el-table-column>
     <el-table-column prop="AddedValue" label="客户类型" :formatter="AddedValueFormat">
@@ -62,7 +62,8 @@ export default {
         Price: '',
         Num: ''
       },
-      tableData: []
+      tableData: [],
+      tableHeight: ''
     }
   },
   created() {
@@ -82,6 +83,9 @@ export default {
     getGiftTypes() {
       getGiftTypes().then((res) => {
         this.giftTypes = res.data
+        if (this.giftTypes.length > 10) {
+          this.tableHeight = 440
+        }
       })
     },
     fetchData() {
@@ -89,6 +93,10 @@ export default {
         ChannelId: this.channelId
       }).then((res) => {
         this.tableData = res.data
+        console.log(this.tableData.length, 'length')
+        if (this.tableData.length > 10) {
+          this.tableHeight = 440
+        }
       })
     },
     AddedValueFormat(row) {

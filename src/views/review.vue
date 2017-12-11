@@ -128,9 +128,11 @@ export default {
     passOrder(row) {
       var customerid = row.CustomerId
       var serviceStart = row.ServiceStart
+      var channelid = row.ChannelId
       CheckIsConnectDate({
         servicestart: serviceStart,
-        customerid: customerid
+        customerid: customerid,
+        channelid: channelid
       }).then((res) => {
         if (res.status) {
           if (!res.data) { // 账期连续
