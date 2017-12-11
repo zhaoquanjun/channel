@@ -128,51 +128,70 @@ export default {
     passOrder(row) {
       var customerid = row.CustomerId
       var serviceStart = row.ServiceStart
-      var channelid = row.ChannelId
-      CheckIsConnectDate({
-        servicestart: serviceStart,
-        customerid: customerid,
-        channelid: channelid
-      }).then((res) => {
-        if (res.status) {
-          if (!res.data) { // 账期连续
-            console.log('账期联系')
-            this.$confirm('您确定要通过吗?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              passO(row.OrderId).then(res => {
-                if (res.status) {
-                  this.$message({
-                    type: 'success',
-                    message: '通过!'
-                  })
-                  this.fetchData()
-                }
-              })
-            }).catch(() => {})
-          } else if (res.data) {
-            var errorMsg = res.data
-            console.log(errorMsg, 'errorMsg')
-            this.$confirm(errorMsg, '提示', {
-              confirmButtonText: '确定通过',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              passO(row.OrderId).then(res => {
-                if (res.status) {
-                  this.$message({
-                    type: 'success',
-                    message: '通过!'
-                  })
-                  this.fetchData()
-                }
-              })
-            }).catch(() => {})
+      var orderid = row.OrderId
+      var freChangeOrderId = row.FreChangeOrderId
+      if (!freChangeOrderId) {
+        CheckIsConnectDate({
+          servicestart: serviceStart,
+          customerid: customerid,
+          orderid: orderid
+        }).then((res) => {
+          if (res.status) {
+            if (!res.data) { // 账期连续
+              console.log('账期联系')
+              this.$confirm('您确定要通过吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                passO(row.OrderId).then(res => {
+                  if (res.status) {
+                    this.$message({
+                      type: 'success',
+                      message: '通过!'
+                    })
+                    this.fetchData()
+                  }
+                })
+              }).catch(() => {})
+            } else if (res.data) {
+              var errorMsg = res.data
+              console.log(errorMsg, 'errorMsg')
+              this.$confirm(errorMsg, '提示', {
+                confirmButtonText: '确定通过',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                passO(row.OrderId).then(res => {
+                  if (res.status) {
+                    this.$message({
+                      type: 'success',
+                      message: '通过!'
+                    })
+                    this.fetchData()
+                  }
+                })
+              }).catch(() => {})
+            }
           }
-        }
-      })
+        })
+      } else {
+        this.$confirm('您确定要通过吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          passO(row.OrderId).then(res => {
+            if (res.status) {
+              this.$message({
+                type: 'success',
+                message: '通过!'
+              })
+              this.fetchData()
+            }
+          })
+        }).catch(() => {})
+      }
     },
     refuseOrder(row) {
       var item = {

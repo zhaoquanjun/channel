@@ -87,7 +87,7 @@
                 <el-form-item label='合同金额：' required>
                   <el-input v-model='postData.ContractAmount' readonly></el-input>
                 </el-form-item>
-                <div style="padding-left:135px;color:red;margin-top: -10px;margin-bottom: 10px;">注:合同金额根据所属城市、公司性质和付款方式自动计算，不包含礼包价格。</div>
+                <div style="padding-left:135px;color:red;margin-top: -10px;margin-bottom: 10px;">注:合同金额根据所属城市、纳税人类别、套餐类型自动计算，不包含礼包价格。</div>
               </el-col>
             </el-row>
 

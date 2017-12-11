@@ -129,7 +129,7 @@ export default {
       }
       console.log(enddate)
       // var agent = 'https://agent.pilipa.cn/api/v1/AgentExport.ashx'
-      var agent = 'http://123.56.31.133:8083/api/v1/AgentExport.ashx'
+      var agent = 'https://ri.i-counting.cn/api/v1/AgentExport.ashx'
       var url = ''
       if (cell.cellIndex === 9) {
         url = agent + `?type=getmonitionandunmakeaccount&accountid=${AccountId || ''}&enddate=${enddate || ''}`
