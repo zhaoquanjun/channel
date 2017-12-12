@@ -71,9 +71,13 @@ export default {
   methods: {
     handleNum(row) {
       // console.log(row)
-      var ConfirmRate = row.ConfirmRate
-      ConfirmRate = (ConfirmRate * 100).toFixed(2) + '%'
-      return ConfirmRate
+      if (row && row.ConfirmRate) {
+        var ConfirmRate = row.ConfirmRate
+        ConfirmRate = (ConfirmRate * 100).toFixed(2) + '%'
+        return ConfirmRate
+      } else {
+        return ''
+      }
     },
     fetchData() {
       agentaccountcustomer(this.params).then((res) => {
@@ -128,8 +132,8 @@ export default {
         enddate = date
       }
       console.log(enddate)
-      // var agent = 'https://agent.pilipa.cn/api/v1/AgentExport.ashx'
-      var agent = 'https://ri.i-counting.cn/api/v1/AgentExport.ashx'
+      var agent = 'https://agent.pilipa.cn/api/v1/AgentExport.ashx'
+      // var agent = 'https://ri.i-counting.cn/api/v1/AgentExport.ashx'
       var url = ''
       if (cell.cellIndex === 9) {
         url = agent + `?type=getmonitionandunmakeaccount&accountid=${AccountId || ''}&enddate=${enddate || ''}`

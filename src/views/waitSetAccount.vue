@@ -118,8 +118,8 @@ export default {
         enddate = date
       }
       // console.log(enddate)
-      // var agent = 'https://agent.pilipa.cn/api/v1/AgentExport.ashx'
-      var agent = 'https://ri.i-counting.cn/api/v1/AgentExport.ashx'
+      var agent = 'https://agent.pilipa.cn/api/v1/AgentExport.ashx'
+      // var agent = 'https://ri.i-counting.cn/api/v1/AgentExport.ashx'
       var url = ''
       if (cell.cellIndex === 6) {
         url = agent + `?type=getunaccount&accountid=${AccountId || ''}&enddate=${enddate || ''}`
