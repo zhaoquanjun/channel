@@ -12,7 +12,7 @@
         <span>欢迎 {{userInfo.RoleName}}：</span>
         <span>{{userInfo.RealName}} 进入！</span>
       </div>
-      <h4>PILIPA渠道管理系统</h4>
+      <h4 @click="goMainHtml">PILIPA渠道管理系统</h4>
     </el-menu>
   </div>
 </template>
@@ -42,6 +42,9 @@ export default {
           }
         })
       }
+    },
+    goMainHtml() {
+      this.$router.push({name: 'Main'})
     }
   }
 }
@@ -76,5 +79,8 @@ a {
 
 .el-menu--horizontal .el-submenu>.el-menu {
   top: auto;
+}
+.header h4 {
+  cursor: pointer;
 }
 </style>

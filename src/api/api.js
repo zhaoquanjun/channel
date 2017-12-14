@@ -890,3 +890,13 @@ export const deletepromotion = (id) => {
 export const deletechannelpromotion = (id) => {
   return axios.delete(`${base}/newpromotion/deletechannelpromotion/${id}`).then(res => res.data)
 }
+// 公告列表获取
+export const getnoticelist = params => {
+  return axios.get(`${base}/notice/getnoticelist`, {
+    params: params
+  }).then(res => res.data)
+}
+// 撤回公告
+export const deletenotice = (id) => {
+  return axios.put(`${base}/notice/deletenotice/${id}`).then(res => res.data)
+}

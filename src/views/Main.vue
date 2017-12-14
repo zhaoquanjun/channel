@@ -3,7 +3,10 @@
   <VHeader :user-info="userInfo"></VHeader>
   <div class="content">
     <div class="content-left">
-      <VAside></VAside>
+      <div class="nav-title" @click="goMainHtml">
+        首页
+      </div>
+      <VAside ref='vaside'></VAside>
     </div>
     <div class="content-right">
       <router-view></router-view>
@@ -18,17 +21,36 @@ import VAside from '../components/aside.vue'
 export default {
   data: function() {
     return {
-      userInfo: {}
+      userInfo: {},
+      showIndex: true
     }
   },
   components: {
     VHeader,
     VAside
   },
+  mounted() {
+    this.initMenu()
+  },
   created() {
     var userInfos = JSON.parse(sessionStorage.getItem('userInfo'))
     this.userInfo.RoleName = userInfos.RoleName
     this.userInfo.RealName = userInfos.RealName
+  },
+  methods: {
+    goMainHtml() {
+      $('.nav-title').addClass('active')
+      $(this.$refs.vaside.$el).children().map((index, el) => {
+        $(el).removeClass('is-expanded')
+        $(el).children().eq(1).hide()
+      })
+      this.$router.push({name: 'Main'})
+    },
+    initMenu() {
+      if (this.$route.name === 'main.home') {
+        $('.nav-title').addClass('active')
+      }
+    }
   }
 }
 </script>
@@ -59,5 +81,19 @@ export default {
 .content-right {
   flex: auto;
   overflow-y: auto;
+}
+
+.main .nav-title {
+  line-height: 36px;
+  height: 36px;
+  cursor: pointer;
+  font-size: 14px;
+  padding-left: 24px;
+}
+.main .nav-title.active {
+  background-color: #edf7ff;
+}
+.main .nav-title:hover {
+  background-color: #e4e8f1;
 }
 </style>

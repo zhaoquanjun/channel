@@ -54,6 +54,7 @@ export default {
   },
   methods: {
     handleNodeClick(data) {
+      $('.nav-title').removeClass('active')
       if (data.url.indexOf('.') > 0) {
         this.$router.push(data.url.split('.')[1])
       }

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Main from '@/views/Main'
+import Home from '@/views/Home'
 import Login from '@/views/Login'
 import AgentList from '@/views/Agent' // 代理管理list
 import AgentAuth from '@/views/AgentAuth' // 代理审核
@@ -42,6 +43,7 @@ import Chargeback from '@/views/chargeback' // 退单记录
 import YJViewDetails from '@/views/YJviewDetails' // 业绩数据管理-预提单&&零申报查看明细
 import XFViewDetails from '@/views/XFviewDetails' // 续费数据管理-查看明细
 import LZViewDetails from '@/views/LZViewDetails' // 流转数据管理-查看明细
+import InfoList from '@/views/infolist' // 公告管理列表
 
 Vue.use(Router)
 const router = new Router({
@@ -50,6 +52,10 @@ const router = new Router({
     name: 'Main',
     component: Main,
     children: [{
+      name: 'main.home',
+      path: '/',
+      component: Home
+    }, {
       name: 'main.agent',
       path: 'agent',
       component: AgentList
@@ -199,6 +205,10 @@ const router = new Router({
       name: 'main.statis_outwork',
       path: 'statis_outwork',
       component: StatisOutwork
+    }, {
+      name: 'InfoList',
+      path: 'info_list',
+      component: InfoList
     }]
   }, {
     path: '/login',
