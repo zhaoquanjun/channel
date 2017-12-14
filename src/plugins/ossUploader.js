@@ -3,7 +3,8 @@ var typMap = {
   1: 'FileUploads/Order/CardID/',
   2: 'FileUploads/Order/BusinessLicense/',
   3: 'FileUploads/Order/Contract/',
-  4: 'FileUploads/Agent/'
+  4: 'FileUploads/Agent/',
+  5: 'FileUploads/File/'
 }
 var signkey = {}
 $.get('/api/signkey').then(function (res) {
