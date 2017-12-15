@@ -100,7 +100,7 @@ export default {
         obj.title = '公告管理'
         obj.category = 1
       } else {
-        obj.title = '最新公告'
+        obj.title = '公告列表'
         obj.category = 0
       }
       this.$router.push({name: 'InfoList', query: obj})

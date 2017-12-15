@@ -50,7 +50,6 @@ export default {
   methods: {
     getrolesList() {
       getroles().then((res) => {
-        console.log(res)
         if (res.status) {
           this.listData = res.data
           this.CenterRolesList = this.listData[0]
@@ -59,23 +58,19 @@ export default {
       })
     },
     CenterhandleCheckAllChange(val) {
-      console.log(this.CentercheckAll, val)
       this.CenterRoles = this.CentercheckAll ? this.CentercheckList : []
       this.centerisIndeterminate = false
     },
     CenterhandleCheckedRolesChange(value) {
-      console.log(value)
       let checkedCount = value.length
       this.CentercheckAll = checkedCount === this.CenterRolesList.length
       this.centerisIndeterminate = checkedCount > 0 && checkedCount < this.CenterRolesList.length
     },
     ChannelhandleCheckAllChange(val) {
-      console.log(this.ChannelcheckAll, val)
       this.ChannelRoles = this.ChannelcheckAll ? this.ChannelcheckList : []
       this.channelisIndeterminate = false
     },
     ChannelhandleCheckedRolesChange(value) {
-      console.log(value)
       let ChannelcheckedCount = value.length
       this.CentercheckAll = ChannelcheckedCount === this.ChannelRolesList.length
       this.channelisIndeterminate = ChannelcheckedCount > 0 && ChannelcheckedCount < this.ChannelRolesList.length
