@@ -4,7 +4,7 @@
       <h4>仪表盘</h4>
     </div>
     <div class="right-content">
-      <div class="board announcement">
+      <div class="board notice">
         <h4>
           最新公告
           <span class="more" @click="goMoreinfo">更多>></span>
@@ -18,8 +18,8 @@
         </div>
         <div v-if="!lists.length" class="list-bg">
         </div>
-        <div v-if="category === 1" class="new">
-          <div class="new-announcement">
+        <div v-if="category === 1" class="new" @click="makeNotice">
+          <div class="new-notice">
             创建公告
           </div>
         </div>
@@ -36,7 +36,7 @@
         <div v-if="!documents.length" class="list-bg list-bg-document">
         </div>
         <div v-if="category === 1" class="new" @click="uploaderFile">
-          <div class="new-announcement">
+          <div class="new-notice">
             上传文件
           </div>
         </div>
@@ -48,6 +48,7 @@
 import { getnoticelist } from '@/api/api'
 import Dialog from '@/service/dialog.js'
 import FileUploader from '@/components/fileUploader'
+import MakeNotice from '@/views/components/makeNotice'
 export default {
   data() {
     return {
@@ -109,6 +110,11 @@ export default {
       Dialog(FileUploader).then(() => {
         // this.getFilelist()
       })
+    },
+    makeNotice() {
+      Dialog(MakeNotice).then(() => {
+        this.getNoticeList()
+      })
     }
   }
 }
@@ -136,7 +142,7 @@ export default {
       float: left
       width: 38%
       overflow: hidden
-      .announcement, .document
+      .notice, .document
         height: 277px
         h4
           margin-bottom: 10px
@@ -176,7 +182,7 @@ export default {
             color: #ccc
             padding: 5px 0 10px
             margin: 0
-      .announcement
+      .notice
         margin-bottom: 20px
       .document
         .document-item
@@ -200,7 +206,7 @@ export default {
             margin-right: 10px
 </style>
 <style lang="stylus">
-  .announcement
+  .notice
     .list-item:nth-child(4)
       border-bottom: none !important
 </style>
@@ -221,7 +227,7 @@ export default {
     bottom: 0
     left: 0
     width: 100%
-    .new-announcement
+    .new-notice
       margin: 0 25px
       padding: 20px 0
       border-top: 1px solid #ccc

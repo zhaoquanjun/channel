@@ -900,3 +900,7 @@ export const getnoticelist = params => {
 export const deletenotice = (id) => {
   return axios.put(`${base}/notice/deletenotice/${id}`).then(res => res.data)
 }
+// 获取公告及文档课件范围列表
+export const getroles = () => {
+  return axios.get(`${base}/notice/getroles`).then(res => res.data)
+}
