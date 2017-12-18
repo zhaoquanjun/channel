@@ -904,3 +904,11 @@ export const deletenotice = (id) => {
 export const getroles = () => {
   return axios.get(`${base}/notice/getroles`).then(res => res.data)
 }
+// 保存公告
+export const insertnotice = (params) => {
+  return axios.post(`${base}/notice/insertnotice`, params).then(res => res.data)
+}
+// 公告详情
+export const getnotice = (id) => {
+  return axios.get(`${base}/notice/getnotice?id=${id}`).then(res => res.data)
+}

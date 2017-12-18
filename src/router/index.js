@@ -44,6 +44,7 @@ import YJViewDetails from '@/views/YJviewDetails' // 业绩数据管理-预提�
 import XFViewDetails from '@/views/XFviewDetails' // 续费数据管理-查看明细
 import LZViewDetails from '@/views/LZViewDetails' // 流转数据管理-查看明细
 import InfoList from '@/views/infolist' // 公告管理列表
+import NoticeDetail from '@/views/noticeDetail' // 公告详情页
 
 Vue.use(Router)
 const router = new Router({
@@ -209,6 +210,10 @@ const router = new Router({
       name: 'InfoList',
       path: 'info_list',
       component: InfoList
+    }, {
+      name: 'NoticeDetail',
+      path: '/noticeDetails',
+      component: NoticeDetail
     }]
   }, {
     path: '/login',

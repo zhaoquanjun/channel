@@ -25,7 +25,10 @@
 </template>
 
 <script>
+import { insertnotice } from '@/api/api'
 import Noticemodel from '@/components/noticeRound.vue'
+import bus from '@/bus'
+import router from '@/router'
 export default {
   data() {
     return {
@@ -50,6 +53,45 @@ export default {
   },
   components: {
     noticemodel: Noticemodel
+  },
+  created() {
+    bus.$on('selectedRound', (selectdObj) => {
+      console.log(selectdObj, 'selectdObj')
+      this.ruleForm.CenterRoles = selectdObj.CenterRoles
+      this.ruleForm.ChannelRoles = selectdObj.ChannelRoles
+    })
+  },
+  methods: {
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          console.log(this.ruleForm, 'ruleForm')
+          if (!this.ruleForm.Text) {
+            this.$message({
+              message: '请填写公告正文',
+              type: 'warning'
+            })
+            return
+          }
+          insertnotice(this.ruleForm).then((res) => {
+            if (res.status) {
+              this.$message({
+                type: 'success',
+                message: '发布成功'
+              })
+              var obj = {
+                title: '公告管理',
+                category: 1
+              }
+              router.push({name: 'InfoList', query: obj})
+              this.dialogFormVisible = false
+            }
+          })
+        } else {
+          return false
+        }
+      })
+    }
   }
 }
 </script>

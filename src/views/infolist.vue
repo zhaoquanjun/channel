@@ -20,7 +20,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <el-table v-if="+category === 1" :data="tableData" border style="width: 100%">
+    <el-table v-if="+category === 1" :data="tableData" border style="width: 100%" @cell-click="sacnColumnDetail">
       <el-table-column prop="Title" label="公告标题" min-width="150">
         <template scope="scope">
           <span :style="{color: scope.row.IsOverdue ? '#ccc' : '', borderColor: scope.row.IsOverdue ? '#ccc' : ''}" class="data-sign" v-if="scope.row.IsNew">新</span>
@@ -45,11 +45,11 @@
         </template>
       </el-table-column>
     </el-table>
-    <div v-if="+category !== 1" class="">
-      <div class="list-item" v-for="list in tableData">
+    <div v-if="+category !== 1" class="other-style">
+      <div class="list-item-other" v-for="list in tableData">
         <span class="data-sign" v-if="list.IsNew">新</span>
-        <span>{{list.Title}}</span>
-        <span>{{list.CreateDate}}</span>
+        <span class="detail-item" @click="goDetail(list.id)">{{list.Title}}</span>
+        <span class="date-float">{{list.CreateDate}}</span>
       </div>
     </div>
     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 30]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
@@ -132,6 +132,22 @@ export default {
         })
       }).catch(() => {})
     },
+    sacnColumnDetail(row, column, cell) {
+      var obj = {
+        id: row.id
+      }
+      if (cell.cellIndex === 0) {
+        this.$router.push({name: 'NoticeDetail', query: obj})
+      } else {
+        return
+      }
+    },
+    goDetail(id) {
+      var obj = {
+        id: id
+      }
+      this.$router.push({name: 'NoticeDetail', query: obj})
+    },
     handleSizeChange(val) {
       this.pagination.pageSize = val
       this.fetchData()
@@ -170,4 +186,24 @@ export default {
     line-height: 30px
     margin: 10px 25px
     border-bottom: 1px solid #ccc
+  .el-table__body tr td:nth-child(1) .cell:hover
+    cursor: pointer
+    color: #1b9bfc
+  .other-style
+    .list-item-other
+      padding: 15px 25px
+      border-bottom: 1px solid #ccc
+      clear: both
+      overflow: hidden
+      .detail-item:hover
+        color: #1b9bfc
+        cursor: pointer
+      .data-sign
+        font-size: 14px
+        border-radius: 4px
+      .date-float
+        float: right
+        color: #969696
+      span
+        float: left
 </style>

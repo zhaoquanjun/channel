@@ -12,7 +12,7 @@
         <div v-if="lists.length" class="list-item" v-for="list in lists">
           <div>
             <i v-if="list.IsNew">新</i>
-            <span>{{list.Title}}</span>
+            <span @click="goDetail(list.id)">{{list.Title}}</span>
           </div>
           <p>{{list.CreateDate}}</p>
         </div>
@@ -53,11 +53,7 @@ export default {
   data() {
     return {
       category: '',
-      lists: [
-        {IsNew: 1, Title: '渠道系统V1.5.1正式版发布 升级注意事项', CreatDate: '2017-11-25'},
-        {IsNew: 1, Title: '渠道系统V1.5.1正式版发布 升级注意事项渠道系统V1.5.1正式版发布 升级注意事项渠道系统V1.5.1正式版发布 升级注意事项', CreatDate: '2017-11-25'},
-        {IsNew: 1, Title: '渠道系统V1.5.1正式版发布 升级注意事项', CreatDate: '2017-11-25'}
-      ],
+      lists: [],
       documents: [
         {title: '渠道系统提单使用手册渠道系统提单使用手册渠道系统提单使用手册渠道系统提单使用手渠道系统提单使用手册'},
         {title: '渠道系统提单使用手册'},
@@ -115,6 +111,12 @@ export default {
       Dialog(MakeNotice).then(() => {
         this.getNoticeList()
       })
+    },
+    goDetail(id) {
+      var obj = {
+        id: id
+      }
+      this.$router.push({name: 'NoticeDetail', query: obj})
     }
   }
 }
