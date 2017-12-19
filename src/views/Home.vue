@@ -27,7 +27,7 @@
       <div class="board document">
         <h4>
           帮助文档
-          <span class="more">更多>></span>
+          <span class="more" @click="goMorefile">更多>></span>
         </h4>
         <div v-if="documents.length" class="document-item" v-for="list in documents">
           <i></i>
@@ -100,6 +100,17 @@ export default {
         obj.category = 0
       }
       this.$router.push({name: 'InfoList', query: obj})
+    },
+    goMorefile() {
+      var obj = {}
+      if (this.category === 1) {
+        obj.title = '文件管理'
+        obj.category = 1
+      } else {
+        obj.title = '文档列表'
+        obj.category = 0
+      }
+      this.$router.push({name: 'Filelist', query: obj})
     },
     uploaderFile() {
       console.log('aa')

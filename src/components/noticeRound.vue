@@ -4,7 +4,7 @@
     <div class="center-rount">{{centerselectedText}}</div>
     <div style="color: #1b9bfc">{{channelselectedText}}</div>
   </div>
-  <div class="el-dropdown-menu" v-show="visible">
+  <div class="el-dropdown-menu" :class="{'el-dropdown-menu-position': isTop}" v-show="visible">
     <el-tabs v-model="activeName" type="card">
       <el-tab-pane label="渠道内部" name="first">
         <el-checkbox :indeterminate="centerisIndeterminate" v-model="CentercheckAll" @change="CenterhandleCheckAllChange">渠道内部全体</el-checkbox>
@@ -28,6 +28,7 @@ import { getroles } from '@/api/api'
 import Clickoutside from 'element-ui/src/utils/clickoutside'
 import bus from '@/bus'
 export default {
+  props: ['top'],
   data() {
     return {
       visible: false,
@@ -41,14 +42,17 @@ export default {
       CenterRolesList: [],
       ChannelRolesList: [],
       CenterRoles: [1],
-      CentercheckList: [1, 2, 3, 4, 5, 18, 19, 24, 25, 26, 27],
+      CentercheckList: [],
       ChannelRoles: [],
-      ChannelcheckList: [6, 7, 8, 9, 14, 16, 20, 22],
+      ChannelcheckList: [],
       centerselectedText: '系统管理员',
-      channelselectedText: ''
+      channelselectedText: '',
+      isTop: false
     }
   },
   created() {
+    this.isTop = this.top
+    console.log(this.isTop)
     this.getrolesList()
   },
   methods: {
@@ -57,7 +61,11 @@ export default {
         if (res.status) {
           this.listData = res.data
           this.CenterRolesList = this.listData[0]
+          this.CentercheckList = window._.map(this.CenterRolesList, 'RoleId')
+          console.log(this.CentercheckList, 'this.CentercheckList')
           this.ChannelRolesList = this.listData[1]
+          this.ChannelcheckList = window._.map(this.ChannelRolesList, 'RoleId')
+          console.log(this.ChannelcheckList)
         }
       })
     },
@@ -180,7 +188,7 @@ export default {
     min-height: 36px
     border: 1px solid #8391a5
     border-radius: 4px
-    padding: 3px 10px
+    /* padding: 3px 10px */
     .center-rount
       white-space: nowrap
       text-overflow: ellipsis
@@ -190,7 +198,8 @@ export default {
     padding: 0
     width: 500px
     overflow: auto
-    /* top: auto !important */
+    top: auto
+  .el-dropdown-menu-position
     top: -200px
     .el-tabs
       padding-bottom: 0

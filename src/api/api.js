@@ -912,3 +912,13 @@ export const insertnotice = (params) => {
 export const getnotice = (id) => {
   return axios.get(`${base}/notice/getnotice?id=${id}`).then(res => res.data)
 }
+// 文件列表获取
+export const getdoclist = params => {
+  return axios.get(`${base}/doc/getdoclist`, {
+    params: params
+  }).then(res => res.data)
+}
+// 文件上传
+export const insertdoc = (params) => {
+  return axios.post(`${base}/doc/insertdoc`, params).then(res => res.data)
+}

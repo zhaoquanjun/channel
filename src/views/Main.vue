@@ -44,7 +44,7 @@ export default {
         $(el).removeClass('is-expanded')
         $(el).children().eq(1).hide()
       })
-      this.$router.push({name: 'Main'})
+      this.$router.push({name: 'main.home'})
     },
     initMenu() {
       if (this.$route.name === 'main.home') {

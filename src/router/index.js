@@ -45,6 +45,7 @@ import XFViewDetails from '@/views/XFviewDetails' // 续费数据管理-查看�
 import LZViewDetails from '@/views/LZViewDetails' // 流转数据管理-查看明细
 import InfoList from '@/views/infolist' // 公告管理列表
 import NoticeDetail from '@/views/noticeDetail' // 公告详情页
+import Filelist from '@/views/filelist' // 文档列表
 
 Vue.use(Router)
 const router = new Router({
@@ -210,6 +211,10 @@ const router = new Router({
       name: 'InfoList',
       path: 'info_list',
       component: InfoList
+    }, {
+      name: 'Filelist',
+      path: 'file_list',
+      component: Filelist
     }, {
       name: 'NoticeDetail',
       path: '/noticeDetails',

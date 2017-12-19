@@ -44,7 +44,7 @@ export default {
       }
     },
     goMainHtml() {
-      this.$router.push({name: 'Main'})
+      this.$router.push({name: 'main.home'})
     }
   }
 }

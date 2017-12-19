@@ -8,14 +8,17 @@
     </div>
     <div class="content">
       <h3>{{detailData.Title}}</h3>
-      <div class="detail-nav">
-        <div class="">
+      <div class="detail-nav" v-if="category === 1">
+        <div>
           <span>发布日期：{{detailData.CreateDate}}</span>
           <span class="end-date">公告截止日期：{{detailData.EndDate}}</span>
         </div>
-        <div class="">
+        <div>
           <span>发布范围：{{detailData.CenterRoleNames + ';' + detailData.ChannelRoleNames}}</span>
         </div>
+      </div>
+      <div v-if="category !== 1" class="detail-nav" style="padding-bottom: 20px">
+        <span>发布日期：{{detailData.CreateDate}}</span>
       </div>
       <div class="detail-con">
         <pre><el-input class="detail-area" type="textarea" v-model="detailData.Text" :rows=15></el-input></pre>
@@ -30,13 +33,16 @@ export default {
   data() {
     return {
       id: '',
-      detailData: ''
+      detailData: '',
+      category: ''
     }
   },
   created() {
     this.id = this.$route.query.id
     console.log(this.id, 'this.id')
     this.getDetail()
+    this.category = JSON.parse(sessionStorage.getItem('userInfo')).Category
+    console.log(this.category, 'this.category')
   },
   methods: {
     goLastPage() {
@@ -84,11 +90,12 @@ export default {
     .detail-nav
       padding: 5px
       border-bottom: 1px solid #ccc
+      color: #969696
+      font-size: 14px
       div
         height: 30px
         line-height: 30px
         padding: 0 120px
-        color: #969696
         .end-date
           float: right
         span

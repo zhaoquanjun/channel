@@ -10,7 +10,7 @@
           <span class="notice-text">{{ruleForm.Text.length}}/1000</span>
         </el-form-item>
         <el-form-item label="公告范围：" required>
-          <noticemodel></noticemodel>
+          <noticemodel :top="true"></noticemodel>
         </el-form-item>
         <el-form-item label='公告截止到：' prop="EndDate">
           <el-date-picker v-model="ruleForm.EndDate" type="date" placeholder="开始日期" :clearable="false"></el-date-picker>
@@ -43,7 +43,7 @@ export default {
       rules: {
         Title: [
           { required: true, message: '请输入公告标题', trigger: 'blur' },
-          { min: 3, max: 50, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { min: 1, max: 50, message: '长度最多50个字符', trigger: 'blur' }
         ],
         EndDate: [
           { type: 'date', required: true, message: '请选择公告截止日期', trigger: 'change' }

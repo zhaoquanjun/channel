@@ -2,8 +2,8 @@
   <el-dialog title="上传文件" :visible.sync="dialogTableVisible" size="small">
     <div class="file-uploader">
       <el-form :model="ruleForm" class="demo-ruleForm" ref="ruleForm" label-width="85px">
-        <el-form-item label="可见范围：" prop="PartitionName">
-          <el-input type="text" v-model="ruleForm.VisualRange"></el-input>
+        <el-form-item label="可见范围：">
+          <noticemodel :top="false"></noticemodel>
         </el-form-item>
       </el-form>
       <el-upload
@@ -27,14 +27,13 @@
           </el-table-column>
           <el-table-column label="状态" width="80">
             <template scope="scope">
-              <span>{{scope.row.showIcon}}a</span>
               <span v-if="scope.row.showIcon === 2"><i class="el-icon-check"></i></span>
               <span v-if="scope.row.showIcon === 3"><i class="el-icon-close"></i></span>
               <span v-if="scope.row.showIcon === 1"><i class="el-icon-loading"></i></span>
             </template>
           </el-table-column>
         </el-table>
-        <el-button @click="dialogTableVisible = false">关 闭</el-button>
+        <el-button @click="dialogTableVisible = false">取 消</el-button>
         <el-button v-if="!isloading" type="primary" @click="submitUpload">上 传</el-button>
         <el-button v-else type="primary" @click="submitUpload" :loading="true">上传中...</el-button>
       </el-upload>
@@ -43,25 +42,34 @@
 </template>
 
 <script>
+import { insertdoc } from '@/api/api'
+import Noticemodel from '@/components/noticeRound.vue'
+import router from '@/router'
+import bus from '@/bus'
 export default {
   data() {
     return {
       dialogTableVisible: true,
       ruleForm: {
-        VisualRange: ''
+        CenterRoles: '',
+        ChannelRoles: ''
       },
       fileList: [],
       canDelete: false,
       isloading: false
     }
   },
+  created() {
+    bus.$on('selectedRound', (selectdObj) => {
+      console.log(selectdObj, 'selectdObj')
+      this.ruleForm.CenterRoles = selectdObj.CenterRoles
+      this.ruleForm.ChannelRoles = selectdObj.ChannelRoles
+    })
+  },
   methods: {
     handleChange(file, fileList) {
-      // console.log(file, fileList)
-      // var list = fileList
       this.handleFileSize(fileList)
       this.fileList = fileList
-      // console.log(this.fileList)
     },
     handleFileSize(list) {
       for (var i in list) {
@@ -101,12 +109,23 @@ export default {
       if (this.fileList.length === 0) return
       this.canDelete = true
       this.isloading = true
+      var count = 0
       this.fileList.forEach((item, i) => {
         this.fileList[i].showIcon = 1
         _self.$ossUploader(this.fileList[i].raw, 5).then(res => {
+          console.log(res)
+          count += 1
           if (res.status === 200) {
-            this.fileList[i].url = res.sourceUrl
+            this.fileList[i].FilePath = res.sourceUrl
             this.fileList[i].showIcon = 2
+            console.log(this.fileList[i], 'this.fileList[i]')
+            this.filterPostData(this.fileList[i])
+            // var lastList = []
+            // lastList[0] = this.fileList[i]
+            if (count === this.fileList.length) {
+              this.addFile(this.fileList)
+            }
+            // this.addFile(lastList, this.fileList.length)
           } else {
             this.fileList[i].showIcon = 3
           }
@@ -115,9 +134,41 @@ export default {
       this.fileList = $.extend(true, [], this.fileList)
       console.log(this.fileList, 'this.fileList')
       // setTimeout(() => {
-      this.dialogTableVisible = false
+      // this.dialogTableVisible = false
       // }, 1000)
+    },
+    filterPostData(list) {
+      list.FileName = list.name
+      list.FileSize = list.filesize
+      list.CenterRoles = this.ruleForm.CenterRoles
+      list.ChannelRoles = this.ruleForm.ChannelRoles
+      delete list.filesize
+      delete list.name
+      delete list.percentage
+      delete list.raw
+      delete list.showIcon
+      delete list.size
+      delete list.status
+      delete list.uid
+      delete list.url
+    },
+    addFile(list) {
+      console.log(list, '提交list')
+      insertdoc(list).then((res) => {
+        console.log(res)
+        if (res.status) {
+          var obj = {
+            title: '文档列表',
+            category: 1
+          }
+          router.push({name: 'Filelist', query: obj})
+          this.dialogTableVisible = false
+        }
+      })
     }
+  },
+  components: {
+    noticemodel: Noticemodel
   }
 }
 </script>
@@ -131,7 +182,7 @@ export default {
     color: #ccc
   .upload-area
     .el-upload
-      width: 100%
+      /* width: 100% */
       text-align: left
     .el-table
       margin: 20px 0
