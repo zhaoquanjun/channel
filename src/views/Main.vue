@@ -40,8 +40,10 @@ export default {
   methods: {
     goMainHtml() {
       $('.nav-title').addClass('active')
+      console.log($(this.$refs.vaside.$el))
       $(this.$refs.vaside.$el).children().map((index, el) => {
         $(el).removeClass('is-expanded')
+        $(el).removeClass('is-current')
         $(el).children().eq(1).hide()
       })
       this.$router.push({name: 'main.home'})

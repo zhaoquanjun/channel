@@ -206,4 +206,6 @@ export default {
       margin-top: 0
       .el-tab-pane
         padding: 0 5px
+        .el-checkbox
+          margin: 0 15px 0 0
 </style>

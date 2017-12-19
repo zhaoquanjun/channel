@@ -14,7 +14,9 @@
           <span class="end-date">公告截止日期：{{detailData.EndDate}}</span>
         </div>
         <div>
-          <span>发布范围：{{detailData.CenterRoleNames + ';' + detailData.ChannelRoleNames}}</span>
+          <span>公告范围：</span>
+          <span>{{detailData.CenterRoleNames}}</span>
+          <span v-if="detailData.ChannelRoleNames">{{'；' + detailData.ChannelRoleNames}}</span>
         </div>
       </div>
       <div v-if="category !== 1" class="detail-nav" style="padding-bottom: 20px">

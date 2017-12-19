@@ -180,7 +180,6 @@ export default {
     overflow: hidden
     white-space: nowrap
     text-overflow: ellipsis
-    cursor: pointer
   .list-item
     height: 30px
     line-height: 30px

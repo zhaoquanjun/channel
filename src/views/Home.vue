@@ -1,7 +1,9 @@
 <template>
   <div class="container">
     <div class="board dash-board">
-      <h4>仪表盘</h4>
+      <div class="dash-board-bg">
+        <h4>仪表盘</h4>
+      </div>
     </div>
     <div class="right-content">
       <div class="board notice">
@@ -9,12 +11,14 @@
           最新公告
           <span class="more" @click="goMoreinfo">更多>></span>
         </h4>
-        <div v-if="lists.length" class="list-item" v-for="list in lists">
-          <div>
-            <i v-if="list.IsNew">新</i>
-            <span @click="goDetail(list.id)">{{list.Title}}</span>
+        <div class="last-item-border">
+          <div v-if="lists.length" class="list-item" v-for="list in lists">
+            <div>
+              <i v-if="list.IsNew">新</i>
+              <span @click="goDetail(list.id)">{{list.Title}}</span>
+            </div>
+            <p>{{list.CreateDate}}</p>
           </div>
-          <p>{{list.CreateDate}}</p>
         </div>
         <div v-if="!lists.length" class="list-bg">
         </div>
@@ -151,6 +155,11 @@ export default {
       width: 60%
       height: 574px;
       margin-right: 20px
+      .dash-board-bg
+        height: 100%
+        background: url('../assets/images/dashboard.png')
+        background-position: center
+        background-repeat: no-repeat
     .right-content
       float: left
       width: 38%
@@ -219,8 +228,8 @@ export default {
             margin-right: 10px
 </style>
 <style lang="stylus">
-  .notice
-    .list-item:nth-child(4)
+  .notice .last-item-border
+    .list-item:last-child
       border-bottom: none !important
 </style>
 <style lang="stylus" scoped>

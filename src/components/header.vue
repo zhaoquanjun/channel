@@ -12,7 +12,7 @@
         <span>欢迎 {{userInfo.RoleName}}：</span>
         <span>{{userInfo.RealName}} 进入！</span>
       </div>
-      <h4 @click="goMainHtml">PILIPA渠道管理系统</h4>
+      <h4 @click="goMainHtml" style="width: 200px">PILIPA渠道管理系统</h4>
     </el-menu>
   </div>
 </template>

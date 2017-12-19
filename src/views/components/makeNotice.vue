@@ -28,7 +28,7 @@
 import { insertnotice } from '@/api/api'
 import Noticemodel from '@/components/noticeRound.vue'
 import bus from '@/bus'
-import router from '@/router'
+// import router from '@/router'
 export default {
   data() {
     return {
@@ -79,11 +79,12 @@ export default {
                 type: 'success',
                 message: '发布成功'
               })
-              var obj = {
-                title: '公告管理',
-                category: 1
-              }
-              router.push({name: 'InfoList', query: obj})
+              // var obj = {
+              //   title: '公告管理',
+              //   category: 1
+              // }
+              // router.push({name: 'InfoList', query: obj})
+              this.$emit('done')
               this.dialogFormVisible = false
             }
           })
