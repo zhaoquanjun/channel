@@ -7,7 +7,8 @@
         </el-form-item>
         <el-form-item label="正文：" required>
           <pre><el-input class="notice-textarea" type="textarea" v-model="ruleForm.Text" :rows=12 :maxlength="1000"></el-input></pre>
-          <span class="notice-text">{{ruleForm.Text.length}}/1000</span>
+          <span v-if="+ruleForm.Text.length !== 1000" class="notice-text">{{ruleForm.Text.length}}/1000</span>
+          <span v-if="+ruleForm.Text.length === 1000" class="notice-text"><span style="color: red">{{ruleForm.Text.length}}</span>/1000</span>
         </el-form-item>
         <el-form-item label="公告范围：" required>
           <noticemodel :top="true"></noticemodel>
@@ -69,6 +70,13 @@ export default {
           if (!this.ruleForm.Text) {
             this.$message({
               message: '请填写公告正文',
+              type: 'warning'
+            })
+            return
+          }
+          if (this.ruleForm.CenterRoles === '' && this.ruleForm.CenterRoles === '') {
+            this.$message({
+              message: '请设置可见范围',
               type: 'warning'
             })
             return

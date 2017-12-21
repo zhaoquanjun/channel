@@ -20,7 +20,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <el-table v-if="+category === 1" :data="tableData" border style="width: 100%" @cell-click="sacnColumnDetail">
+    <el-table v-if="+category === 1" :data="tableData" style="width: 100%" @cell-click="sacnColumnDetail">
       <el-table-column prop="Title" label="公告标题" min-width="150">
         <template scope="scope">
           <span :style="{color: scope.row.IsOverdue ? '#ccc' : '', borderColor: scope.row.IsOverdue ? '#ccc' : ''}" class="data-sign" v-if="scope.row.IsNew">新</span>
@@ -29,9 +29,10 @@
       </el-table-column>
       <el-table-column prop="" label="公告范围" min-width="150">
         <template scope="scope">
-          <span :style="{color: scope.row.IsOverdue ? '#ccc' : ''}">{{scope.row.CenterRoleNames}}</span>
-          <span :style="{color: scope.row.IsOverdue ? '#ccc' : ''}" v-if="scope.row.ChannelRoleNames">;</span>
-          <span :style="{color: scope.row.IsOverdue ? '#ccc' : ''}" :title="scope.row.CenterRoleNames + ';' +scope.row.ChannelRoleNames">{{scope.row.ChannelRoleNames}}</span>
+          <div :title="scope.row.CenterRoleNames + ';' +scope.row.ChannelRoleNames">
+            <span :style="{color: scope.row.IsOverdue ? '#ccc' : ''}">{{scope.row.CenterRoleNames}}</span>
+            <span :style="{color: scope.row.IsOverdue ? '#ccc' : ''}" v-if="scope.row.ChannelRoleNames">{{'；' + scope.row.ChannelRoleNames}}</span>
+          </div>
         </template>
       </el-table-column>
       <el-table-column prop="" label="发布日期" width="120">
@@ -173,9 +174,15 @@ export default {
     &:hover
       color: #1b9bfc
   .data-sign
-    font-size: 12px
-    color: red
-    border: 1px solid red
+    display: inline-block;
+    width: 16px;
+    line-height: 16px;
+    text-align: center;
+    color: #f00;
+    border: 1px solid #f00;
+    font-style: normal;
+    font-size: 12px;
+    border-radius: 4px;
   .el-table .cell
     overflow: hidden
     white-space: nowrap

@@ -922,3 +922,15 @@ export const getdoclist = params => {
 export const insertdoc = (params) => {
   return axios.post(`${base}/doc/insertdoc`, params).then(res => res.data)
 }
+// 文件重新设置可见范围
+export const updateDocScope = (CenterRoles, ChannelRoles, id) => {
+  return axios.put(`${base}/doc/UpdateDocScope?CenterRoles=${CenterRoles}&ChannelRoles=${ChannelRoles}&id=${id}`).then(res => res.data)
+}
+// 文件设为常用
+export const updatedocisoften = (isoften, id) => {
+  return axios.put(`${base}/doc/updatedocisoften?isoften=${isoften}&id=${id}`).then(res => res.data)
+}
+// 文件删除
+export const deletedoc = (id) => {
+  return axios.put(`${base}/doc/deletedoc?id=${id}`).then(res => res.data)
+}

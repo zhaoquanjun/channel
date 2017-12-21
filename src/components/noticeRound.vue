@@ -201,6 +201,7 @@ export default {
     top: auto
   .el-dropdown-menu-position
     top: -200px
+  .el-dropdown-menu
     .el-tabs
       padding-bottom: 0
       margin-top: 0

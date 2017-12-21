@@ -4,10 +4,10 @@
       {{title}}
       <span class="back-last" @click="goBackHome"><<返回首页</span>
     </h3>
-    <div v-if="+category === 1" class="vsearch">
+    <div class="vsearch">
       <el-form ref="params" :inline="true" :model="params" label-width="80px">
         <el-form-item label="">
-          <el-input placeholder="搜索文件名" v-model="params.title"></el-input>
+          <el-input placeholder="搜索文件名" v-model="params.filename"></el-input>
         </el-form-item>
         <el-form-item label="">
           <el-select v-model="params.type " clearable placeholder="按上传日期倒序">
@@ -17,41 +17,41 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="fetchData">查询</el-button>
+          <!-- <el-button type="primary" @click="uploaderFile">上传文件</el-button> -->
+        </el-form-item>
+        <el-form-item class="uploader-file-btn" v-if="category === 1">
+          <!-- <el-button type="primary" @click="fetchData">查询</el-button> -->
+          <el-button type="primary" @click="uploaderFile">上传文件</el-button>
         </el-form-item>
       </el-form>
     </div>
-    <el-table v-if="+category === 1" :data="tableData" border style="width: 100%" @cell-click="sacnColumnDetail">
-      <el-table-column prop="Title" label="公告标题" min-width="150">
+    <el-table :data="tableData" style="width: 100%">
+      <el-table-column prop="FileName" label="文件名" min-width="150"></el-table-column>
+      <el-table-column v-if="category === 1" prop="" label="可见范围" min-width="150">
         <template scope="scope">
-          <span :style="{color: scope.row.IsOverdue ? '#ccc' : '', borderColor: scope.row.IsOverdue ? '#ccc' : ''}" class="data-sign" v-if="scope.row.IsNew">新</span>
-          <span :style="{color: scope.row.IsOverdue ? '#ccc' : ''}">{{scope.row.Title}}</span>
+          <div :title="scope.row.CenterRoleNames + ';' +scope.row.ChannelRoleNames">
+            <span>{{scope.row.CenterRoleNames}}</span>
+            <span v-if="scope.row.ChannelRoleNames">{{'；' + scope.row.ChannelRoleNames}}</span>
+          </div>
         </template>
       </el-table-column>
-      <el-table-column prop="" label="公告范围" min-width="150">
+      <el-table-column prop="FileSize" label="大小" width="80"></el-table-column>
+      <el-table-column prop="CreateDate" label="上传日期" width="120"></el-table-column>
+      <el-table-column v-if="category === 1" label="操作" width="240">
         <template scope="scope">
-          <span :style="{color: scope.row.IsOverdue ? '#ccc' : ''}">{{scope.row.CenterRoleNames}}</span>
-          <span :style="{color: scope.row.IsOverdue ? '#ccc' : ''}" v-if="scope.row.ChannelRoleNames">;</span>
-          <span :style="{color: scope.row.IsOverdue ? '#ccc' : ''}" :title="scope.row.CenterRoleNames + ';' +scope.row.ChannelRoleNames">{{scope.row.ChannelRoleNames}}</span>
+          <el-button @click="download(scope.row)" type="text" size="small">下载</el-button>
+          <el-button v-if="!scope.row.IsOften" @click="setOften(scope.row)" type="text" size="small">设为常用</el-button>
+          <el-button v-if="scope.row.IsOften" @click="setOften(scope.row)" type="text" size="small">取消常用</el-button>
+          <el-button @click="setRound(scope.row)" type="text" size="small">设置可见范围</el-button>
+          <el-button @click="deleteItem(scope.row)" type="text" size="small">删除</el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="" label="发布日期" width="120">
+      <el-table-column v-if="category === 0" label="操作" width="100">
         <template scope="scope">
-          <span :style="{color: scope.row.IsOverdue ? '#ccc' : ''}">{{scope.row.CreateDate}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" width="120">
-        <template scope="scope">
-          <el-button v-if="!scope.row.IsOverdue" @click="reback(scope.row)" type="text" size="small">撤回</el-button>
+          <el-button @click="download(scope.row)" type="text" size="small">下载</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <div v-if="+category !== 1" class="other-style">
-      <div class="list-item-other" v-for="list in tableData">
-        <span class="data-sign" v-if="list.IsNew">新</span>
-        <span class="detail-item" @click="goDetail(list.id)">{{list.Title}}</span>
-        <span class="date-float">{{list.CreateDate}}</span>
-      </div>
-    </div>
     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 30]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
       style="text-align:center; margin:20px;">
     </el-pagination>
@@ -61,8 +61,12 @@
 <script>
 import {
   getdoclist,
-  deletenotice
+  updatedocisoften,
+  deletedoc
 } from '@/api/api'
+import Dialog from '@/service/dialog.js'
+import FileSetRound from '@/views/components/fileSetRound'
+import FileUploader from '@/components/fileUploader'
 export default {
   data() {
     return {
@@ -73,23 +77,24 @@ export default {
       },
       tableData: [],
       types: [{
-        type: 0,
+        type: 1,
         name: '按上传日期倒序'
       }, {
-        type: 1,
+        type: 2,
         name: '按文件名称升序'
       }],
       title: '',
       category: '',
       params: {
-        title: '',
-        type: 0
+        filename: '',
+        type: 1 // type 0 管理员首页 type 1 时间排序 type2 名称排序
       }
     }
   },
   mounted() {
     this.title = this.$route.query.title
-    this.category = this.$route.query.category
+    this.category = +this.$route.query.category
+    console.log(this.category, typeof (this.category))
   },
   created() {
     this.fetchData()
@@ -104,46 +109,69 @@ export default {
       getdoclist({
         limit: limit,
         offset: offset,
-        title: this.params.title,
+        filename: this.params.filename,
         type: this.params.type
       }).then((res) => {
         this.tableData = res.data
         this.pagination.total = res.Count
       })
     },
-    reback(row) {
-      var str = '确定撤回公告吗？撤回后，发布方和接收方都将不再显示该公告。'
-      this.$confirm(str, '撤回公告', {
-        confirmButtonText: '确定撤回',
+    uploaderFile() {
+      Dialog(FileUploader, {
+        uploadSign: true
+      }).then(() => {
+        this.fetchData()
+      })
+    },
+    download(row) {
+      var url = row.FilePath
+      // var url = 'https://pilipa.oss-cn-beijing.aliyuncs.com/FileUploads/File/201712/4BSQQ6wTeh.pptx'
+      window.open(url)
+    },
+    setOften(row) {
+      console.log(row)
+      var isoften = row.IsOften ? 0 : 1
+      updatedocisoften(isoften, row.Id).then((res) => {
+        if (res.status) {
+          if (row.IsOften) {
+            this.$message({
+              type: 'success',
+              message: '取消常用'
+            })
+          } else {
+            this.$message({
+              type: 'success',
+              message: '已设为常用'
+            })
+          }
+          this.fetchData()
+        }
+      })
+    },
+    setRound(row) {
+      Dialog(FileSetRound, {
+        row: row
+      }).then(() => {
+        this.fetchData()
+      })
+    },
+    deleteItem(row) {
+      var str = '确定删除文件吗？删除后，发布方和接收方都将不再显示该文件。'
+      this.$confirm(str, '删除文件', {
+        confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deletenotice(row.id).then(res => {
+        deletedoc(row.Id).then(res => {
           if (res.status) {
             this.$message({
               type: 'success',
-              message: '撤回公告成功！'
+              message: '删除成功!'
             })
             this.fetchData()
           }
         })
       }).catch(() => {})
-    },
-    sacnColumnDetail(row, column, cell) {
-      var obj = {
-        id: row.id
-      }
-      if (cell.cellIndex === 0) {
-        this.$router.push({name: 'NoticeDetail', query: obj})
-      } else {
-        return
-      }
-    },
-    goDetail(id) {
-      var obj = {
-        id: id
-      }
-      this.$router.push({name: 'NoticeDetail', query: obj})
     },
     handleSizeChange(val) {
       this.pagination.pageSize = val
@@ -162,6 +190,9 @@ export default {
   .vheader
     border-bottom: none
     margin-bottom: 20px
+  .uploader-file-btn
+    float: right
+    padding-right: 5px
   .back-last
     font-size: 12px
     font-weight: normal
@@ -178,6 +209,11 @@ export default {
     white-space: nowrap
     text-overflow: ellipsis
     cursor: pointer
+    div
+      overflow: hidden
+      white-space: nowrap
+      text-overflow: ellipsis
+      cursor: pointer
   .list-item
     height: 30px
     line-height: 30px

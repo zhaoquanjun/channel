@@ -35,7 +35,7 @@
         </h4>
         <div v-if="documents.length" class="document-item" v-for="list in documents">
           <i></i>
-          <div>{{list.title}}</div>
+          <div @click="download(list.FilePath)">{{list.FileName}}</div>
         </div>
         <div v-if="!documents.length" class="list-bg list-bg-document">
         </div>
@@ -49,30 +49,24 @@
   </div>
 </template>
 <script>
-import { getnoticelist } from '@/api/api'
+import { getnoticelist, getdoclist } from '@/api/api'
 import Dialog from '@/service/dialog.js'
 import FileUploader from '@/components/fileUploader'
 import MakeNotice from '@/views/components/makeNotice'
 export default {
   data() {
     return {
-      category: '',
+      category: 1,
       lists: [],
-      documents: [
-        {title: '渠道系统提单使用手册渠道系统提单使用手册渠道系统提单使用手册渠道系统提单使用手渠道系统提单使用手册'},
-        {title: '渠道系统提单使用手册'},
-        {title: '渠道系统提单使用手册'},
-        {title: '渠道系统提单使用手册'},
-        {title: '渠道系统提单使用手册'}
-      ]
-      // lists: [],
-      // documents: []
+      documents: []
     }
   },
   mounted() {
+    this.category = JSON.parse(sessionStorage.getItem('userInfo')).Category
+    console.log(this.category, typeof (this.category))
     this.initMenu()
     this.getNoticeList()
-    this.category = JSON.parse(sessionStorage.getItem('userInfo')).Category
+    this.getFileList()
   },
   methods: {
     getNoticeList() {
@@ -82,9 +76,25 @@ export default {
         limit: limit,
         offset: offset,
         title: '',
-        type: 1
+        type: 0
       }).then((res) => {
         this.lists = res.data
+      })
+    },
+    getFileList() {
+      if (this.category === 1) {
+        var limit = 5
+      } else {
+        limit = 7
+      }
+      let offset = 0
+      getdoclist({
+        limit: limit,
+        offset: offset,
+        filename: '',
+        type: 0
+      }).then((res) => {
+        this.documents = res.data
       })
     },
     initMenu() {
@@ -117,8 +127,9 @@ export default {
       this.$router.push({name: 'Filelist', query: obj})
     },
     uploaderFile() {
-      console.log('aa')
-      Dialog(FileUploader).then(() => {
+      Dialog(FileUploader, {
+        uploadSign: false
+      }).then(() => {
         // this.getFilelist()
       })
     },
@@ -132,6 +143,10 @@ export default {
         id: id
       }
       this.$router.push({name: 'NoticeDetail', query: obj})
+    },
+    download(url) {
+      // url = 'https://pilipa.oss-cn-beijing.aliyuncs.com/FileUploads/File/201712/4BSQQ6wTeh.pptx'
+      window.open(url)
     }
   }
 }

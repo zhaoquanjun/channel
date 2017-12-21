@@ -47,6 +47,7 @@ import Noticemodel from '@/components/noticeRound.vue'
 import router from '@/router'
 import bus from '@/bus'
 export default {
+  props: ['uploadSign'],
   data() {
     return {
       dialogTableVisible: true,
@@ -161,8 +162,14 @@ export default {
             title: '文档列表',
             category: 1
           }
-          router.push({name: 'Filelist', query: obj})
-          this.dialogTableVisible = false
+          console.log(this.uploadSign)
+          if (this.uploadSign) {
+            this.$emit('done')
+            this.dialogTableVisible = false
+          } else {
+            router.push({name: 'Filelist', query: obj})
+            this.dialogTableVisible = false
+          }
         }
       })
     }
