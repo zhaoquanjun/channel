@@ -33,9 +33,11 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-button @click="dialogTableVisible = false">取 消</el-button>
-        <el-button v-if="!isloading" type="primary" @click="submitUpload">上 传</el-button>
-        <el-button v-else type="primary" @click="submitUpload" :loading="true">上传中...</el-button>
+        <div class="btn">
+          <el-button @click="dialogTableVisible = false">取 消</el-button>
+          <el-button v-if="!isloading" type="primary" @click="submitUpload">上 传</el-button>
+          <el-button v-else type="primary" @click="submitUpload" :loading="true">上传中...</el-button>
+        </div>
       </el-upload>
     </div>
   </el-dialog>
@@ -189,8 +191,12 @@ export default {
     color: #ccc
   .upload-area
     .el-upload
-      /* width: 100% */
       text-align: left
     .el-table
       margin: 20px 0
+      tr
+        text-align: center;
+    .btn
+      float: right
+      margin: 10px 0 20px
 </style>

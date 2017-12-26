@@ -2,9 +2,9 @@
 <el-dialog title="代理商任务设置" :visible.sync="dialogTableVisible" size="small">
   <div class="fd-child">
     <el-form class="inline" label-width="50px">
-      <el-form-item class="year-select" label="">
+      <el-form-item class="year-select" label="年份">
         <el-select v-model="year" @change="getcurYearData">
-          <el-option v-for="item in years" :key="item.year" :label="item.name" :value="item.year">
+          <el-option v-for="item in years" :key="item" :label="item" :value="item">
           </el-option>
         </el-select>
       </el-form-item>
@@ -48,13 +48,7 @@ export default {
       id: '',
       tasks: null,
       year: 2017,
-      years: [{
-        name: '2017年',
-        year: 2017
-      }, {
-        name: '2018年',
-        year: 2018
-      }],
+      years: [2017, 2018],
       currYear: ''
     }
   },
@@ -160,4 +154,7 @@ export default {
 </script>
 
 <style scoped>
+.fd-child .year-select {
+  width: 140px;
+}
 </style>

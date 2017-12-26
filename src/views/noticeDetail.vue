@@ -23,7 +23,7 @@
         <span>发布日期：{{detailData.CreateDate}}</span>
       </div>
       <div class="detail-con">
-        <pre><el-input class="detail-area" type="textarea" v-model="detailData.Text" :rows=15></el-input></pre>
+        <pre><el-input class="detail-area" type="textarea" v-model="detailData.Text" :rows=13></el-input></pre>
       </div>
     </div>
   </div>
@@ -69,7 +69,8 @@ export default {
     margin: 10px 0
     h3
       margin: 0
-      font-weight: normal
+      font-weight: 600
+      margin-left: 12px;
   .back-last
     font-size: 12px
     font-weight: normal

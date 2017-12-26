@@ -28,7 +28,7 @@ import { getroles } from '@/api/api'
 import Clickoutside from 'element-ui/src/utils/clickoutside'
 import bus from '@/bus'
 export default {
-  props: ['top'],
+  props: ['top', 'initData'],
   data() {
     return {
       visible: false,
@@ -47,13 +47,28 @@ export default {
       ChannelcheckList: [],
       centerselectedText: '系统管理员',
       channelselectedText: '',
-      isTop: false
+      isTop: false,
+      init: ''
     }
   },
   created() {
     this.isTop = this.top
     console.log(this.isTop)
     this.getrolesList()
+    console.log(this.initData, 'initData')
+    this.init = this.initData ? $.extend(true, [], this.initData) : ''
+    // if (this.init) {
+    //   console.log(this.init.CenterRoles === '0', this.init.ChannelRoles === '0')
+    //   if (this.init.CenterRoles === '0') {
+    //     this.CentercheckAll = true
+    //     this.CenterRoles = this.CentercheckList
+    //     console.log(this.CenterRoles, 'this.CenterRoles')
+    //   }
+    //   if (this.init.ChannelRoles === '0') {
+    //     this.ChannelcheckAll = true
+    //     this.ChannelRoles = this.ChannelcheckList
+    //   }
+    // }
   },
   methods: {
     getrolesList() {
@@ -66,8 +81,43 @@ export default {
           this.ChannelRolesList = this.listData[1]
           this.ChannelcheckList = window._.map(this.ChannelRolesList, 'RoleId')
           console.log(this.ChannelcheckList)
+          this.handleModify()
         }
       })
+    },
+    handleModify() {
+      if (this.init) {
+        console.log(this.init.CenterRoles, this.init.ChannelRoles)
+        if (this.init.CenterRoles) {
+          if (this.init.CenterRoles === '0') {
+            this.CentercheckAll = true
+            this.CenterhandleCheckAllChange()
+            // this.CenterRoles = this.CentercheckList
+            console.log(this.CenterRoles, 'this.CenterRoles')
+          } else {
+            this.CenterRoles = this.init.CenterRoles.split(',')
+            for (var i in this.CenterRoles) {
+              this.CenterRoles[i] = +this.CenterRoles[i]
+            }
+            console.log(this.CenterRoles, 'this.CenterRoles')
+            this.CenterhandleCheckedRolesChange(this.CenterRoles)
+          }
+        }
+        if (this.init.ChannelRoles) {
+          if (this.init.ChannelRoles === '0') {
+            this.ChannelcheckAll = true
+            // this.ChannelRoles = this.ChannelcheckList
+            this.ChannelhandleCheckAllChange()
+          } else {
+            this.ChannelRoles = this.init.ChannelRoles.split(',')
+            for (var j in this.ChannelRoles) {
+              this.ChannelRoles[j] = +this.ChannelRoles[j]
+            }
+            console.log(this.CenterRoles, 'this.CenterRoles')
+            this.ChannelhandleCheckedRolesChange(this.ChannelRoles)
+          }
+        }
+      }
     },
     CenterhandleCheckAllChange(val) {
       this.CenterRoles = this.CentercheckAll ? this.CentercheckList : []
@@ -94,7 +144,7 @@ export default {
       var showText = []
       showText = window._.filter(centerLists, (item) => {
         for (var i in curcenterValue) {
-          if (curcenterValue[i] === item.RoleId) {
+          if (+curcenterValue[i] === item.RoleId) {
             return true
           }
         }
@@ -130,7 +180,7 @@ export default {
       var showText = []
       showText = window._.filter(channelLists, (item) => {
         for (var i in curcenterValue) {
-          if (curcenterValue[i] === item.RoleId) {
+          if (+curcenterValue[i] === item.RoleId) {
             return true
           }
         }

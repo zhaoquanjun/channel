@@ -59,8 +59,8 @@ export default {
         console.log(res)
         if (res.status) {
           if (res.data) {
-            var str = '以下代理商名称有误，请检查文件' + res.data
-            this.$confirm(str, '导入失败', {
+            var str = '以下代理商名称有误，请检查文件：' + res.data
+            this.$confirm(str, '导入成功', {
               // confirmButtonText: '确定',
               cancelButtonText: '确定',
               type: 'warning'

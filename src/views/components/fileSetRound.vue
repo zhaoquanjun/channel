@@ -2,7 +2,7 @@
   <el-dialog title="设置可见范围" :visible.sync="dialogFormVisible" size="small">
     <el-form :model="ruleForm" class="demo-ruleForm" ref="ruleForm" label-width="120px">
       <el-form-item label="可见范围：" required>
-        <noticemodel></noticemodel>
+        <noticemodel :initData="row"></noticemodel>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -26,7 +26,7 @@ export default {
   },
   created() {
     console.log(this.row)
-    this.ruleForm = this.row
+    this.ruleForm = $.extend(true, {}, this.row)
     bus.$on('selectedRound', (selectdObj) => {
       console.log(selectdObj, 'selectdObj')
       this.ruleForm.CenterRoles = selectdObj.CenterRoles

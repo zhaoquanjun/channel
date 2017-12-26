@@ -90,7 +90,7 @@ export default {
   height: 36px;
   cursor: pointer;
   font-size: 14px;
-  padding-left: 24px;
+  padding-left: 20px;
 }
 .main .nav-title.active {
   background-color: #edf7ff;

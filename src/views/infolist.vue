@@ -24,7 +24,7 @@
       <el-table-column prop="Title" label="公告标题" min-width="150">
         <template scope="scope">
           <span :style="{color: scope.row.IsOverdue ? '#ccc' : '', borderColor: scope.row.IsOverdue ? '#ccc' : ''}" class="data-sign" v-if="scope.row.IsNew">新</span>
-          <span :style="{color: scope.row.IsOverdue ? '#ccc' : ''}">{{scope.row.Title}}</span>
+          <span :class="{'hover-change': scope.row.IsOverdue }">{{scope.row.Title}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="" label="公告范围" min-width="150">
@@ -172,8 +172,9 @@ export default {
   .vheader
     border-bottom: none
     margin: 10px 0
+    padding: 6px 20px;
   .vsearch
-    padding-left: 14px
+    padding-left: 20px
   .back-last
     font-size: 12px
     font-weight: normal
@@ -201,6 +202,10 @@ export default {
       white-space: nowrap
       text-overflow: ellipsis
       cursor: pointer
+    .hover-change
+      color: #ccc
+    .hover-change:hover
+      color: #1b9bfc
   .list-item
     height: 30px
     line-height: 30px
@@ -222,9 +227,12 @@ export default {
       .data-sign
         font-size: 14px
         border-radius: 4px
+        margin-right: 5px
       .date-float
         float: right
         color: #969696
+        font-size: 14px
+        margin-right: 15px
       span
         float: left
 </style>

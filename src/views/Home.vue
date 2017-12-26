@@ -1,12 +1,12 @@
 <template>
   <div class="container">
-    <div class="board dash-board">
+    <div class="board dash-board" :style="{height: curHeight}">
       <div class="dash-board-bg">
         <h4>仪表盘</h4>
       </div>
     </div>
     <div class="right-content">
-      <div class="board notice">
+      <div class="board notice" :style="{height: rightcurHeight}">
         <h4>
           最新公告
           <span class="more" @click="goMoreinfo">更多>></span>
@@ -28,7 +28,7 @@
           </div>
         </div>
       </div>
-      <div class="board document">
+      <div class="board document" :style="{height: rightcurHeight}">
         <h4>
           帮助文档
           <span class="more" @click="goMorefile">更多>></span>
@@ -58,7 +58,9 @@ export default {
     return {
       category: 1,
       lists: [],
-      documents: []
+      documents: [],
+      curHeight: '',
+      rightcurHeight: ''
     }
   },
   mounted() {
@@ -67,6 +69,11 @@ export default {
     this.initMenu()
     this.getNoticeList()
     this.getFileList()
+  },
+  created() {
+    this.curHeight = ($(document).height() - 60) + 'px'
+    this.rightcurHeight = ($(document).height() - 60) / 2 - 10 + 'px'
+    console.log(this.curHeight, 'curHeight')
   },
   methods: {
     getNoticeList() {

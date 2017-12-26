@@ -10,7 +10,7 @@
           <el-input placeholder="搜索文件名" v-model="params.filename"></el-input>
         </el-form-item>
         <el-form-item label="">
-          <el-select v-model="params.type " clearable placeholder="按上传日期倒序">
+          <el-select v-model="params.type " clearable>
             <el-option v-for="data in types" :key="data.type" :label="data.name" :value="data.type">
             </el-option>
           </el-select>
@@ -40,8 +40,8 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="FileSize" label="大小" width="80"></el-table-column>
-      <el-table-column prop="CreateDate" label="上传日期" width="120"></el-table-column>
+      <el-table-column prop="FileSize" label="大小" min-width="80"></el-table-column>
+      <el-table-column prop="CreateDate" label="上传日期" min-width="120"></el-table-column>
       <el-table-column v-if="category === 1" label="操作" width="250">
         <template scope="scope">
           <el-button @click="download(scope.row)" type="text" size="small">下载</el-button>
@@ -51,7 +51,7 @@
           <el-button @click="deleteItem(scope.row)" type="text" size="small">删除</el-button>
         </template>
       </el-table-column>
-      <el-table-column v-if="category === 0" label="操作" width="100">
+      <el-table-column v-if="category === 0" label="操作" min-width="100">
         <template scope="scope">
           <el-button @click="download(scope.row)" type="text" size="small">下载</el-button>
         </template>
@@ -100,8 +100,13 @@ export default {
     this.title = this.$route.query.title
     this.category = +this.$route.query.category
     console.log(this.category, typeof (this.category))
-  },
-  created() {
+    console.log(this.category === 1)
+    if (this.category === 1) {
+      this.params.type = 1
+    } else {
+      this.params.type = 2
+    }
+    console.log(this.params.type)
     this.fetchData()
   },
   methods: {
@@ -156,6 +161,7 @@ export default {
       })
     },
     setRound(row) {
+      console.log(row, 'row')
       Dialog(FileSetRound, {
         row: row
       }).then(() => {
@@ -195,8 +201,11 @@ export default {
 <style lang="stylus">
 .file-list
   .vheader
-    border-bottom: none
-    margin-bottom: 20px
+    border-bottom: none;
+    margin: 10px 0;
+    padding: 6px 20px;
+  .vsearch
+    padding-left: 20px
   .back-last
     font-size: 12px
     font-weight: normal
