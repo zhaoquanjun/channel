@@ -1,6 +1,14 @@
 <template>
-<div>
-  <el-dialog :title="title" :visible.sync="dialogTableVisible" size="small">
+<el-dialog title="代理商任务设置" :visible.sync="dialogTableVisible" size="small">
+  <div class="fd-child">
+    <el-form class="inline" label-width="50px">
+      <el-form-item class="year-select" label="">
+        <el-select v-model="year" @change="getcurYearData">
+          <el-option v-for="item in years" :key="item.year" :label="item.name" :value="item.year">
+          </el-option>
+        </el-select>
+      </el-form-item>
+    </el-form>
     <el-table :data="tasks">
       <el-table-column property="Name" label="月份"></el-table-column>
       <el-table-column property="TaskNumMonth" label="目标数"></el-table-column>
@@ -15,11 +23,11 @@
           </template>
       </el-table-column>
     </el-table>
-    <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="dialogTableVisible = false">关 闭</el-button>
-    </div>
-  </el-dialog>
-</div>
+  </div>
+  <div slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="dialogTableVisible = false">关 闭</el-button>
+  </div>
+</el-dialog>
 </template>
 
 <script>
@@ -39,17 +47,27 @@ export default {
       dialogTableVisible: true,
       id: '',
       tasks: null,
+      year: 2017,
+      years: [{
+        name: '2017年',
+        year: 2017
+      }, {
+        name: '2018年',
+        year: 2018
+      }],
       currYear: ''
     }
   },
   created() {
     this.id = this.channelId
-    var year = new Date()
-    this.currYear = year.getFullYear()
-    this.title = `代理商任务设置(${this.currYear}年)`
-    this.fandian()
+    // var year = new Date()
+    this.currYear = this.year
+    this.getcurYearData()
   },
   methods: {
+    getcurYearData() {
+      this.fandian()
+    },
     set(fd) { // 返点传递参数是 row.fd
       console.log(fd + '返点')
       Dialog(Refuse, {
@@ -62,7 +80,7 @@ export default {
       })
     },
     fetch(row) { // 新组成表数据
-      // console.log(row + '计算')
+      console.log(row + '计算')
       var item = {
         ChannelId: row.ChannelId,
         YearMonth: row.TaskMonth.substr(0, 7)
@@ -76,8 +94,8 @@ export default {
     },
     fandian() {
       // 点击两次数据请求 ==> 两次数据请求结果合并成一个新表 然后传递给弹出层
-      var year = new Date()
-      var currYear = year.getFullYear()
+      // var year = new Date()
+      var currYear = this.year
       var item = {
         channelId: this.id,
         currYear: currYear
@@ -85,26 +103,24 @@ export default {
       fdSalestask(item).then(res => {
         window._.each(res.data, function(item) {
           item.Name = (+item.TaskMonth.split('-')[1]) + '月'
-          if (parseInt(item.TaskMonth.split('-')[1]) > year.getMonth() + 1) {
-            item.access = false
-          } else {
-            item.access = true
-          }
+          // 当前月之前才能显示计算
+          // if (parseInt(item.TaskMonth.split('-')[1]) > year.getMonth() + 1) {
+          //   item.access = false
+          // } else {
+          //   item.access = true
+          // }
+          item.access = true
         })
         this.tasks = res.data
         console.log(this.tasks, 'this.tasks')
         this.fdR()
       })
-      // bus.$on('fetch-success', () => {
-      //   this.fdR()
-      // })
-      // bus.$on('fd-success', () => {
-      //   this.fandian()
-      // })
     },
     fdR() { // 返点保存及弹框数据获取列表1
-      var year = new Date()
-      var currYear = year.getFullYear()
+      // var year = new Date()
+      // var currYear = year.getFullYear()
+      // var year = new Date()
+      var currYear = this.year
       var item = {
         channelId: this.id,
         currYear: currYear

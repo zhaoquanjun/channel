@@ -29,9 +29,15 @@
       </el-table-column>
       <el-table-column prop="" label="公告范围" min-width="150">
         <template scope="scope">
-          <div :title="scope.row.CenterRoleNames + ';' +scope.row.ChannelRoleNames">
+          <div v-if="scope.row.ChannelRoleNames && scope.row.CenterRoleNames" :title="scope.row.CenterRoleNames + '；' +scope.row.ChannelRoleNames">
             <span :style="{color: scope.row.IsOverdue ? '#ccc' : ''}">{{scope.row.CenterRoleNames}}</span>
-            <span :style="{color: scope.row.IsOverdue ? '#ccc' : ''}" v-if="scope.row.ChannelRoleNames">{{'；' + scope.row.ChannelRoleNames}}</span>
+            <span :style="{color: scope.row.IsOverdue ? '#ccc' : ''}">{{'；' + scope.row.ChannelRoleNames}}</span>
+          </div>
+          <div v-if="!scope.row.ChannelRoleNames && scope.row.CenterRoleNames" :title="scope.row.CenterRoleNames">
+            <span :style="{color: scope.row.IsOverdue ? '#ccc' : ''}">{{scope.row.CenterRoleNames}}</span>
+          </div>
+          <div v-if="scope.row.ChannelRoleNames && !scope.row.CenterRoleNames" :title="scope.row.ChannelRoleNames">
+            <span :style="{color: scope.row.IsOverdue ? '#ccc' : ''}">{{scope.row.ChannelRoleNames}}</span>
           </div>
         </template>
       </el-table-column>
@@ -165,7 +171,9 @@ export default {
 .info-list
   .vheader
     border-bottom: none
-    margin-bottom: 20px
+    margin: 10px 0
+  .vsearch
+    padding-left: 14px
   .back-last
     font-size: 12px
     font-weight: normal
@@ -187,6 +195,12 @@ export default {
     overflow: hidden
     white-space: nowrap
     text-overflow: ellipsis
+    text-align: center
+    div
+      overflow: hidden
+      white-space: nowrap
+      text-overflow: ellipsis
+      cursor: pointer
   .list-item
     height: 30px
     line-height: 30px
@@ -197,10 +211,11 @@ export default {
     color: #1b9bfc
   .other-style
     .list-item-other
-      padding: 15px 25px
+      padding: 15px 30px 15px 20px
       border-bottom: 1px solid #ccc
       clear: both
       overflow: hidden
+      margin: 0 20px
       .detail-item:hover
         color: #1b9bfc
         cursor: pointer

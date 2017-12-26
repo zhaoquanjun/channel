@@ -35,7 +35,7 @@
         </h4>
         <div v-if="documents.length" class="document-item" v-for="list in documents">
           <i></i>
-          <div @click="download(list.FilePath)">{{list.FileName}}</div>
+          <div @click="download(list.Id)">{{list.FileName}}</div>
         </div>
         <div v-if="!documents.length" class="list-bg list-bg-document">
         </div>
@@ -144,8 +144,8 @@ export default {
       }
       this.$router.push({name: 'NoticeDetail', query: obj})
     },
-    download(url) {
-      // url = 'https://pilipa.oss-cn-beijing.aliyuncs.com/FileUploads/File/201712/4BSQQ6wTeh.pptx'
+    download(id) {
+      var url = 'api/doc/downloadfile?id=' + id
       window.open(url)
     }
   }

@@ -6,7 +6,8 @@
         <div class="item item-width">发票抬头：{{view.Title}}</div>
         <div class="item">发票性质：{{view.Property | PropertyFormat}}</div>
         <div class="item">发票类型：{{view.Category | CategoryFormat}}</div>
-        <div class="item">发票项目：{{view.Project}}</div>
+        <!-- <div class="item">发票项目：{{view.Project}}</div> -->
+        <div class="item">发票项目：服务费</div>
         <div class="item">税号：{{view.InvoiceNumber}}</div>
         <div class="item">发票金额：{{view.Amount}}</div>
         <div class="item">申请类型：{{view.ApplyType}}</div>

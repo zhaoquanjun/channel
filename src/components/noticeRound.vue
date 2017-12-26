@@ -196,7 +196,7 @@ export default {
       cursor: pointer
   .el-dropdown-menu
     padding: 0
-    width: 500px
+    width: 480px
     overflow: auto
     top: auto
   .el-dropdown-menu-position

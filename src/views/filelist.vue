@@ -1,5 +1,5 @@
 <template>
-  <div class="info-list">
+  <div class="file-list">
     <h3 class="vheader">
       {{title}}
       <span class="back-last" @click="goBackHome"><<返回首页</span>
@@ -17,27 +17,32 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="fetchData">查询</el-button>
-          <!-- <el-button type="primary" @click="uploaderFile">上传文件</el-button> -->
         </el-form-item>
         <el-form-item class="uploader-file-btn" v-if="category === 1">
-          <!-- <el-button type="primary" @click="fetchData">查询</el-button> -->
           <el-button type="primary" @click="uploaderFile">上传文件</el-button>
         </el-form-item>
       </el-form>
     </div>
     <el-table :data="tableData" style="width: 100%">
-      <el-table-column prop="FileName" label="文件名" min-width="150"></el-table-column>
-      <el-table-column v-if="category === 1" prop="" label="可见范围" min-width="150">
+      <el-table-column prop="FileName" label="文件名" min-width="180"></el-table-column>
+      <el-table-column v-if="category === 1" prop="" label="可见范围" min-width="180">
         <template scope="scope">
-          <div :title="scope.row.CenterRoleNames + ';' +scope.row.ChannelRoleNames">
+          <div v-if="scope.row.ChannelRoleNames && scope.row.CenterRoleNames" :title="scope.row.CenterRoleNames + '；' +scope.row.ChannelRoleNames">
             <span>{{scope.row.CenterRoleNames}}</span>
-            <span v-if="scope.row.ChannelRoleNames">{{'；' + scope.row.ChannelRoleNames}}</span>
+            <span>；</span>
+            <span>{{scope.row.ChannelRoleNames}}</span>
+          </div>
+          <div v-if="!scope.row.ChannelRoleNames && scope.row.CenterRoleNames" :title="scope.row.CenterRoleNames">
+            <span>{{scope.row.CenterRoleNames}}</span>
+          </div>
+          <div v-if="scope.row.ChannelRoleNames && !scope.row.CenterRoleNames" :title="scope.row.ChannelRoleNames">
+            <span>{{scope.row.ChannelRoleNames}}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column prop="FileSize" label="大小" width="80"></el-table-column>
       <el-table-column prop="CreateDate" label="上传日期" width="120"></el-table-column>
-      <el-table-column v-if="category === 1" label="操作" width="240">
+      <el-table-column v-if="category === 1" label="操作" width="250">
         <template scope="scope">
           <el-button @click="download(scope.row)" type="text" size="small">下载</el-button>
           <el-button v-if="!scope.row.IsOften" @click="setOften(scope.row)" type="text" size="small">设为常用</el-button>
@@ -124,8 +129,10 @@ export default {
       })
     },
     download(row) {
-      var url = row.FilePath
+      // var url = row.FilePath
+      var id = row.Id
       // var url = 'https://pilipa.oss-cn-beijing.aliyuncs.com/FileUploads/File/201712/4BSQQ6wTeh.pptx'
+      var url = 'api/doc/downloadfile?id=' + id
       window.open(url)
     },
     setOften(row) {
@@ -186,13 +193,10 @@ export default {
 </script>
 
 <style lang="stylus">
-.info-list
+.file-list
   .vheader
     border-bottom: none
     margin-bottom: 20px
-  .uploader-file-btn
-    float: right
-    padding-right: 5px
   .back-last
     font-size: 12px
     font-weight: normal
@@ -208,7 +212,7 @@ export default {
     overflow: hidden
     white-space: nowrap
     text-overflow: ellipsis
-    cursor: pointer
+    text-align: center
     div
       overflow: hidden
       white-space: nowrap
@@ -219,9 +223,6 @@ export default {
     line-height: 30px
     margin: 10px 25px
     border-bottom: 1px solid #ccc
-  .el-table__body tr td:nth-child(1) .cell:hover
-    cursor: pointer
-    color: #1b9bfc
   .other-style
     .list-item-other
       padding: 15px 25px

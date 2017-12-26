@@ -102,7 +102,7 @@ export default {
       for (var j in this.fileList) {
         var fileSize = this.fileList[j].size / 1024 / 1024
         if (fileSize > 4) {
-          this.$message.error('上传文件大小不能超过4M！请删除大小超过4M的文件后再上传！')
+          this.$message.error('文件大小超过限制，请删除大于4M的文件！')
           return false
         }
       }

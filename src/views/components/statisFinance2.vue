@@ -48,6 +48,12 @@
     </el-form>
   </div>
   <el-table :data="tableData" border style="width: 100%">
+    <el-table-column prop="PartitionName" label="大区" width="120">
+    </el-table-column>
+    <el-table-column prop="ProvinceName" label="省份" width="120">
+    </el-table-column>
+    <el-table-column prop="CityName" label="城市" width="120">
+    </el-table-column>
     <el-table-column prop="ChannelName1" label="一级代理" min-width="150">
     </el-table-column>
     <el-table-column prop="ChannelName2" label="二级代理" min-width="100">

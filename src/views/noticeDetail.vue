@@ -66,10 +66,9 @@ export default {
 .notice-detail
   .vheader
     border-bottom: none
-    margin-bottom: 20px
+    margin: 10px 0
     h3
       margin: 0
-      font-size: 26px
       font-weight: normal
   .back-last
     font-size: 12px

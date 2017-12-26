@@ -44,7 +44,7 @@ export default {
       rules: {
         Title: [
           { required: true, message: '请输入公告标题', trigger: 'blur' },
-          { min: 1, max: 50, message: '长度最多50个字符', trigger: 'blur' }
+          { min: 1, max: 50, message: '长度最多50个字符', trigger: 'change' }
         ],
         EndDate: [
           { type: 'date', required: true, message: '请选择公告截止日期', trigger: 'change' }
@@ -87,11 +87,6 @@ export default {
                 type: 'success',
                 message: '发布成功'
               })
-              // var obj = {
-              //   title: '公告管理',
-              //   category: 1
-              // }
-              // router.push({name: 'InfoList', query: obj})
               this.$emit('done')
               this.dialogFormVisible = false
             }
@@ -113,6 +108,7 @@ export default {
     .el-textarea__inner
       margin-bottom: 20px
       border-bottom: none
+      resize: none
   .notice-text
     position: absolute
     right: 30px

@@ -934,3 +934,7 @@ export const updatedocisoften = (isoften, id) => {
 export const deletedoc = (id) => {
   return axios.put(`${base}/doc/deletedoc?id=${id}`).then(res => res.data)
 }
+// 文件下载
+export const downloadfile = (id) => {
+  return axios.get(`${base}/doc/downloadfile?id=${id}`).then(res => res.data)
+}

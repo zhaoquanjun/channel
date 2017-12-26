@@ -38,14 +38,14 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           console.log(this.ruleForm, 'ruleForm')
-          if (this.ruleForm.CenterRoles === '' && this.ruleForm.CenterRoles === '') {
+          if (this.ruleForm.CenterRoles === '' && this.ruleForm.ChannelRoles === '') {
             this.$message({
               message: '请设置可见范围',
               type: 'warning'
             })
             return
           }
-          updateDocScope(this.ruleForm.CenterRoles, this.ruleForm.CenterRoles, this.row.Id).then((res) => {
+          updateDocScope(this.ruleForm.CenterRoles, this.ruleForm.ChannelRoles, this.row.Id).then((res) => {
             if (res.status) {
               this.$message({
                 type: 'success',

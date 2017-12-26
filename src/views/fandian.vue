@@ -9,6 +9,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="fetchData">查询</el-button>
+        <el-button type="primary" @click="uploadExcel">导入任务</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -47,12 +48,13 @@
 <script>
 import {
   getAgents,
-  agents,
-  setTask
+  agents
+  // setTask
 } from '../api/api'
 import Dialog from '../service/dialog.js'
 import SetTask from './components/setTaskChannel.vue'
 import fdChild from './components/fdChild.vue'
+import UploadTask from './components/uploadTask'
 export default {
   data() {
     return {
@@ -107,41 +109,51 @@ export default {
       }
       return status
     },
-    setTask(row) {
-      var year = new Date().getFullYear()
-      this.data = []
-      for (var i = 1; i < 13; i++) {
-        this.data.push({
-          Id: i,
-          ChannelId: row.ChannelId,
-          TaskMonth: [year, i, '1'].join('-'),
-          TaskNumMonth: 0
-        })
-      }
-      var item = {
-        channelId: row.ChannelId,
-        currYear: year
-      }
-      setTask(item).then((res) => {
-        if (res.data.length > 0) {
-          window._.each(res.data, (item) => {
-            console.log(item.TaskMonth, 'TaskMonth')
-            item.Name = (+item.TaskMonth.split('-')[1]) + '月'
-          })
-          this.salestask = res.data
-        } else {
-          window._.each(this.data, (item) => {
-            item.Name = item.Id + '月'
-          })
-          this.salestask = this.data
-        }
-        Dialog(SetTask, {
-          length: res.data.length,
-          year: year,
-          salestasks: this.salestask
-        })
+    uploadExcel() {
+      Dialog(UploadTask).then(() => {
+        this.fetchData()
       })
     },
+    setTask(row) {
+      Dialog(SetTask, {
+        channelId: row.ChannelId
+      })
+    },
+    // setTask(row) {
+    //   var year = new Date().getFullYear()
+    //   this.data = []
+    //   for (var i = 1; i < 13; i++) {
+    //     this.data.push({
+    //       Id: i,
+    //       ChannelId: row.ChannelId,
+    //       TaskMonth: [year, i, '1'].join('-'),
+    //       TaskNumMonth: 0
+    //     })
+    //   }
+    //   var item = {
+    //     channelId: row.ChannelId,
+    //     currYear: year
+    //   }
+    //   setTask(item).then((res) => {
+    //     if (res.data.length > 0) {
+    //       window._.each(res.data, (item) => {
+    //         console.log(item.TaskMonth, 'TaskMonth')
+    //         item.Name = (+item.TaskMonth.split('-')[1]) + '月'
+    //       })
+    //       this.salestask = res.data
+    //     } else {
+    //       window._.each(this.data, (item) => {
+    //         item.Name = item.Id + '月'
+    //       })
+    //       this.salestask = this.data
+    //     }
+    //     Dialog(SetTask, {
+    //       length: res.data.length,
+    //       year: year,
+    //       salestasks: this.salestask
+    //     })
+    //   })
+    // },
     fd(row) {
       Dialog(fdChild, {
         channelId: row.ChannelId
