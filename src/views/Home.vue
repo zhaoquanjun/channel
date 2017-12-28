@@ -77,22 +77,29 @@ export default {
   },
   methods: {
     getNoticeList() {
-      let limit = 3
+      console.log(this.category)
+      if (this.category === 1) {
+        var limit = 3
+      } else {
+        limit = 4
+      }
+      // let limit = 3
       let offset = 0
       getnoticelist({
         limit: limit,
         offset: offset,
         title: '',
-        type: 0
+        type: 1
       }).then((res) => {
         this.lists = res.data
       })
     },
     getFileList() {
+      console.log(this.category === 1)
       if (this.category === 1) {
         var limit = 5
       } else {
-        limit = 7
+        limit = 8
       }
       let offset = 0
       getdoclist({
