@@ -36,27 +36,30 @@ export default {
     return {
       tableData: [],
       params: {
-        year: '2017',
+        year: '',
         months: '',
         status: ''
       },
-      tableHeight: 300
+      tableHeight: 300,
+      time: ''
     }
   },
   created() {
+    this.getLastAgent()
     this.fetchData()
-    this.params.months = this.getCurMonth()
   },
   mounted() {
     this.tableHeight = document.querySelector('.content-right').offsetHeight - 163
   },
   methods: {
-    getCurMonth() {
+    getLastAgent() {
       var date = new Date()
-      var month = date.getMonth()
-      month = month < 10 ? ('0' + month) : month
-      // console.log(month)
-      return month
+      this.time = date.setMonth(-1)
+      var month = date.getMonth() + 1
+      var year = date.getFullYear()
+      console.log(month, year)
+      this.params.months = month < 10 ? ('0' + month) : month
+      this.params.year = year
     },
     fetchData() {
       getStatisRenew(this.params).then((res) => {

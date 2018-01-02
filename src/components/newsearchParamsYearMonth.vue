@@ -64,7 +64,7 @@ export default {
         {status: 1, statusName: '否'}
       ],
       params: {
-        year: 2017,
+        year: '',
         months: '',
         partitions: [],
         provinces: [],
@@ -77,11 +77,15 @@ export default {
       cities: [],
       years: [2018, 2017, 2016],
       months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-      agents: []
+      agents: [],
+      time: ''
     }
   },
+  mounted() {
+    this.getLastAgent()
+    console.log(this.params.months)
+  },
   created() {
-    this.params.months = this.getCurMonth() + '月'
     this.getPartitions()
     this.getParamsProvince()
     this.getParamsCities()
@@ -97,11 +101,14 @@ export default {
     }
   },
   methods: {
-    getCurMonth() {
+    getLastAgent() {
       var date = new Date()
-      var month = date.getMonth()
-      // console.log(month)
-      return month
+      this.time = date.setMonth(-1)
+      var month = date.getMonth() + 1 + '月'
+      var year = date.getFullYear()
+      console.log(month, year)
+      this.params.months = month
+      this.params.year = year
     },
     getPartitions() {
       getPartitions().then((res) => {
