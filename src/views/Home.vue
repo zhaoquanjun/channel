@@ -77,13 +77,12 @@ export default {
   },
   methods: {
     getNoticeList() {
-      console.log(this.category)
-      if (this.category === 1) {
+      console.log(this.category, +this.category === 1)
+      if (+this.category === 1) {
         var limit = 3
       } else {
         limit = 4
       }
-      // let limit = 3
       let offset = 0
       getnoticelist({
         limit: limit,

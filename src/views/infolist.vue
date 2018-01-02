@@ -93,7 +93,7 @@ export default {
       category: '',
       params: {
         title: '',
-        type: 0
+        type: ''
       }
     }
   },
@@ -102,6 +102,11 @@ export default {
     this.category = this.$route.query.category
   },
   created() {
+    if (+this.category === 1) {
+      this.params.type = 0
+    } else {
+      this.params.type = 1
+    }
     this.fetchData()
   },
   methods: {
