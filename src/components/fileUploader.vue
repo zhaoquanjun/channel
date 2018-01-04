@@ -9,14 +9,13 @@
       <el-upload
         class="upload-area"
         ref="upload"
-        accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel	application/x-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, application/pdf"
         action=""
         :on-change="handleChange"
         :show-file-list="false"
         :auto-upload="false"
         :multiple="true">
         <el-button slot="trigger" type="primary">添加文件</el-button>
-        <span class="file-declare">单个文件最大4M，支持word、excel、ppt、pdf格式</span>
+        <span class="file-declare">单个文件最大4M</span>
         <el-table :data="fileList">
           <el-table-column property="name" label="文件名" min-width="150"></el-table-column>
           <el-table-column property="filesize" label="大小" width="80"></el-table-column>

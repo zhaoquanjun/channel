@@ -9,7 +9,7 @@
       <div class="board notice" :style="{height: rightcurHeight}">
         <h4>
           最新公告
-          <span class="more" @click="goMoreinfo">更多>></span>
+          <span v-if="lists.length" class="more" @click="goMoreinfo">更多>></span>
         </h4>
         <div class="last-item-border">
           <div v-if="lists.length" class="list-item" v-for="list in lists">
@@ -31,7 +31,7 @@
       <div class="board document" :style="{height: rightcurHeight}">
         <h4>
           帮助文档
-          <span class="more" @click="goMorefile">更多>></span>
+          <span v-if="documents.length" class="more" @click="goMorefile">更多>></span>
         </h4>
         <div v-if="documents.length" class="document-item" v-for="list in documents">
           <i></i>

@@ -14,7 +14,7 @@
           <noticemodel :top="true"></noticemodel>
         </el-form-item>
         <el-form-item label='公告截止到：' prop="EndDate">
-          <el-date-picker v-model="ruleForm.EndDate" type="date" placeholder="开始日期" :clearable="false"></el-date-picker>
+          <el-date-picker v-model="ruleForm.EndDate" type="date" placeholder="" :clearable="false"></el-date-picker>
         </el-form-item>
       </el-form>
     </div>

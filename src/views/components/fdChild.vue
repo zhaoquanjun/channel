@@ -47,7 +47,7 @@ export default {
       dialogTableVisible: true,
       id: '',
       tasks: null,
-      year: 2017,
+      year: 2018,
       years: [2017, 2018],
       currYear: ''
     }
