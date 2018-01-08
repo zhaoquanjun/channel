@@ -1,23 +1,17 @@
 <template>
-<el-dialog title="添加/修改代理商" :visible.sync="isShow">
+<el-dialog :title="title" :visible.sync="isShow" class="add-agent">
   <el-form :inline="true" :model="agent" label-width="150px" :rules="rules" ref="agent">
-    <el-form-item label="代理商名称" required prop="ChannelName">
+    <el-form-item label="代理商" required prop="ChannelName">
       <el-input v-model="agent.ChannelName" auto-complete="off"></el-input>
     </el-form-item>
-    <!-- <el-form-item label="大区" prop="ChannelPartitionId">
-      <el-select v-model="agent.ChannelPartitionId" placeholder="请选择">
-        <el-option v-for="item in partitions" :key="item.Id" :label="item.PartitionName" :value="item.Id">
-        </el-option>
-      </el-select>
-    </el-form-item> -->
     <el-form-item label="省份" required prop="ProvinceCode">
-      <el-select v-model="agent.ProvinceCode" placeholder="请选择" @change="filterCities()">
+      <el-select class="option-width" v-model="agent.ProvinceCode" placeholder="请选择" @change="filterCities()">
         <el-option v-for="item in provinces" :key="item.Code" :label="item.Name" :value="item.Code">
         </el-option>
       </el-select>
     </el-form-item>
     <el-form-item label="城市" required prop="CityCode">
-      <el-select v-model="agent.CityCode" placeholder="请选择城市">
+      <el-select class="option-width" v-model="agent.CityCode" placeholder="请选择城市">
         <el-option v-for="item in cities" :key="item.Code" :label="item.Name" :value="item.Code"></el-option>
       </el-select>
     </el-form-item>
@@ -27,17 +21,8 @@
     <el-form-item label="手机">
       <el-input v-model="agent.Mobile" auto-complete="off"></el-input>
     </el-form-item>
-    <el-form-item label="固定电话">
-      <el-input v-model="agent.Tel" auto-complete="off"></el-input>
-    </el-form-item>
-    <el-form-item label="传真">
-      <el-input v-model="agent.Fax" auto-complete="off"></el-input>
-    </el-form-item>
     <el-form-item label="地址">
       <el-input v-model="agent.Address" auto-complete="off"></el-input>
-    </el-form-item>
-    <el-form-item label="邮政编码">
-      <el-input v-model="agent.Postcode" auto-complete="off"></el-input>
     </el-form-item>
     <el-form-item label="法人">
       <el-input v-model="agent.LegalPerson" auto-complete="off"></el-input>
@@ -54,10 +39,13 @@
     <el-form-item label="银行账户">
       <el-input v-model="agent.BankAccount" auto-complete="off"></el-input>
     </el-form-item>
-    <el-form-item label="总经理用户名" prop="UserName" v-if="isCenter && !agent.ChannelId">
+    <el-form-item label="保证金" prop="Deposit">
+      <el-input v-model="agent.Deposit" auto-complete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="用户名" prop="UserName" v-if="isCenter && !ismodify">
       <el-input v-model="agent.UserName" auto-complete="off"></el-input>
     </el-form-item>
-    <el-form-item label="总经理密码" prop="PassWrod" v-if="isCenter && !agent.ChannelId">
+    <el-form-item label="密码" prop="PassWrod" v-if="isCenter && !ismodify">
       <el-input v-model="agent.PassWrod" auto-complete="off"></el-input>
     </el-form-item>
     <el-row>
@@ -83,22 +71,6 @@
         <div>营业执照(三证合一)</div>
       </el-col>
     </el-row>
-    <el-row>
-      <el-col :span="8" class="text-center">
-        <el-upload class="avatar-uploader" :action="uploadUrl" :show-file-list="false" :on-success="handleDocuments2" :before-upload="beforeAvatarUpload" thumbnail-mode="true" :data="signKey">
-          <img v-if="agent.Documents2" :src="agent.Documents2" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
-        <div>税务登记证</div>
-      </el-col>
-      <el-col :span="8">
-        <el-upload class="avatar-uploader" :action="uploadUrl" :show-file-list="false" :on-success="handleDocuments3" :before-upload="beforeAvatarUpload" thumbnail-mode="true" :data="signKey">
-          <img v-if="agent.Documents3" :src="agent.Documents3" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
-        <div>组织机构代码证</div>
-      </el-col>
-    </el-row>
   </el-form>
   <div slot="footer" class="dialog-footer">
     <el-button @click="dialogCacel">取 消</el-button>
@@ -117,7 +89,7 @@ import {
 
 export default {
   name: 'AgentDialog',
-  props: ['channelId', 'signKey'],
+  props: ['channelId', 'signKey', 'title'],
   data() {
     const userInfo = sessionStorage.userInfo && JSON.parse(sessionStorage.userInfo)
     return {
@@ -129,20 +101,16 @@ export default {
         ChannelName: '',
         IdCard: '',
         Aptitude: '',
-        Documents: '',
-        Documents2: '',
-        Documents3: ''
+        Documents: ''
+        // Documents2: '',
+        // Documents3: ''
       },
+      ismodify: false,
       rules: {
         ChannelName: [{
           required: true,
-          message: '请输入渠道名称',
+          message: '请输入代理商名称',
           trigger: 'blur'
-        }],
-        ChannelPartitionId: [{
-          required: true,
-          message: '请选择所在大区',
-          trigger: 'change'
         }],
         ProvinceCode: [{
           required: true,
@@ -154,14 +122,19 @@ export default {
           message: '请选择所在城市',
           trigger: 'change'
         }],
+        Deposit: [{
+          required: true,
+          message: '请输入保证金',
+          trigger: 'blur'
+        }],
         UserName: [{
           required: true,
-          message: '请输入总经理用户名',
+          message: '请输入用户名',
           trigger: 'blur'
         }],
         PassWrod: [{
           required: true,
-          message: '请输入总经理密码',
+          message: '请输入密码',
           trigger: 'blur'
         }]
       },
@@ -174,12 +147,19 @@ export default {
       uploadUrl: 'https://pilipa.oss-cn-beijing.aliyuncs.com'
     }
   },
+  mounted() {
+    if (this.channelId) {
+      this.ismodify = true
+    } else {
+      this.ismodify = false
+    }
+  },
   created() {
     this.getPartitions()
     this.getParamsProvince()
     this.getParamsCities()
     this.fetchData()
-    console.log(this.signKey, 'signKey')
+    console.log(this.channelId, 'channelId')
   },
   watch: {
     channelId() {
@@ -267,14 +247,14 @@ export default {
       res = this.uploadUrl + '/' + this.signKey.key
       this.agent.Documents = res
     },
-    handleDocuments2(res) {
-      res = this.uploadUrl + '/' + this.signKey.key
-      this.agent.Documents2 = res
-    },
-    handleDocuments3(res) {
-      res = this.uploadUrl + '/' + this.signKey.key
-      this.agent.Documents3 = res
-    },
+    // handleDocuments2(res) {
+    //   res = this.uploadUrl + '/' + this.signKey.key
+    //   this.agent.Documents2 = res
+    // },
+    // handleDocuments3(res) {
+    //   res = this.uploadUrl + '/' + this.signKey.key
+    //   this.agent.Documents3 = res
+    // },
     // getCities () {
     //   getCities().then(res => {
     //     this.cities = res.data
@@ -328,8 +308,14 @@ export default {
 }
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-.el-form--inline .el-form-item {
+<style>
+.add-agent .el-form--inline .el-form-item {
   width: 380px;
+}
+.add-agent .el-dialog--small {
+  width: 65%;
+}
+.add-agent .option-width .el-input {
+  width: 192px;
 }
 </style>

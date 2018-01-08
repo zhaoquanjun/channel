@@ -21,7 +21,7 @@
 import {
   pass
 } from '../api/api'
-import bus from '../bus'
+// import bus from '../bus'
 export default {
   props: {
     row: {
@@ -61,7 +61,7 @@ export default {
                 message: '代理商审核通过'
               })
               this.dialogFormVisible = false
-              bus.$emit('done')
+              this.$emit('done')
             }
           })
         } else {
