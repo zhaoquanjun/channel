@@ -120,7 +120,7 @@ export const logout = () => {
 // 代理商管理
 // --获取渠道列表 && 财务管理--财务信息列表 && 渠道返点列表
 export const getAgents = params => {
-  return axios.get(`${base}/agent`, {
+  return axios.get(`${base}/agents`, {
     params: params
   }).then(res => res.data)
 }
