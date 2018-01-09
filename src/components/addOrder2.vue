@@ -4,7 +4,10 @@
       <div class='container add-order-container'>
         <el-form ref='postData' :model='postData' label-width='130px'>
           <div>
-            <p ng-if="postData.OrderId" class="form-control-static">
+            <p v-if="!modify">账户余额：
+              <span style="color: red">{{'￥' + balance}}</span>
+            </p>
+            <p class="form-control-static">
               销售：{{postData.SalerName}} 订单号：{{postData.OrderId}} 所属公司：{{postData.ChannelName}} 提单员：{{postData.BillName}}
               <span v-if="postData.Category != 1" style="color:red">预提单</span>
               <span v-if="postData.FreChangeOrderId" style="color:red">纳税人类别变更</span>
@@ -24,7 +27,10 @@
             <el-row>
               <el-col :span='12'>
                 <el-form-item label='公司名称：' required>
-                  <span v-if="!modify">{{postData.Customer.Name}}</span>
+                  <span v-if="!modify">
+                    {{postData.Customer.Name}}
+                    <span v-if="postData.Customer.IsSync" class="IsSync">工商检索</span>
+                  </span>
                   <el-input v-if="modify" class='company-search' v-model='postData.Customer.Name'></el-input>
                   <el-button v-if="modify" type="primary" class="company-alert" @click="getCompanyInfo">同步官方</el-button>
                 </el-form-item>
@@ -213,7 +219,8 @@
     getpersoncardbypath,
     modifyOrders,
     getChannelGift,
-    urlsignkey
+    urlsignkey,
+    balance
 } from '../api/api'
   import Dialog from '@/service/dialog.js'
   import CompanyInfo from '@/views/components/companyInfo'
@@ -233,6 +240,7 @@
         signkey: {},
         ischecked: true,
         title: '订单查看',
+        balance: '',
         pickerOptions: {
           disabledDate(time) {
             console.log(time, 'pickerOptions')
@@ -296,8 +304,16 @@
       this.getChannelGift()
       this.BusnissDeadlineCanBeChoose()
       this.getsignkey()
+      this.getBalance()
     },
     methods: {
+      getBalance() {
+        balance().then(res => {
+          if (res.status) {
+            this.balance = res.data
+          }
+        })
+      },
       getChannelGift() {
         const addedvalue = this.postData.Customer.AddedValue
         getChannelGift({
@@ -766,5 +782,11 @@
 }
 .add-order2 textarea {
   font-family: Microsoft YaHei;
+}
+.add-order2 .IsSync {
+  border: 1px solid red;
+  border-radius: 4px;
+  color: red;
+  margin-left: 10px;
 }
 </style>
