@@ -940,5 +940,5 @@ export const downloadfile = (id) => {
 }
 // 获取账户余额
 export const balance = (channelid) => {
-  return axios.get(`${base}/agent/balance?channelid=${channelid}`).then(res => res.data)
+  return axios.get(`${base}/finance/balance?channelid=${channelid}`).then(res => res.data)
 }
