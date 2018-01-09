@@ -308,7 +308,7 @@
     },
     methods: {
       getBalance() {
-        balance().then(res => {
+        balance(this.channelid).then(res => {
           if (res.status) {
             this.balance = res.data
           }

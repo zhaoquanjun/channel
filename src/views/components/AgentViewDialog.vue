@@ -21,6 +21,9 @@
     <el-form-item label="手机">
       <el-input v-model="agent.Mobile" auto-complete="off"></el-input>
     </el-form-item>
+    <el-form-item label="邮箱">
+      <el-input v-model="agent.Email" auto-complete="off"></el-input>
+    </el-form-item>
     <el-form-item label="地址">
       <el-input v-model="agent.Address" auto-complete="off"></el-input>
     </el-form-item>
@@ -71,6 +74,9 @@
         <div>营业执照(三证合一)</div>
       </el-col>
     </el-row>
+    <el-form-item v-if="agent.Status === 3" label="驳回原因">
+      <span style="color: red">{{agent.Desc}}</span>
+    </el-form-item>
   </el-form>
   <div slot="footer" class="dialog-footer">
     <el-button @click="dialogCacel">取 消</el-button>
