@@ -74,9 +74,13 @@
         <div style="padding-left: 30px">营业执照(三证合一)</div>
       </el-col>
     </el-row>
-    <el-form-item v-if="agent.Status === 3" label="驳回原因">
+    <div v-if="agent.Status === 3">
+      <div class='add-order-title'>
+        <span>拒审原因</span>
+      </div>
+      <span style="margin-left: 30px">驳回原因：</span>
       <span style="color: red">{{agent.BackReason}}</span>
-    </el-form-item>
+    </div>
   </el-form>
   <div slot="footer" class="dialog-footer">
     <el-button @click="dialogCacel">取 消</el-button>
@@ -326,5 +330,14 @@ export default {
 }
 .add-agent .el-input__icon+.el-input__inner {
   padding-right: 0;
+}
+.add-agent .add-order-title {
+  height: 25px;
+  line-height: 25px;
+  border-left: 5px solid #20a0ff;
+  padding-left: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 20px;
 }
 </style>
