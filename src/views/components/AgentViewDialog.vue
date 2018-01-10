@@ -324,4 +324,7 @@ export default {
 .add-agent .option-width .el-input {
   width: 192px;
 }
+.add-agent .el-input__icon+.el-input__inner {
+  padding-right: 0;
+}
 </style>
