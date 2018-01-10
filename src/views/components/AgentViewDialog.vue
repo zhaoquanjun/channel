@@ -64,18 +64,18 @@
           <img v-if="agent.Aptitude" :src="agent.Aptitude" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <div>代帐资质</div>
+        <div style="padding-left: 60px">代帐资质</div>
       </el-col>
       <el-col :span="8">
         <el-upload class="avatar-uploader" :action="uploadUrl" :show-file-list="false" :on-success="handleDocuments" :before-upload="beforeAvatarUpload" thumbnail-mode="true" :data="signKey">
           <img v-if="agent.Documents" :src="agent.Documents" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <div>营业执照(三证合一)</div>
+        <div style="padding-left: 30px">营业执照(三证合一)</div>
       </el-col>
     </el-row>
     <el-form-item v-if="agent.Status === 3" label="驳回原因">
-      <span style="color: red">{{agent.Desc}}</span>
+      <span style="color: red">{{agent.BackReason}}</span>
     </el-form-item>
   </el-form>
   <div slot="footer" class="dialog-footer">
@@ -319,7 +319,7 @@ export default {
   width: 380px;
 }
 .add-agent .el-dialog--small {
-  width: 65%;
+  width: 70%;
 }
 .add-agent .option-width .el-input {
   width: 192px;

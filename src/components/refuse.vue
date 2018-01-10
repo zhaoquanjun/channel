@@ -92,7 +92,7 @@ export default {
             case 'REFUSEAGENT':
               var item = {
                 ChannelId: this.row.ChannelId,
-                Desc: this.ruleForm.desc,
+                BackReason: this.ruleForm.desc,
                 status: 3
               }
               pass(this.row.ChannelId, item).then((res) => {

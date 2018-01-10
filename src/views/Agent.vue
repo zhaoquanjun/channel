@@ -28,7 +28,7 @@
     </el-table-column>
     <el-table-column prop="ChannelName2" label="二级代理商" min-width="200">
     </el-table-column>
-    <el-table-column prop="Status" :formatter="StatusFormat" label="状态">
+    <el-table-column prop="StatusText" label="状态">
     </el-table-column>
     <el-table-column prop="CreateDate" label="入驻日期" width="130">
     </el-table-column>
@@ -37,7 +37,7 @@
     <el-table-column v-if="category != 7 && category != 13" label="操作" min-width="300">
       <template scope="scope">
         <div v-if="scope.row.Status === 1">
-          <el-button @click="viewAgent(scope.row)" type="text" size="small">查看</el-button>
+          <el-button @click="viewAgent(scope.row)" type="text" size="small">修改</el-button>
           <el-button @click="deleteAgent(scope.row)" type="text" size="small">删除</el-button>
           <el-button @click="setDiscount(scope.row)" type="text" size="small">设置折扣</el-button>
           <el-button @click="setFetation(scope.row)" type="text" size="small">能否添加下级</el-button>
@@ -245,21 +245,6 @@ export default {
           this.$message.error(res.message)
         }
       })
-    },
-    StatusFormat: function (row) {
-      var status = row.Status
-      switch (status) {
-        case 1:
-          status = '通过'
-          break
-        case 2:
-          status = '审核中'
-          break
-        case 3:
-          status = '拒审'
-          break
-      }
-      return status
     },
     deleteAgent(row) {
       this.$confirm('您确定要删除代理商?', '提示', {
