@@ -40,7 +40,7 @@
           <el-button @click="viewAgent(scope.row)" type="text" size="small">修改</el-button>
           <el-button @click="deleteAgent(scope.row)" type="text" size="small">删除</el-button>
           <el-button @click="setDiscount(scope.row)" type="text" size="small">设置折扣</el-button>
-          <el-button @click="setFetation(scope.row)" type="text" size="small">能否添加下级</el-button>
+          <el-button v-if="!scope.row.ChannelName2" @click="setFetation(scope.row)" type="text" size="small">能否添加下级</el-button>
           <el-button @click="setGift(scope.row)" type="text" size="small">礼包设置</el-button>
           <el-button @click="setPromotion(scope.row)" type="text" size="small">活动设置</el-button>
           <el-button  @click="setCustomerSettings(scope.row)" type="text" size="small">客户设置</el-button>
@@ -172,7 +172,7 @@ export default {
       Dialog(AgentDialog, {
         channelId: agent.ChannelId,
         signKey: this.signkey,
-        title: '修改/查看代理商'
+        title: '修改代理商'
       }).then(() => {
         this.fetchData()
       })

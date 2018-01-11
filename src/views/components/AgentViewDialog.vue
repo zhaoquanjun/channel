@@ -59,19 +59,19 @@
         </el-upload>
         <div>上传身份证</div>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="8"  class="text-center">
         <el-upload class="avatar-uploader" :action="uploadUrl" :show-file-list="false" :on-success="handleAptitude" :before-upload="beforeAvatarUpload" thumbnail-mode="true" :data="signKey">
           <img v-if="agent.Aptitude" :src="agent.Aptitude" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <div style="padding-left: 60px">代帐资质</div>
+        <div>代帐资质</div>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="8"  class="text-center">
         <el-upload class="avatar-uploader" :action="uploadUrl" :show-file-list="false" :on-success="handleDocuments" :before-upload="beforeAvatarUpload" thumbnail-mode="true" :data="signKey">
           <img v-if="agent.Documents" :src="agent.Documents" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <div style="padding-left: 30px">营业执照(三证合一)</div>
+        <div>营业执照(三证合一)</div>
       </el-col>
     </el-row>
     <div v-if="agent.Status === 3">
@@ -325,12 +325,10 @@ export default {
 .add-agent .el-dialog--small {
   width: 70%;
 }
-.add-agent .option-width .el-input {
+.add-agent .el-input {
   width: 192px;
 }
-.add-agent .el-input__icon+.el-input__inner {
-  padding-right: 0;
-}
+
 .add-agent .add-order-title {
   height: 25px;
   line-height: 25px;
