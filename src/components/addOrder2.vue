@@ -81,7 +81,7 @@
                 <el-form-item label='统一信用代码：' required>
                   <el-input v-model='postData.Customer.RegNO' :readonly="!modify" :maxlength="18"></el-input>
                 </el-form-item>
-                <el-form-item label='营业期限：' required>
+                <el-form-item class="date-style" label='营业期限：' required>
                   <el-date-picker width="100" v-model="postData.Customer.RegisterDate" type="date" placeholder="开始日期" :clearable="false" :readonly="!modify">
                   </el-date-picker>
                   <span>-</span>
@@ -725,7 +725,7 @@
 <style lang='stylus'>
   .add-order-container
   .el-date-editor.el-input
-    width: 120px
+    width: 125px
     form
       input, textarea
         width: 300px
@@ -788,5 +788,8 @@
   border-radius: 4px;
   color: red;
   margin-left: 10px;
+}
+.add-order2 .add-order-container .el-date-editor.el-input {
+  width: 125px;
 }
 </style>
