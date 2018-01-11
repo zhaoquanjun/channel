@@ -22,11 +22,7 @@
     </el-table-column>
     <el-table-column prop="Address" label="地址" min-width="200">
     </el-table-column>
-    <el-table-column prop="Tel" label="联系方式" width="130">
-      <template scope="scope">
-        <span v-text="scope.row.Tel"></span><br>
-        <span v-text="scope.row.Mobile"></span>
-      </template>
+    <el-table-column prop="Mobile" label="联系方式" width="130">
     </el-table-column>
     <el-table-column prop="Balance" label="余额" width="120">
     </el-table-column>
