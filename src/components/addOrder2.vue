@@ -21,7 +21,7 @@
             <div class='custom-tips mb-10'>
               <!-- <i class='fa fa-exclamation-circle' aria-hidden='true'></i> -->
               <span v-if="postData.Category == 2">【温馨提示】支持对二代居民身份证的关键字段识别。上传身份证后，即可自动读取并带出姓名、身份证号等信息。</span>
-              <span v-else>【温馨提示】可根据客户在国家企业信息公示系统的链接地址，快速完成工商信息的录入。</span>
+              <span v-else>【温馨提示】可通过“检索”或“快速录入”按钮，帮您完成工商信息的快速录入。</span>
             </div>
 
             <el-row>
