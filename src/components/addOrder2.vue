@@ -730,7 +730,7 @@
       input, textarea
         width: 300px
       input:nth-child(2)
-        width: 120px
+        width: 125px
     .company-search
       input
         width: 300px !important
@@ -790,6 +790,9 @@
   margin-left: 10px;
 }
 .add-order2 .add-order-container .el-date-editor.el-input {
-  width: 125px;
+  width: 130px;
+}
+.add-order2 .add-order-container form input:nth-child(2) {
+  width: 130px;
 }
 </style>

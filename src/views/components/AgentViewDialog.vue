@@ -2,7 +2,7 @@
 <el-dialog :title="title" :visible.sync="isShow" class="add-agent">
   <el-form :inline="true" :model="agent" label-width="150px" :rules="rules" ref="agent">
     <el-form-item label="代理商" required prop="ChannelName">
-      <el-input v-model="agent.ChannelName" auto-complete="off" :disabled="readonly"></el-input>
+      <el-input v-model="agent.ChannelName" auto-complete="off" :readonly="readonly"></el-input>
     </el-form-item>
     <el-form-item label="省份" required prop="ProvinceCode">
       <el-select class="option-width" v-model="agent.ProvinceCode" placeholder="请选择" @change="filterCities()" :disabled="readonly">
@@ -16,40 +16,40 @@
       </el-select>
     </el-form-item>
     <el-form-item label="负责人">
-      <el-input v-model="agent.Principal" auto-complete="off" :disabled="readonly"></el-input>
+      <el-input v-model="agent.Principal" auto-complete="off" :readonly="readonly"></el-input>
     </el-form-item>
     <el-form-item label="手机">
-      <el-input v-model="agent.Mobile" auto-complete="off" :disabled="readonly"></el-input>
+      <el-input v-model="agent.Mobile" auto-complete="off" :readonly="readonly"></el-input>
     </el-form-item>
     <el-form-item label="邮箱">
-      <el-input v-model="agent.Email" auto-complete="off" :disabled="readonly"></el-input>
+      <el-input v-model="agent.Email" auto-complete="off" :readonly="readonly"></el-input>
     </el-form-item>
     <el-form-item label="地址">
-      <el-input v-model="agent.Address" auto-complete="off" :disabled="readonly"></el-input>
+      <el-input v-model="agent.Address" auto-complete="off" :readonly="readonly"></el-input>
     </el-form-item>
     <el-form-item label="法人">
-      <el-input v-model="agent.LegalPerson" auto-complete="off" :disabled="readonly"></el-input>
+      <el-input v-model="agent.LegalPerson" auto-complete="off" :readonly="readonly"></el-input>
     </el-form-item>
     <el-form-item label="开户行">
-      <el-input v-model="agent.DepositBank" auto-complete="off" :disabled="readonly"></el-input>
+      <el-input v-model="agent.DepositBank" auto-complete="off" :readonly="readonly"></el-input>
     </el-form-item>
     <el-form-item label="开户行支行">
-      <el-input v-model="agent.BranchBank" auto-complete="off" :disabled="readonly"></el-input>
+      <el-input v-model="agent.BranchBank" auto-complete="off" :readonly="readonly"></el-input>
     </el-form-item>
     <el-form-item label="开户名">
-      <el-input v-model="agent.AccountName" auto-complete="off" :disabled="readonly"></el-input>
+      <el-input v-model="agent.AccountName" auto-complete="off" :readonly="readonly"></el-input>
     </el-form-item>
     <el-form-item label="银行账户">
-      <el-input v-model="agent.BankAccount" auto-complete="off" :disabled="readonly"></el-input>
+      <el-input v-model="agent.BankAccount" auto-complete="off" :readonly="readonly"></el-input>
     </el-form-item>
     <el-form-item label="保证金" prop="Deposit">
-      <el-input v-model="agent.Deposit" auto-complete="off" :disabled="readonly"></el-input>
+      <el-input v-model="agent.Deposit" auto-complete="off" :readonly="readonly"></el-input>
     </el-form-item>
     <el-form-item label="用户名" prop="UserName" v-if="isCenter && !ismodify">
-      <el-input v-model="agent.UserName" auto-complete="off" :disabled="readonly"></el-input>
+      <el-input v-model="agent.UserName" auto-complete="off" :readonly="readonly"></el-input>
     </el-form-item>
     <el-form-item label="密码" prop="PassWrod" v-if="isCenter && !ismodify">
-      <el-input v-model="agent.PassWrod" auto-complete="off" :disabled="readonly"></el-input>
+      <el-input v-model="agent.PassWrod" auto-complete="off" :readonly="readonly"></el-input>
     </el-form-item>
     <el-row>
       <el-col :span="8" class="text-center">
