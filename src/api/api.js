@@ -942,3 +942,9 @@ export const downloadfile = (id) => {
 export const balance = (channelid) => {
   return axios.get(`${base}/finance/balance?channelid=${channelid}`).then(res => res.data)
 }
+// 代理商-发票申请列表查询
+export const invoiceapply = params => {
+  return axios.get(`${base}/invoice`, {
+    params: params
+  }).then(res => res.data)
+}

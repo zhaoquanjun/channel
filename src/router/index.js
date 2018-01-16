@@ -47,6 +47,9 @@ import InfoList from '@/views/infolist' // 公告管理列表
 import NoticeDetail from '@/views/noticeDetail' // 公告详情页
 import Filelist from '@/views/filelist' // 文档列表
 
+// 代理商组件列表
+import InvoiceApply from '@/views/channel/InvoiceApply' // 代理商发票申请
+
 Vue.use(Router)
 const router = new Router({
   routes: [{
@@ -89,6 +92,10 @@ const router = new Router({
       name: 'main.invoiceSearch',
       path: 'invoiceSearch',
       component: InvoiceSearch
+    }, {
+      name: 'main.invoice',
+      path: 'invoice',
+      component: InvoiceApply
     }, {
       name: 'main.chargebackRecord',
       path: 'chargebackRecord',
