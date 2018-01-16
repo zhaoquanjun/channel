@@ -14,7 +14,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="fetchData">查询</el-button>
-        <el-button v-if="category != 14 && category != 7 && category != 13" type="primary" @click="addAgent()">添加代理商</el-button>
+        <el-button v-if="category != 14 && category != 7 && category != 13 && category != 10" type="primary" @click="addAgent()">添加代理商</el-button>
         <el-button type="primary" @click="onDownload()" :disabled="!tableData.length">导出</el-button>
       </el-form-item>
     </el-form>
@@ -34,7 +34,7 @@
     </el-table-column>
     <el-table-column prop="Balance" label="余额" width="130">
     </el-table-column>
-    <el-table-column v-if="category != 7 && category != 13 && category != 14" label="操作" min-width="300">
+    <el-table-column v-if="category != 7 && category != 13 && category != 14 && category != 10" label="操作" min-width="300">
       <template scope="scope">
         <div v-if="scope.row.Status === 1">
           <el-button @click="viewAgent(scope.row)" type="text" size="small">修改</el-button>
@@ -60,11 +60,6 @@
     <el-table-column v-if="category == 7 || category == 13" label="操作" width="100px">
       <template scope="scope">
         <el-button  @click="setCustomerSettings(scope.row)" type="text" size="small">客户设置</el-button>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="category == 14" label="操作" width="100px">
-      <template scope="scope">
-        <el-button @click="scanAgent(scope.row)" type="text" size="small">查看</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -181,16 +176,6 @@ export default {
         channelId: agent.ChannelId,
         signKey: this.signkey,
         title: '修改代理商'
-      }).then(() => {
-        this.fetchData()
-      })
-    },
-    scanAgent(agent) {
-      Dialog(AgentDialog, {
-        channelId: agent.ChannelId,
-        signKey: this.signkey,
-        title: '查看代理商',
-        readonly: true
       }).then(() => {
         this.fetchData()
       })

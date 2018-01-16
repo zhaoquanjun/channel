@@ -2,72 +2,72 @@
 <el-dialog :title="title" :visible.sync="isShow" class="add-agent">
   <el-form :inline="true" :model="agent" label-width="150px" :rules="rules" ref="agent">
     <el-form-item label="代理商" required prop="ChannelName">
-      <el-input v-model="agent.ChannelName" auto-complete="off" :readonly="readonly"></el-input>
+      <el-input v-model="agent.ChannelName" auto-complete="off" ></el-input>
     </el-form-item>
     <el-form-item label="省份" required prop="ProvinceCode">
-      <el-select class="option-width" v-model="agent.ProvinceCode" placeholder="请选择" @change="filterCities()" :disabled="readonly">
+      <el-select class="option-width" v-model="agent.ProvinceCode" placeholder="请选择" @change="filterCities()" >
         <el-option v-for="item in provinces" :key="item.Code" :label="item.Name" :value="item.Code">
         </el-option>
       </el-select>
     </el-form-item>
     <el-form-item label="城市" required prop="CityCode">
-      <el-select class="option-width" v-model="agent.CityCode" placeholder="请选择城市" :disabled="readonly">
+      <el-select class="option-width" v-model="agent.CityCode" placeholder="请选择城市" >
         <el-option v-for="item in cities" :key="item.Code" :label="item.Name" :value="item.Code"></el-option>
       </el-select>
     </el-form-item>
     <el-form-item label="负责人">
-      <el-input v-model="agent.Principal" auto-complete="off" :readonly="readonly"></el-input>
+      <el-input v-model="agent.Principal" auto-complete="off" ></el-input>
     </el-form-item>
     <el-form-item label="手机">
-      <el-input v-model="agent.Mobile" auto-complete="off" :readonly="readonly"></el-input>
+      <el-input v-model="agent.Mobile" auto-complete="off" ></el-input>
     </el-form-item>
     <el-form-item label="邮箱">
-      <el-input v-model="agent.Email" auto-complete="off" :readonly="readonly"></el-input>
+      <el-input v-model="agent.Email" auto-complete="off" ></el-input>
     </el-form-item>
     <el-form-item label="地址">
-      <el-input v-model="agent.Address" auto-complete="off" :readonly="readonly"></el-input>
+      <el-input v-model="agent.Address" auto-complete="off" ></el-input>
     </el-form-item>
     <el-form-item label="法人">
-      <el-input v-model="agent.LegalPerson" auto-complete="off" :readonly="readonly"></el-input>
+      <el-input v-model="agent.LegalPerson" auto-complete="off" ></el-input>
     </el-form-item>
     <el-form-item label="开户行">
-      <el-input v-model="agent.DepositBank" auto-complete="off" :readonly="readonly"></el-input>
+      <el-input v-model="agent.DepositBank" auto-complete="off" ></el-input>
     </el-form-item>
     <el-form-item label="开户行支行">
-      <el-input v-model="agent.BranchBank" auto-complete="off" :readonly="readonly"></el-input>
+      <el-input v-model="agent.BranchBank" auto-complete="off" ></el-input>
     </el-form-item>
     <el-form-item label="开户名">
-      <el-input v-model="agent.AccountName" auto-complete="off" :readonly="readonly"></el-input>
+      <el-input v-model="agent.AccountName" auto-complete="off" ></el-input>
     </el-form-item>
     <el-form-item label="银行账户">
-      <el-input v-model="agent.BankAccount" auto-complete="off" :readonly="readonly"></el-input>
+      <el-input v-model="agent.BankAccount" auto-complete="off" ></el-input>
     </el-form-item>
     <el-form-item label="保证金" prop="Deposit">
-      <el-input v-model="agent.Deposit" auto-complete="off" :readonly="readonly"></el-input>
+      <el-input v-model="agent.Deposit" auto-complete="off" ></el-input>
     </el-form-item>
     <el-form-item label="用户名" prop="UserName" v-if="isCenter && !ismodify">
-      <el-input v-model="agent.UserName" auto-complete="off" :readonly="readonly"></el-input>
+      <el-input v-model="agent.UserName" auto-complete="off" ></el-input>
     </el-form-item>
     <el-form-item label="密码" prop="PassWrod" v-if="isCenter && !ismodify">
-      <el-input v-model="agent.PassWrod" auto-complete="off" :readonly="readonly"></el-input>
+      <el-input v-model="agent.PassWrod" auto-complete="off" ></el-input>
     </el-form-item>
     <el-row>
       <el-col :span="8" class="text-center">
-        <el-upload class="avatar-uploader" :action="uploadUrl" :show-file-list="false" :on-success="handleIdCard" :before-upload="beforeAvatarUpload" thumbnail-mode="true" :data="signKey" :disabled="readonly">
+        <el-upload class="avatar-uploader" :action="uploadUrl" :show-file-list="false" :on-success="handleIdCard" :before-upload="beforeAvatarUpload" thumbnail-mode="true" :data="signKey" >
           <img v-if="agent.IdCard" :src="agent.IdCard" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
         <div>上传身份证</div>
       </el-col>
       <el-col :span="8"  class="text-center">
-        <el-upload class="avatar-uploader" :action="uploadUrl" :show-file-list="false" :on-success="handleAptitude" :before-upload="beforeAvatarUpload" thumbnail-mode="true" :data="signKey" :disabled="readonly">
+        <el-upload class="avatar-uploader" :action="uploadUrl" :show-file-list="false" :on-success="handleAptitude" :before-upload="beforeAvatarUpload" thumbnail-mode="true" :data="signKey" >
           <img v-if="agent.Aptitude" :src="agent.Aptitude" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
         <div>代帐资质</div>
       </el-col>
       <el-col :span="8"  class="text-center">
-        <el-upload class="avatar-uploader" :action="uploadUrl" :show-file-list="false" :on-success="handleDocuments" :before-upload="beforeAvatarUpload" thumbnail-mode="true" :data="signKey" :disabled="readonly">
+        <el-upload class="avatar-uploader" :action="uploadUrl" :show-file-list="false" :on-success="handleDocuments" :before-upload="beforeAvatarUpload" thumbnail-mode="true" :data="signKey" >
           <img v-if="agent.Documents" :src="agent.Documents" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
@@ -84,7 +84,7 @@
   </el-form>
   <div slot="footer" class="dialog-footer">
     <el-button @click="dialogCacel">取 消</el-button>
-    <el-button v-if="!readonly"type="primary" @click="dialogSave('agent')">确 定</el-button>
+    <el-button type="primary" @click="dialogSave('agent')">确 定</el-button>
   </div>
 </el-dialog>
 </template>
@@ -99,7 +99,7 @@ import {
 
 export default {
   name: 'AgentDialog',
-  props: ['channelId', 'signKey', 'title', 'readonly'],
+  props: ['channelId', 'signKey', 'title'],
   data() {
     const userInfo = sessionStorage.userInfo && JSON.parse(sessionStorage.userInfo)
     return {
@@ -158,7 +158,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.readonly, 'readonly')
     if (this.channelId) {
       this.ismodify = true
     } else {
