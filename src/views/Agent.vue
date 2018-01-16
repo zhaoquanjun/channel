@@ -14,7 +14,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="fetchData">查询</el-button>
-        <el-button v-if="category != 14" type="primary" @click="addAgent()">添加代理商</el-button>
+        <el-button v-if="category != 14 && category != 7 && category != 13" type="primary" @click="addAgent()">添加代理商</el-button>
         <el-button type="primary" @click="onDownload()" :disabled="!tableData.length">导出</el-button>
       </el-form-item>
     </el-form>
@@ -57,12 +57,12 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column v-if="category == 7 && category == 13" label="操作" width="450px">
+    <el-table-column v-if="category == 7 || category == 13" label="操作" width="100px">
       <template scope="scope">
         <el-button  @click="setCustomerSettings(scope.row)" type="text" size="small">客户设置</el-button>
       </template>
     </el-table-column>
-    <el-table-column v-if="category == 14" label="操作" width="450px">
+    <el-table-column v-if="category == 14" label="操作" width="100px">
       <template scope="scope">
         <el-button @click="scanAgent(scope.row)" type="text" size="small">查看</el-button>
       </template>
@@ -139,7 +139,7 @@ export default {
     var userInfos = JSON.parse(sessionStorage.getItem('userInfo'))
     this.RoleId = userInfos.RoleId
     this.category = JSON.parse(sessionStorage.getItem('userInfo')).Category
-    // console.log(this.category, 'category')
+    console.log(this.category, 'category')
     this.fetchData()
     this.getsignkey()
   },
