@@ -30,19 +30,19 @@
     </el-form>
   </div>
   <el-table :data="tableData" border style="width: 100%">
-    <el-table-column prop="InvoiceId" label="编号" width="120"></el-table-column>
-    <el-table-column prop="ChannelName1" label="一级代理商" min-width="250"></el-table-column>
-    <el-table-column prop="ChannelName2" label="二级代理商" min-width="200"></el-table-column>
+    <el-table-column prop="InvoiceId" label="编号" width="200"></el-table-column>
+    <el-table-column prop="ChannelName1" label="一级代理商" min-width="200"></el-table-column>
+    <el-table-column prop="ChannelName2" label="二级代理商" min-width="150"></el-table-column>
     <el-table-column prop="Title" label="发票抬头"></el-table-column>
     <el-table-column prop="InvoiceNumber" label="税号"></el-table-column>
     <el-table-column prop="Amount" label="开票金额"></el-table-column>
-    <el-table-column prop="Property" label="发票类型"></el-table-column>
-    <el-table-column prop="ApplyDate" label="申请时间"></el-table-column>
-    <el-table-column prop="Status" label="审批状态"></el-table-column>
+    <el-table-column prop="Property" label="发票类型" :formatter="CategoryFormat"></el-table-column>
+    <el-table-column prop="ApplyDate" label="申请时间" :formatter="StatusDate"></el-table-column>
+    <el-table-column prop="Status" label="审批状态" :formatter="StatusFormat"></el-table-column>
     <el-table-column prop="AuditMsg" label="审批意见"></el-table-column>
     <el-table-column label="操作" width="180">
       <template scope="scope">
-        <el-button @click="viewInvoice(scope.row)" type="text" size="small">查看</el-button>
+        <el-button @click="view(scope.row)" type="text" size="small">查看</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -54,8 +54,11 @@
 
 <script>
 import {
-  invoiceapply
+  invoiceapply,
+  viewInvoice
 } from '@/api/api'
+import Dialog from '@/service/dialog.js'
+import InvoiceView from '@/components/invoiceView.vue'
 export default {
   data: function() {
     return {
@@ -78,6 +81,9 @@ export default {
       financeTypeChild: [],
       isShowAllChildFinanceType: true
     }
+  },
+  created() {
+    this.onSearch()
   },
   methods: {
     onSearch() {
@@ -103,6 +109,46 @@ export default {
         this.tableData = res.data
         this.pagination.total = res.Count
       })
+    },
+    view(row) {
+      var InvoiceId = row.InvoiceId
+      viewInvoice(InvoiceId).then((res) => {
+        this.scanView = res.data
+        Dialog(InvoiceView, {
+          view: this.scanView
+        })
+      })
+    },
+    CategoryFormat(row) {
+      var category = row.Category
+      switch (category) {
+        case 1:
+          category = '专票'
+          break
+        case 2:
+          category = '普票'
+          break
+      }
+      return category
+    },
+    StatusDate(row) {
+      var date = row.ApplyDate
+      return date.substring(0, 10)
+    },
+    StatusFormat(row) {
+      let status = row.Status
+      switch (status) {
+        case 1:
+          status = '未审核'
+          break
+        case 2:
+          status = '通过'
+          break
+        case 3:
+          status = '拒审'
+          break
+      }
+      return status
     },
     handleSizeChange(val) {
       this.pagination.pageSize = val

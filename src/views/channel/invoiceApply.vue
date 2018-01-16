@@ -4,7 +4,7 @@
     <div class="invoice-declare">
       <div>
         <strong>未开发票金额</strong>
-        <span>4320元</span>
+        <span>{{balance}}元</span>
         <el-button type="primary" @click="apply()">立即申请</el-button>
         <span>提醒：</span>
       </div>
@@ -25,18 +25,33 @@
 </template>
 
 <script>
+import {
+  invoiceLastmonth
+} from '@/api/api'
 import InvoiceApplyTab1 from '@/views/components/channelCom/invoiceApplyTab1'
 import InvoiceApplyTab2 from '@/views/components/channelCom/invoiceApplyTab2'
 export default {
   data: function() {
     return {
       activeName: 'tab1',
-      agents: []
+      balance: ''
     }
   },
   components: {
     Tab1: InvoiceApplyTab1,
     Tab2: InvoiceApplyTab2
+  },
+  created() {
+    this.getBalance()
+  },
+  methods: {
+    getBalance() {
+      invoiceLastmonth().then(res => {
+        if (res.status) {
+          this.balance = res.data
+        }
+      })
+    }
   }
 }
 </script>

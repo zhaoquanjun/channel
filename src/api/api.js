@@ -948,3 +948,13 @@ export const invoiceapply = params => {
     params: params
   }).then(res => res.data)
 }
+// 代理商-发票未开金额
+export const invoiceLastmonth = () => {
+  return axios.get(`${base}/invoice/invoiceLastmonth`).then(res => res.data)
+}
+// 代理商-发票开具查询列表
+export const invoiceIssue = params => {
+  return axios.get(`${base}/invoice/issue`, {
+    params: params
+  }).then(res => res.data)
+}
