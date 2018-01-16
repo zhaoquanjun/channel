@@ -51,6 +51,9 @@ export default {
           this.balance = res.data
         }
       })
+    },
+    apply() {
+
     }
   }
 }
