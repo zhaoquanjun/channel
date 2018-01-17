@@ -1,17 +1,17 @@
 <template lang="html">
   <div class="header">
-  	<el-menu class="el-menu-demo" mode="horizontal" @select="handleSelect">
+  	<el-menu class="el-menu-demo menu-style" mode="horizontal" @select="handleSelect">
       <div class="pull-right">
       	<el-submenu index="1">
-        <template slot="title">设置</template>
+        <template slot="title">{{userInfo.RealName}}</template>
         <el-menu-item index="1-1">修改密码</el-menu-item>
         <el-menu-item index="1-2">退出登陆</el-menu-item>
       </el-submenu>
       </div>
-      <div class="pull-right info">
+      <!-- <div class="pull-right info">
         <span>欢迎 {{userInfo.RoleName}}：</span>
         <span>{{userInfo.RealName}} 进入！</span>
-      </div>
+      </div> -->
       <h4 @click="goMainHtml" style="width: 200px">PILIPA渠道管理系统</h4>
     </el-menu>
   </div>

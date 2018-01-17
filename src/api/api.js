@@ -958,3 +958,7 @@ export const invoiceIssue = params => {
     params: params
   }).then(res => res.data)
 }
+// 代理商发票地址列表
+export const address = () => {
+  return axios.get(`${base}/address`).then(res => res.data)
+}
