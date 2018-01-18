@@ -4,7 +4,10 @@
       <div class='container add-order-container'>
         <el-form ref='postData' :model='postData' label-width='130px'>
           <div>
-            <p ng-if="postData.OrderId" class="form-control-static">
+            <p v-if="!modify">账户余额：
+              <span style="color: red">{{'￥' + balance}}</span>
+            </p>
+            <p class="form-control-static">
               销售：{{postData.SalerName}} 订单号：{{postData.OrderId}} 所属公司：{{postData.ChannelName}} 提单员：{{postData.BillName}}
               <span v-if="postData.Category != 1" style="color:red">预提单</span>
               <span v-if="postData.FreChangeOrderId" style="color:red">纳税人类别变更</span>
@@ -18,13 +21,16 @@
             <div class='custom-tips mb-10'>
               <!-- <i class='fa fa-exclamation-circle' aria-hidden='true'></i> -->
               <span v-if="postData.Category == 2">【温馨提示】支持对二代居民身份证的关键字段识别。上传身份证后，即可自动读取并带出姓名、身份证号等信息。</span>
-              <span v-else>【温馨提示】可根据客户在国家企业信息公示系统的链接地址，快速完成工商信息的录入。</span>
+              <span v-else>【温馨提示】可通过“检索”或“快速录入”按钮，帮您完成工商信息的快速录入。</span>
             </div>
 
             <el-row>
               <el-col :span='12'>
                 <el-form-item label='公司名称：' required>
-                  <span v-if="!modify">{{postData.Customer.Name}}</span>
+                  <span v-if="!modify">
+                    {{postData.Customer.Name}}
+                    <span v-if="postData.Customer.IsSync" class="IsSync">工商检索</span>
+                  </span>
                   <el-input v-if="modify" class='company-search' v-model='postData.Customer.Name'></el-input>
                   <el-button v-if="modify" type="primary" class="company-alert" @click="getCompanyInfo">同步官方</el-button>
                 </el-form-item>
@@ -75,7 +81,7 @@
                 <el-form-item label='统一信用代码：' required>
                   <el-input v-model='postData.Customer.RegNO' :readonly="!modify" :maxlength="18"></el-input>
                 </el-form-item>
-                <el-form-item label='营业期限：' required>
+                <el-form-item class="date-style" label='营业期限：' required>
                   <el-date-picker width="100" v-model="postData.Customer.RegisterDate" type="date" placeholder="开始日期" :clearable="false" :readonly="!modify">
                   </el-date-picker>
                   <span>-</span>
@@ -213,7 +219,8 @@
     getpersoncardbypath,
     modifyOrders,
     getChannelGift,
-    urlsignkey
+    urlsignkey,
+    balance
 } from '../api/api'
   import Dialog from '@/service/dialog.js'
   import CompanyInfo from '@/views/components/companyInfo'
@@ -233,6 +240,8 @@
         signkey: {},
         ischecked: true,
         title: '订单查看',
+        balance: '',
+        ServiceCompanyCode: '', // 后端业务需要
         pickerOptions: {
           disabledDate(time) {
             console.log(time, 'pickerOptions')
@@ -296,8 +305,16 @@
       this.getChannelGift()
       this.BusnissDeadlineCanBeChoose()
       this.getsignkey()
+      this.getBalance()
     },
     methods: {
+      getBalance() {
+        balance(this.channelid).then(res => {
+          if (res.status) {
+            this.balance = res.data
+          }
+        })
+      },
       getChannelGift() {
         const addedvalue = this.postData.Customer.AddedValue
         getChannelGift({
@@ -371,19 +388,7 @@
             if (res.RegisteredCapital) {
               this.postData.Customer.RegisteredCapital = res.RegisteredCapital
             }
-            // this.postData.Customer.Name = res.CompanyName
-            // this.postData.Customer.Address = res.Address
-            // this.postData.Customer.BusinessScope = res.BusinessScope
-            // this.postData.Customer.BusnissDeadline = new Date(res.BusnissDeadline)
-            // if (this.postData.Customer.LegalPerson && this.postData.Customer.LegalPerson !== res.LegalPerson) {
-            //   this.postData.Customer.LegalPerson = res.LegalPerson
-            //   this.postData.Customer.PersonCardID = ''
-            // } else {
-            //   this.postData.Customer.LegalPerson = res.LegalPerson
-            // }
-            // this.postData.Customer.RegNO = res.RegNO
-            // this.postData.Customer.RegisterDate = new Date(res.RegisterDate)
-            // this.postData.Customer.RegisteredCapital = res.RegisteredCapital
+            this.ServiceCompanyCode = res.ServiceCompanyCode
           }
         })
       },
@@ -577,6 +582,7 @@
               this.postData.ContractPath = this.imgs.join(';')
             }
             this.postData = window._.extend(this.postData, this.postData.Customer)
+            this.postData.ServiceCompanyCode = this.ServiceCompanyCode ? this.ServiceCompanyCode : this.postData.Customer.ServiceCompanyCode
             modifyOrders(this.postData.OrderId, this.postData).then(res => {
               if (res.status) {
                 this.$message.info('保存成功!')
@@ -709,12 +715,12 @@
 <style lang='stylus'>
   .add-order-container
   .el-date-editor.el-input
-    width: 120px
+    width: 125px
     form
       input, textarea
         width: 300px
       input:nth-child(2)
-        width: 120px
+        width: 125px
     .company-search
       input
         width: 300px !important
@@ -766,5 +772,17 @@
 }
 .add-order2 textarea {
   font-family: Microsoft YaHei;
+}
+.add-order2 .IsSync {
+  border: 1px solid red;
+  border-radius: 4px;
+  color: red;
+  margin-left: 10px;
+}
+.add-order2 .add-order-container .el-date-editor.el-input {
+  width: 130px;
+}
+.add-order2 .add-order-container form input:nth-child(2) {
+  width: 130px;
 }
 </style>

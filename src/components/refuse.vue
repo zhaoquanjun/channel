@@ -92,7 +92,8 @@ export default {
             case 'REFUSEAGENT':
               var item = {
                 ChannelId: this.row.ChannelId,
-                BackReason: this.ruleForm.desc
+                BackReason: this.ruleForm.desc,
+                status: 3
               }
               pass(this.row.ChannelId, item).then((res) => {
                 if (res.status) {
@@ -100,7 +101,8 @@ export default {
                     type: 'success',
                     message: '代理商审核驳回成功'
                   })
-                  bus.$emit('refuse-agent-success')
+                  // bus.$emit('refuse-agent-success')
+                  this.$emit('done')
                   this.dialogFormVisible = false
                 }
               }) // 代理商审核通过和驳回是一个接口 传递参数不同

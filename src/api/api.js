@@ -120,7 +120,7 @@ export const logout = () => {
 // 代理商管理
 // --获取渠道列表 && 财务管理--财务信息列表 && 渠道返点列表
 export const getAgents = params => {
-  return axios.get(`${base}/agent`, {
+  return axios.get(`${base}/agents`, {
     params: params
   }).then(res => res.data)
 }
@@ -937,4 +937,8 @@ export const deletedoc = (id) => {
 // 文件下载
 export const downloadfile = (id) => {
   return axios.get(`${base}/doc/downloadfile?id=${id}`).then(res => res.data)
+}
+// 获取账户余额
+export const balance = (channelid) => {
+  return axios.get(`${base}/finance/balance?channelid=${channelid}`).then(res => res.data)
 }

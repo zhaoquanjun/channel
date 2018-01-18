@@ -4,6 +4,9 @@
       <div class='container add-order-container'>
         <el-form ref='postData' :model='postData' label-width='130px'>
           <div>
+            <p ng-if="postData.OrderId">账户余额：
+              <span style="color: red">{{'￥' + balance}}</span>
+            </p>
             <p ng-if="postData.OrderId" class="form-control-static">
               销售：{{postData.SalerName}} 订单号：{{postData.OrderId}} 所属公司：{{postData.ChannelName}} 提单员：{{postData.BillName}}
               <span style="color:red">预提单</span>
@@ -147,7 +150,8 @@
     getpersoncardbypath,
     modifyOrders,
     getChannelGift,
-    urlsignkey
+    urlsignkey,
+    balance
 } from '../api/api'
   import customUpload from '@/components/customUpload'
   import ImageUploader from '@/components/imageUploader.vue'
@@ -164,7 +168,8 @@
         ShowBusnissDeadline: true,
         signkey: {},
         ischecked: true,
-        title: '订单查看'
+        title: '订单查看',
+        balance: ''
       }
     },
     watch: {
@@ -202,8 +207,16 @@
       this.getChannelGift()
       // this.BusnissDeadlineCanBeChoose()
       this.getsignkey()
+      this.getBalance()
     },
     methods: {
+      getBalance() {
+        balance(this.channelid).then(res => {
+          if (res.status) {
+            this.balance = res.data
+          }
+        })
+      },
       getChannelGift() {
         const addedvalue = this.postData.Customer.AddedValue
         getChannelGift({
