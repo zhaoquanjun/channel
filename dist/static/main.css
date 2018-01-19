@@ -28,9 +28,9 @@ body {
 }
 
 .vheader {
-    border-bottom: 2px solid #ccc;
+    border-bottom: 2px solid #76ace2;
     margin: 0;
-    padding: 6px 0 10px 0;
+    padding: 6px 12px;
 }
 
 .clearfix:after{content:"";display:block;height:0;clear:both;visibility:hidden}
@@ -80,10 +80,4 @@ body {
 
 .el-form-item__content{
     height: 36px;
-}
-.el-table th>.cell {
-  text-align: left;
-}
-.select-width .el-form-item__content{
-  width: 100px;
 }

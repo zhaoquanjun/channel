@@ -83,6 +83,9 @@ export default {
 .content-right {
   flex: auto;
   overflow-y: auto;
+  border: 20px solid #eee;
+  padding: 15px;
+  border-right: none;
 }
 
 .main .nav-title {
