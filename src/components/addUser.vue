@@ -6,17 +6,17 @@
         <el-input v-if="item.UserId" v-model="ruleForm.UserName" auto-complete="off" :disabled="true"></el-input>
         <el-input v-else v-model="ruleForm.UserName" auto-complete="off"></el-input>
       </el-form-item>
-      <el-form-item label="真实姓名" prop="RealName">
-        <el-input v-model="ruleForm.RealName" auto-complete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="邮箱" prop="Email">
-        <el-input v-model="ruleForm.Email" auto-complete="off"></el-input>
-      </el-form-item>
       <el-form-item label="密码" required>
         <el-input v-model="ruleForm.Password" auto-complete="off"></el-input>
       </el-form-item>
-      <el-form-item label="电话" prop="Mobile">
+      <el-form-item label="姓名" prop="RealName">
+        <el-input v-model="ruleForm.RealName" auto-complete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="手机" prop="Mobile">
         <el-input v-model="ruleForm.Mobile" auto-complete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="邮箱" prop="Email">
+        <el-input v-model="ruleForm.Email" auto-complete="off"></el-input>
       </el-form-item>
       <el-form-item label="角色" required>
         <el-select v-model="ruleForm.RoleId" placeholder="请选择" @change="getFunction">
@@ -33,18 +33,6 @@
       <el-form-item v-if="!item.UserId" label="部门" required>
         <el-input v-model="department" auto-complete="off" :disabled="true"></el-input>
       </el-form-item>
-      <!-- <el-form-item v-show="ruleForm.RoleId === 18" label="选择大区" required>
-        <el-select v-model="ruleForm.ChannelPartitionId" placeholder="请选择">
-          <el-option v-for="item in channelpartitions" :key="item.Id" :label="item.PartitionName" :value="item.Id">
-          </el-option>
-        </el-select>
-      </el-form-item> -->
-      <!-- <el-form-item class="select-width" v-show="ruleForm.RoleId === 19" label="选择大区" required>
-        <el-select v-model="ChannelOperatePartitionId" multiple placeholder="请选择">
-          <el-option v-for="item in channelpartitions" :key="item.Id" :label="item.PartitionName" :value="item.Id">
-          </el-option>
-        </el-select>
-      </el-form-item> -->
       <el-form-item label="选择模块" class="clearH" required>
         <el-tree :highlight-current=true ref="tree" :data="dataFunction" :show-checkbox="true" node-key="FunctionId" :props="defaultProps" @check-change="handleNodeClick" :default-checked-keys="defaultCheckedKey">
         </el-tree>

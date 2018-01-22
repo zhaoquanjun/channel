@@ -15,12 +15,12 @@
     <h3 class="vheader">员工列表</h3>
     <div class="vsearch">
       <el-form ref="params" :inline="true" :model="params" label-width="80px">
-        <el-form-item label="用户名">
-          <el-input v-model="params.userName"></el-input>
+        <el-form-item label="">
+          <el-input v-model="params.userName" placeholder="可搜索用户名、姓名、手机"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="getUsers">查询</el-button>
-          <el-button type="primary" @click="newUser">添加用户</el-button>
+          <el-button type="primary" @click="newUser">添加员工</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -39,7 +39,7 @@
       </el-table-column>
       <el-table-column label="操作" width="130">
         <template scope="scope">
-            <el-button @click="newUser(scope.row)" type="text" size="small">查看/修改</el-button>
+            <el-button @click="newUser(scope.row)" type="text" size="small">修改</el-button>
             <el-button @click="deleteCon(scope.row)" type="text" size="small">删除</el-button>
           </template>
       </el-table-column>
