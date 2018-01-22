@@ -969,6 +969,9 @@ export const address = () => {
 export const addAddress = (params) => {
   return axios.post(`${base}/address`, params).then(res => res.data)
 }
+export const updataAddress = (id, params) => {
+  return axios.put(`${base}/address/${id}`, params).then(res => res.data)
+}
 // 代理商可开订单列表
 export const getneworders = params => {
   return axios.get(`${base}/invoice/getneworders`, {

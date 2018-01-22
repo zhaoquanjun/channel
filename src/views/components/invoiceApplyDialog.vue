@@ -44,7 +44,7 @@
           <el-option v-for="item in Address" :key="item.Id" :label="item.Address" :value="item.Id"></el-option>
         </el-select>
       </el-form-item>
-      <div class="add-address" @click="newAddress">+</div>
+      <div class="add-address" @click="newAddress()">+</div>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisible = false">取 消</el-button>

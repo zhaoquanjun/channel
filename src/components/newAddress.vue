@@ -33,9 +33,11 @@
 import {
   getProvince,
   getcurCities,
-  addAddress
+  addAddress,
+  updataAddress
 } from '@/api/api'
 export default {
+  props: ['row'],
   data() {
     return {
       dialogFormVisible: true,
@@ -71,32 +73,50 @@ export default {
     }
   },
   created() {
+    if (this.row) {
+      this.ruleForm = $.extend(true, {}, this.row)
+      this.curCities(this.ruleForm.ProvinceCode)
+    }
     this.getParamsProvince()
   },
   methods: {
     getParamsProvince() {
       getProvince().then((res) => {
         this.provinces = res.data
-        this.ruleForm.ProvinceCode = res.data[0].Code
+        if (!this.row) {
+          this.ruleForm.ProvinceCode = res.data[0].Code
+          this.curCities(this.ruleForm.ProvinceCode)
+        }
       })
     },
     curCities(val) {
       getcurCities(val).then((res) => {
         this.cities = res.data
-        this.ruleForm.CityCode = res.data[0].Code
+        if (!this.row || (this.row.ProvinceCode && this.row.ProvinceCode !== this.ruleForm.ProvinceCode)) {
+          this.ruleForm.CityCode = res.data[0].Code
+        }
       })
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(this.ruleForm, 'ruleForm')
-          addAddress(this.ruleForm).then(res => {
-            if (res.status) {
-              this.$message.info('新增成功!')
-              this.$emit('done')
-              this.dialogFormVisible = false
-            }
-          })
+          if (this.row) {
+            updataAddress(this.ruleForm.Id, this.ruleForm).then(res => {
+              if (res.status) {
+                this.$message.info('修改成功!')
+                this.$emit('done')
+                this.dialogFormVisible = false
+              }
+            })
+          } else {
+            addAddress(this.ruleForm).then(res => {
+              if (res.status) {
+                this.$message.info('新增成功!')
+                this.$emit('done')
+                this.dialogFormVisible = false
+              }
+            })
+          }
         } else {
           return false
         }
