@@ -7,28 +7,28 @@
     <el-date-picker v-model="params.endtime" type="date" placeholder="结束日期" :clearable="clearable">
     </el-date-picker>
   </el-form-item>
-  <el-form-item label="大区">
+  <el-form-item v-if="IsCenter" label="大区">
     <el-select v-model="params.partitions" multiple placeholder="全部" @change="getParamsProvince(),getParamsCities()">
       <el-option v-for="item in partitions" :key="item.Id" :label="item.PartitionName" :value="item.Id">
       </el-option>
     </el-select>
   </el-form-item>
-  <el-form-item label="省份">
+  <el-form-item v-if="IsCenter" label="省份">
     <el-select v-model="params.provinces" multiple placeholder="全部" @change="getParamsCities()">
       <el-option v-for="item in provinces" :key="item.ProvinceCode" :label="item.ProvinceName" :value="item.ProvinceCode">
       </el-option>
     </el-select>
   </el-form-item>
-  <el-form-item label="城市">
+  <el-form-item v-if="IsCenter" label="城市">
     <el-select v-model="params.ccodes" multiple placeholder="全部">
       <el-option v-for="item in cities" :key="item.CityCode" :label="item.CityName" :value="item.CityCode">
       </el-option>
     </el-select>
   </el-form-item>
-  <el-form-item label="代理商" class="inline-input">
+  <el-form-item v-if="IsCenter" label="代理商" class="inline-input">
     <el-autocomplete v-model="params.channelname" :trigger-on-focus="false" :fetch-suggestions="querySearch" placeholder="代理商名称"></el-autocomplete>
   </el-form-item>
-  <el-form-item label="代理商是否解约">
+  <el-form-item label="代理商状态">
     <el-select v-model="params.status">
       <el-option v-for="item in Status" :key="item.status" :label="item.statusName" :value="item.status">
       </el-option>
@@ -55,8 +55,8 @@ export default {
     return {
       Status: [
         {status: '', statusName: '全部'},
-        {status: 0, statusName: '是'},
-        {status: 1, statusName: '否'}
+        {status: 0, statusName: '正常'},
+        {status: 1, statusName: '解约'}
       ],
       params: {
         starttime: '',
@@ -71,10 +71,13 @@ export default {
       provinces: [],
       cities: [],
       clearable: false,
-      agents: []
+      agents: [],
+      IsCenter: ''
     }
   },
   created() {
+    var userInfos = JSON.parse(sessionStorage.getItem('userInfo'))
+    this.IsCenter = userInfos.IsCenter
     this.getPartitions()
     this.getParamsProvince()
     this.getParamsCities()

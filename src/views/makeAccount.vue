@@ -2,7 +2,7 @@
 <div class="baobiao4">
   <h3 class="vheader">做账与报税数据统计</h3>
   <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload" :make-account="true"></SearchParams>
-  <el-table id="dataTable" :data="tableData" @cell-click="downloadColumn" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum>
+  <el-table id="dataTable" :data="tableData" @cell-click="downloadColumn" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum:[5,6,10]="downloadSum">
     <el-table-column prop="PartitionName" label="大区" width="120">
     </el-table-column>
     <el-table-column prop="ProvinceName" label="省" width="120">
@@ -63,6 +63,8 @@ export default {
     }
   },
   created() {
+    var userInfos = JSON.parse(sessionStorage.getItem('userInfo'))
+    this.IsCenter = userInfos.IsCenter
     this.fetchData()
   },
   mounted() {
@@ -122,6 +124,23 @@ export default {
       })
 
       return sums
+    },
+    downloadSum(index) {
+      console.log('合计下载')
+      var {
+        enddate
+      } = this.params
+      var url = ''
+      var Param = `?enddate=${enddate || ''}`
+      if (index === 5) {
+        url = '/api/download/getreserveorders' + Param
+      } else if (index === 6) {
+        url = '/api/download/getzeroorders' + Param
+      } else if (index === 10) {
+        url = '/api/download/getzeroorders' + Param
+      }
+      window.open(url)
+      // alert(index)
     },
     downloadColumn(row, column, cell) {
       var AccountId = row.AccountId

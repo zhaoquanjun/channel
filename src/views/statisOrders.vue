@@ -66,10 +66,13 @@ export default {
         status: ''
       },
       cities: '',
-      tableHeight: 300
+      tableHeight: 300,
+      IsCenter: ''
     }
   },
   created() {
+    var userInfos = JSON.parse(sessionStorage.getItem('userInfo'))
+    this.IsCenter = userInfos.IsCenter
     this.fetchData()
   },
   mounted() {

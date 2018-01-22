@@ -23,25 +23,25 @@
     <el-date-picker v-model="params.endtime" type="date">
     </el-date-picker>
   </el-form-item>
-  <el-form-item v-if="!reduceSearchItem" label="大区">
+  <el-form-item v-if="!reduceSearchItem && IsCenter" label="大区">
     <el-select v-model="params.partitions" multiple placeholder="全部" @change="getParamsProvince(),getParamsCities()">
       <el-option v-for="item in partitions" :key="item.Id" :label="item.PartitionName" :value="item.Id">
       </el-option>
     </el-select>
   </el-form-item>
-  <el-form-item v-if="!reduceSearchItem" label="省份">
+  <el-form-item v-if="!reduceSearchItem && IsCenter" label="省份">
     <el-select v-model="params.provinces" multiple placeholder="全部" @change="getParamsCities()">
       <el-option v-for="item in provinces" :key="item.ProvinceCode" :label="item.ProvinceName" :value="item.ProvinceCode">
       </el-option>
     </el-select>
   </el-form-item>
-  <el-form-item v-if="!reduceSearchItem" label="城市">
+  <el-form-item v-if="!reduceSearchItem && IsCenter" label="城市">
     <el-select v-model="params.ccodes" multiple placeholder="全部">
       <el-option v-for="item in cities" :key="item.CityCode" :label="item.CityName" :value="item.CityCode">
       </el-option>
     </el-select>
   </el-form-item>
-  <el-form-item label="代理商">
+  <el-form-item v-if="IsCenter"label="代理商">
     <el-autocomplete class="inline-input" v-model="params.channelname" :trigger-on-focus="false" :fetch-suggestions="querySearch" placeholder="代理商名称"></el-autocomplete>
   </el-form-item>
   <!-- <el-form-item label="代理商" v-show="!hideChannel">
@@ -81,10 +81,13 @@ export default {
       provinces: [],
       cities: [],
       clearable: false,
-      agents: []
+      agents: [],
+      IsCenter: ''
     }
   },
   created() {
+    var userInfos = JSON.parse(sessionStorage.getItem('userInfo'))
+    this.IsCenter = userInfos.IsCenter
     this.params.cuttime = new Date()
     this.getPartitions()
     this.getParamsProvince()

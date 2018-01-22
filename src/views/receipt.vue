@@ -2,7 +2,7 @@
 <div class="baobiao3">
   <h3 class="vheader">传票数据统计</h3>
   <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload" :make-account="true"></SearchParams>
-  <el-table id="dataTable" :data="tableData" @cell-click="downloadColumn" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum>
+  <el-table id="dataTable" :data="tableData" @cell-click="downloadColumn" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum:[1,3,4,6,7,10]="downloadSum">
     <!-- <el-table-column prop="PartitionName" label="日期" width="120">
     </el-table-column> -->
     <el-table-column prop="PartitionName" label="大区" width="120">
@@ -63,6 +63,8 @@ export default {
     }
   },
   created() {
+    var userInfos = JSON.parse(sessionStorage.getItem('userInfo'))
+    this.IsCenter = userInfos.IsCenter
     this.fetchData()
   },
   mounted() {
@@ -120,6 +122,29 @@ export default {
 
       return sums
     },
+    downloadSum(index) {
+      console.log('合计下载')
+      var {
+        enddate
+      } = this.params
+      var url = ''
+      var Param = `?enddate=${enddate || ''}`
+      if (index === 1) {
+        url = '/api/download/getreserveorders' + Param
+      } else if (index === 3) {
+        url = '/api/download/getzeroorders' + Param
+      } else if (index === 4) {
+        url = '/api/download/getzeroorders' + Param
+      } else if (index === 6) {
+        url = '/api/download/getzeroorders' + Param
+      } else if (index === 7) {
+        url = '/api/download/getzeroorders' + Param
+      } else if (index === 10) {
+        url = '/api/download/getzeroorders' + Param
+      }
+      window.open(url)
+      // alert(index)
+    },
     downloadColumn(row, column, cell) {
       var AccountId = row.AccountId
       // console.log(AccountId)
@@ -140,6 +165,9 @@ export default {
         url = agent + `?type=urge&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else if (cell.cellIndex === 10) {
         url = agent + `?type=requirereceipt&accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else if (cell.cellIndex === 11) {
+        // 新需求
+        url = agent + `?type=requirereceipt&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else if (cell.cellIndex === 14) {
         url = agent + `?type=rejectreceipt&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else {
@@ -155,27 +183,13 @@ export default {
 }
 </script>
 <style>
-.baobiao3 .el-table__body tr td:nth-child(6) .cell{
-  cursor: pointer;
-  color: #20a0ff;
-  text-decoration: underline;
-}
-.baobiao3 .el-table__body tr td:nth-child(8) .cell{
-  cursor: pointer;
-  color: #20a0ff;
-  text-decoration: underline;
-}
-.baobiao3 .el-table__body tr td:nth-child(9) .cell{
-  cursor: pointer;
-  color: #20a0ff;
-  text-decoration: underline;
-}
-.baobiao3 .el-table__body tr td:nth-child(11) .cell{
-  cursor: pointer;
-  color: #20a0ff;
-  text-decoration: underline;
-}
-.baobiao3 .el-table__body tr td:nth-child(15) .cell{
+.baobiao3 .el-table__body tr td:nth-child(6) .cell,
+.baobiao3 .el-table__body tr td:nth-child(8) .cell,
+.baobiao3 .el-table__body tr td:nth-child(9) .cell,
+.baobiao3 .el-table__body tr td:nth-child(11) .cell,
+.baobiao3 .el-table__body tr td:nth-child(12) .cell,
+.baobiao3 .el-table__body tr td:nth-child(15) .cell
+{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;

@@ -45,6 +45,8 @@ export default {
     }
   },
   created() {
+    var userInfos = JSON.parse(sessionStorage.getItem('userInfo'))
+    this.IsCenter = userInfos.IsCenter
     this.getLastAgent()
     this.fetchData()
   },

@@ -45,6 +45,8 @@ export default {
     }
   },
   created() {
+    var userInfos = JSON.parse(sessionStorage.getItem('userInfo'))
+    this.IsCenter = userInfos.IsCenter
     this.fetchData()
     var start = this.getNowMonthStartDate()
     var end = this.getNowMonthLastDate()

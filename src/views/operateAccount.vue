@@ -2,7 +2,7 @@
 <div class="baobiao1">
   <h3 class="vheader">运营会计数据总览</h3>
   <SearchParams :length="tableData.length"  @search="onSearch" @download="onDownload" :make-account="true"></SearchParams>
-  <el-table id="dataTable" :data="tableData" @cell-click="downloadColumn" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum>
+  <el-table id="dataTable" :data="tableData" @cell-click="downloadColumn" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum:[1,2,3,5,6,7,8]="downloadSum">
     <el-table-column prop="PartitionName" label="大区" width="120">
     </el-table-column>
     <el-table-column prop="ProvinceName" label="省" width="120">
@@ -57,6 +57,8 @@ export default {
     }
   },
   created() {
+    var userInfos = JSON.parse(sessionStorage.getItem('userInfo'))
+    this.IsCenter = userInfos.IsCenter
     this.fetchData()
   },
   mounted() {
@@ -85,6 +87,31 @@ export default {
     },
     onDownload() {
       ExcelDown().tableToExcel('dataTable', '运营会计数据')
+    },
+    downloadSum(index) {
+      console.log('合计下载')
+      var {
+        enddate
+      } = this.params
+      var url = ''
+      var Param = `?enddate=${enddate || ''}`
+      if (index === 1) {
+        url = '/api/download/getreserveorders' + Param
+      } else if (index === 2) {
+        url = '/api/download/getzeroorders' + Param
+      } else if (index === 3) {
+        url = '/api/download/getzeroorders' + Param
+      } else if (index === 5) {
+        url = '/api/download/getzeroorders' + Param
+      } else if (index === 6) {
+        url = '/api/download/getzeroorders' + Param
+      } else if (index === 7) {
+        url = '/api/download/getzeroorders' + Param
+      } else if (index === 8) {
+        url = '/api/download/getzeroorders' + Param
+      }
+      window.open(url)
+      // alert(index)
     },
     getSummaries(param) {
       const {
@@ -129,10 +156,22 @@ export default {
       var agent = 'https://agent.pilipa.cn/api/v1/AgentExport.ashx'
       // var agent = 'https://ri.i-counting.cn/api/v1/AgentExport.ashx'
       var url = ''
-      if (cell.cellIndex === 7) {
+      if (cell.cellIndex === 6) {
+        // 新需求
+        url = agent + `?type=totalcustomer&accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else if (cell.cellIndex === 7) {
+        url = agent + `?type=totalcustomer&accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else if (cell.cellIndex === 8) {
+        // 新需求
+        url = agent + `?type=totalcustomer&accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else if (cell.cellIndex === 10) {
+        // 新需求
         url = agent + `?type=totalcustomer&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else if (cell.cellIndex === 11) {
         url = agent + `?type=historybusinessdate&accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else if (cell.cellIndex === 12) {
+        // 新需求
+        url = agent + `?type=totalcustomer&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else if (cell.cellIndex === 13) {
         url = agent + `?type=totalhung&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else {
@@ -148,17 +187,14 @@ export default {
 }
 </script>
 <style>
-.baobiao1 .el-table__body tr td:nth-child(8) .cell{
-  cursor: pointer;
-  color: #20a0ff;
-  text-decoration: underline;
-}
-.baobiao1 .el-table__body tr td:nth-child(12) .cell{
-  cursor: pointer;
-  color: #20a0ff;
-  text-decoration: underline;
-}
-.baobiao1 .el-table__body tr td:nth-child(14) .cell{
+.baobiao1 .el-table__body tr td:nth-child(7) .cell,
+.baobiao1 .el-table__body tr td:nth-child(8) .cell,
+.baobiao1 .el-table__body tr td:nth-child(9) .cell,
+.baobiao1 .el-table__body tr td:nth-child(11) .cell,
+.baobiao1 .el-table__body tr td:nth-child(12) .cell,
+.baobiao1 .el-table__body tr td:nth-child(13) .cell,
+.baobiao1 .el-table__body tr td:nth-child(14) .cell
+{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;
