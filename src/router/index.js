@@ -49,6 +49,7 @@ import Filelist from '@/views/filelist' // 文档列表
 
 // 代理商组件列表
 import InvoiceApply from '@/views/channel/InvoiceApply' // 代理商发票申请
+import InvoiceAddress from '@/views/channel/invoiceAddress' // 代理商发票地址
 
 Vue.use(Router)
 const router = new Router({
@@ -96,6 +97,10 @@ const router = new Router({
       name: 'main.invoice',
       path: 'invoice',
       component: InvoiceApply
+    }, {
+      name: 'main.address',
+      path: 'address',
+      component: InvoiceAddress
     }, {
       name: 'main.chargebackRecord',
       path: 'chargebackRecord',
