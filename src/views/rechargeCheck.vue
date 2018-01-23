@@ -135,7 +135,7 @@ export default {
         start: starttime,
         end: endtime,
         channelname: channelname,
-        type: status,
+        status: status,
         channelstatus: channelstatus
       }).then((res) => {
         console.log(res.data)

@@ -50,6 +50,7 @@ import Filelist from '@/views/filelist' // 文档列表
 // 代理商组件列表
 import InvoiceApply from '@/views/channel/InvoiceApply' // 代理商发票申请
 import InvoiceAddress from '@/views/channel/invoiceAddress' // 代理商发票地址
+import RechargeApply from '@/views/channel/rechargeApply' // 代理商充值申请
 
 Vue.use(Router)
 const router = new Router({
@@ -117,6 +118,10 @@ const router = new Router({
       name: 'main.recharge_review',
       path: 'recharge_review',
       component: RechargeCheck
+    }, {
+      name: 'main.recharge_apply',
+      path: 'recharge_apply',
+      component: RechargeApply
     }, {
       name: 'main.finance_statis',
       path: 'finance_statis',

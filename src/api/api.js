@@ -990,3 +990,11 @@ export const putinvoice = (params) => {
 export const deleteinvoice = (id) => {
   return axios.put(`${base}/invoice/deleteinvoice/${id}`).then(res => res.data)
 }
+// 代理商获取当前代理商账户余额
+export const balancecur = () => {
+  return axios.get(`${base}/finance/balance`).then(res => res.data)
+}
+// 代理商删除充值申请
+export const deleteRecharge = (id) => {
+  return axios.put(`${base}/finance/deleteprepai/${id}`).then(res => res.data)
+}

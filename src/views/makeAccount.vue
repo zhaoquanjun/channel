@@ -140,7 +140,6 @@ export default {
         url = '/api/download/getzeroorders' + Param
       }
       window.open(url)
-      // alert(index)
     },
     downloadColumn(row, column, cell) {
       var AccountId = row.AccountId
