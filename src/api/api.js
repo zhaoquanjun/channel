@@ -998,3 +998,11 @@ export const balancecur = () => {
 export const deleteRecharge = (id) => {
   return axios.put(`${base}/finance/deleteprepai/${id}`).then(res => res.data)
 }
+// 代理商充值申请
+export const addprepai = (params) => {
+  return axios.post(`${base}/finance/addprepai`, params).then(res => res.data)
+}
+// 代理商充值申请修改
+export const putprepai = (params) => {
+  return axios.put(`${base}/finance/putprepai`, params).then(res => res.data)
+}

@@ -1,5 +1,5 @@
 <template>
-  <div class="invoice-apply">
+  <div class="recharge-apply">
     <h3 class="vheader">充值申请</h3>
     <div class="invoice-declare">
       <strong>账户金额</strong>
@@ -65,7 +65,7 @@ import {
 } from '@/api/api'
 import Dialog from '@/service/dialog.js'
 import InvoiceView from '@/components/invoiceView.vue'
-import ApplyDialog from '@/views/components/invoiceApplyDialog'
+import RechargeApplyDialog from '@/components/rechargeApplyDialog'
 export default {
   data: function() {
     return {
@@ -114,11 +114,13 @@ export default {
       })
     },
     apply(row) {
-      let invoiceorderParams = {}
-      invoiceorderParams.balance = this.balance
-      invoiceorderParams.invoiceId = row ? row.InvoiceId : ''
-      Dialog(ApplyDialog, {
-        invoiceorderParams: invoiceorderParams
+      if (row) {
+        row = $.extend(true, {}, row)
+      } else {
+        row = {}
+      }
+      Dialog(RechargeApplyDialog, {
+        row: row
       }).then(res => this.onSearch())
     },
     deleteItem(row) {
@@ -179,7 +181,7 @@ export default {
 </script>
 
 <style lang='stylus' scoped>
-.invoice-apply
+.recharge-apply
   .invoice-declare
     width: 100%;
     padding: 10px 0;
