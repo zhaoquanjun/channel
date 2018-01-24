@@ -1006,3 +1006,7 @@ export const addprepai = (params) => {
 export const putprepai = (params) => {
   return axios.put(`${base}/finance/putprepai`, params).then(res => res.data)
 }
+// 代理商修改发票申请
+export const getprepaiId = (id) => {
+  return axios.get(`${base}/finance/getprepai?id=${id}`).then(res => res.data)
+}

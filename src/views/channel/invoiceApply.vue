@@ -46,7 +46,7 @@
       <el-table-column prop="Title" label="发票抬头" width="150"></el-table-column>
       <el-table-column prop="InvoiceNumber" label="税号" width="150"></el-table-column>
       <el-table-column prop="Amount" label="开票金额"></el-table-column>
-      <el-table-column prop="Property" label="发票类型" :formatter="CategoryFormat"></el-table-column>
+      <!-- <el-table-column prop="Property" label="发票类型" :formatter="CategoryFormat"></el-table-column> -->
       <el-table-column prop="ApplyDate" label="申请时间" :formatter="StatusDate"></el-table-column>
       <el-table-column prop="Status" label="状态" :formatter="StatusFormat"></el-table-column>
       <el-table-column prop="AuditMsg" label="审批意见"></el-table-column>

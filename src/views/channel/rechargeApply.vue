@@ -60,11 +60,9 @@
 import {
   balancecur,
   rechargeList,
-  viewInvoice,
   deleteRecharge
 } from '@/api/api'
 import Dialog from '@/service/dialog.js'
-import InvoiceView from '@/components/invoiceView.vue'
 import RechargeApplyDialog from '@/components/rechargeApplyDialog'
 export default {
   data: function() {
@@ -141,13 +139,15 @@ export default {
       }).catch(() => {})
     },
     view(row) {
-      var InvoiceId = row.InvoiceId
-      viewInvoice(InvoiceId).then((res) => {
-        this.scanView = res.data
-        Dialog(InvoiceView, {
-          view: this.scanView
-        })
-      })
+      if (row) {
+        row = $.extend(true, {}, row)
+      } else {
+        row = {}
+      }
+      Dialog(RechargeApplyDialog, {
+        row: row,
+        isReadOnly: true
+      }).then(res => this.onSearch())
     },
     StatusDate(row) {
       var date = row.CreateDate
